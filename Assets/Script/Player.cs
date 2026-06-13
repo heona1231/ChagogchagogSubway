@@ -4,8 +4,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
+// Block 클래스에 따라 변경 예정
+public enum PassengerType
+{
+    Normal,
+    Villain,
+}
+
 public class Player : MonoBehaviour
 {
+    // Block 클래스에 따라 변경 예정
+    [SerializeField] private PassengerType currentType = PassengerType.Normal;
+    [SerializeField] private Vector2 shapeOffset = Vector2.zero;
+
     [SerializeField] private bool isDragging = false;
     private bool isHovering = false;
 
@@ -31,11 +42,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if(isDragging)
+        if (isDragging)
         {
             transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        
+
         if ((isHovering || isDragging) && Input.GetMouseButtonDown(1))
         {
             Debug.Log("우클릭");
@@ -44,12 +55,23 @@ public class Player : MonoBehaviour
 
     private void OnMouseDown()
     {
-        isDragging = true;
-        Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
-
-        if (spriteRenderer != null)
+        switch (currentType)
         {
-            spriteRenderer.sortingOrder = draggingOrder;
+            case PassengerType.Villain:
+                // 미니게임 함수 호출
+                GetComponent<SpriteRenderer>().color = Color.red;
+                // 미니게임 성공 시 PassengerType을 Normal로 바꿀 것
+                break;
+
+            case PassengerType.Normal:
+                isDragging = true;
+                Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
+
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.sortingOrder = draggingOrder;
+                }
+                break;
         }
     }
 
@@ -65,8 +87,14 @@ public class Player : MonoBehaviour
 
         if (!isHovering)
         {
-            GetComponent<SpriteRenderer>().color = Color.white;
+            // GetComponent<SpriteRenderer>().color = Color.white;
             // 호버시 블록에 아웃라인 꺼지도록 호출처리
+        }
+
+        if (Board.Instance != null)
+        {
+            Vector2 snappedPos = Board.Instance.GetSnappedPosition(transform.position, shapeOffset);
+            transform.position = snappedPos;
         }
     }
 
@@ -74,7 +102,7 @@ public class Player : MonoBehaviour
     {
         // Debug.Log("호버 시작");
         isHovering = true;
-        GetComponent<SpriteRenderer>().color = Color.red;
+        // GetComponent<SpriteRenderer>().color = Color.red;
         // 호버시 블록에 아웃라인 뜨도록 호출처리
     }
 
@@ -85,7 +113,7 @@ public class Player : MonoBehaviour
 
         if (!isDragging)
         {
-            GetComponent<SpriteRenderer>().color = Color.white;
+            // GetComponent<SpriteRenderer>().color = Color.white;
             // 호버시 블록에 아웃라인 꺼지도록 호출처리
         }
     }
