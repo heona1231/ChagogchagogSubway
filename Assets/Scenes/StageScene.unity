@@ -361,7 +361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a669a25a2a1e6745919c8ad3905e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  limitTime: 3
+  stageDatas:
+  - {fileID: 11400000, guid: fe77eff2ab6ad914bab75b26285e1f08, type: 2}
 --- !u!4 &1546721632
 Transform:
   m_ObjectHideFlags: 0
@@ -407,6 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   limitTime: 60
+  targetTime: 30
 --- !u!4 &1704400116
 Transform:
   m_ObjectHideFlags: 0

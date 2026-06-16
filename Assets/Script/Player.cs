@@ -68,6 +68,8 @@ public class Player : MonoBehaviour
             GetComponent<SpriteRenderer>().color = Color.white;
             // 호버시 블록에 아웃라인 꺼지도록 호출처리
         }
+
+        FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
     }
 
     private void OnMouseEnter()

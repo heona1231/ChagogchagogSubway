@@ -8,8 +8,10 @@ public class StageSelectButton : MonoBehaviour
 
     public void SelectStage()
     {
+        int currentChapterNumber = GameManager.Instance.CurrentChapterNumber;
+
         bool isUnlocked = stageNumber == 1 ||
-            PlayerPrefs.GetInt($"Chapter1Stage{stageNumber - 1}Star", 0) > 0;
+            PlayerPrefs.GetInt($"Chapter{currentChapterNumber}Stage{stageNumber - 1}Star", 0) > 0;
 
         if (!isUnlocked)
         {

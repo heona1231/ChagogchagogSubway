@@ -28,10 +28,11 @@ public class ChapterManager : MonoBehaviour
     private void UpdateTotalStarText()
     {
         int totalStar = 0;
+        int chapterNumber = GameManager.Instance.CurrentChapterNumber;
 
         for (int i =1; i <= TOTAL_STAGE_COUNT; i++)
         {
-            totalStar += PlayerPrefs.GetInt("Chapter1Stage" + i + "Star", 0);
+            totalStar += PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{i}Star", 0);
         }
 
         int maxStar = TOTAL_STAGE_COUNT * MAX_STAR_PER_STAGE;
@@ -43,7 +44,9 @@ public class ChapterManager : MonoBehaviour
     {
         for (int i = 1; i <= TOTAL_STAGE_COUNT; i++)
         {
-            int starCount = PlayerPrefs.GetInt("Chapter1Stage" + i + "Star", 0);
+            int chapterNumber = GameManager.Instance.CurrentChapterNumber;
+
+            int starCount = PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{i}Star", 0);
 
             Image starImage = starGrid.GetChild(i - 1).GetComponent<Image>();
 
