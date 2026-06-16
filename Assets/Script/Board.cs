@@ -1,9 +1,20 @@
+// 강혜원 작성
+
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum BoardType
 {
     Main,       // 게임 보드
     Background  // 배경 보드
+}
+
+// 특수 좌석 설정을 위한 구조체
+[System.Serializable]
+public struct SpecialSeat
+{
+    public Vector2Int gridIndex;       // 좌석의 (X, Y) 인덱스 위치
+    public PassengerType requiredType; // 이 자리에 앉아야 하는 승객 타입
 }
 
 public class Board : MonoBehaviour
@@ -16,17 +27,43 @@ public class Board : MonoBehaviour
     [SerializeField] private float gridSize = 1.32f;
     [SerializeField] private Vector2 boardOffset = Vector2.zero;
 
-    [SerializeField] private int columns = 5; // 보드의 가로 칸 수
-    [SerializeField] private int rows = 5;    // 보드의 세로 칸 수
+    [SerializeField] private string[] boardShape = new string[] { };
+    private int columns; // 보드의 가로 칸 수
+    private int rows;    // 보드의 세로 칸 수
 
-    private bool[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
+    private bool[,] isPlayableCell; // 구멍(X)인지 정상 칸(O)인지 판별하는 배열
+    private Player[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
+    [SerializeField] private List<SpecialSeat> specialSeats = new List<SpecialSeat>(); // 특수좌석 위치
 
     private void Awake()
     {
         if (type == BoardType.Main) Main = this;
         else if (type == BoardType.Background) Background = this;
 
-        occupiedCells = new bool[columns, rows];
+        // 문자열 배열에 맞춰 가로/세로 크기 계산
+        rows = boardShape.Length;
+        columns = rows > 0 ? boardShape[0].Length : 0;
+
+        occupiedCells = new Player[columns, rows];
+        isPlayableCell = new bool[columns, rows];
+
+        // 인스펙터에 적힌 O, X를 분석하여 배열에 세팅
+        for (int y = 0; y < rows; y++)
+        {
+            // 인스펙터의 첫 번째 줄(index 0)이 시각적으로 맨 위쪽(가장 큰 y)이 되도록 역순 매핑
+            string rowStr = boardShape[rows - 1 - y];
+            for (int x = 0; x < columns; x++)
+            {
+                if (x < rowStr.Length && (rowStr[x] == 'O' || rowStr[x] == 'o'))
+                {
+                    isPlayableCell[x, y] = true;  // O면 배치 가능한 자리
+                }
+                else
+                {
+                    isPlayableCell[x, y] = false; // X면 뚫려있는 빈 공간
+                }
+            }
+        }
     }
 
     // 보드의 왼쪽 아래 칸의 월드 좌표를 계산
@@ -75,13 +112,20 @@ public class Board : MonoBehaviour
             int checkX = baseGridX + cellOffset.x;
             int checkY = baseGridY + cellOffset.y;
 
-            // 단 한 칸이라도 보드 범위를 벗어나면 false (설치 불가)
+            // 단 한 칸이라도 보드 범위를 벗어나면 설치 불가
             if (checkX < 0 || checkX >= columns || checkY < 0 || checkY >= rows)
             {
                 return false;
             }
 
-            if (occupiedCells[checkX, checkY])
+            // 해당 칸이 뚫려있는(X) 칸이면 설치 불가
+            if (!isPlayableCell[checkX, checkY])
+            {
+                return false;
+            }
+
+            // 다른 블록이 이미 채워져 있으면 설치 불가
+            if (occupiedCells[checkX, checkY] != null)
             {
                 return false;
             }
@@ -106,14 +150,17 @@ public class Board : MonoBehaviour
 
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
-                return true;
+                if (isPlayableCell[checkX, checkY])
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     // 블록이 놓일 때 해당 칸들을 true으로 변경
-    public void PlaceBlock(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    public void PlaceBlock(Player player, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
@@ -128,7 +175,7 @@ public class Board : MonoBehaviour
 
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
-                occupiedCells[checkX, checkY] = true;
+                occupiedCells[checkX, checkY] = player;
             }
         }
     }
@@ -149,7 +196,53 @@ public class Board : MonoBehaviour
 
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
-                occupiedCells[checkX, checkY] = false;
+                occupiedCells[checkX, checkY] = null;
+            }
+        }
+    }
+
+    // 모든 특수 좌석 조건이 만족되었는지 체크하여 bool을 반환하는 함수
+    public bool CheckAllSpecialSeatsSatisfied()
+    {
+        // 등록된 특수 좌석 조건이 없다면 검사할 필요 없이 false
+        if (specialSeats == null || specialSeats.Count == 0) return true;
+
+        foreach (SpecialSeat seat in specialSeats)
+        {
+            int x = seat.gridIndex.x;
+            int y = seat.gridIndex.y;
+
+            // 해당 칸에 앉아있는 승객 확인
+            Player occupant = occupiedCells[x, y];
+
+            // 자리가 비어있거나, 앉아있는 승객의 타입이 요구 타입과 일치하지 않는다면 바로 false 반환
+            if (occupant == null || occupant.CurrentType != seat.requiredType)
+            {
+                return false;
+            }
+        }
+
+        // 위의 모든 조건을 통과했다면 특수좌석에 배치한 것이므로 true 반환
+        return true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (boardShape == null || boardShape.Length == 0) return;
+
+        int r = boardShape.Length;
+        int c = boardShape[0].Length;
+        Vector2 center = (Vector2)transform.position + boardOffset;
+        Vector2 origin = new Vector2(center.x - (c - 1) * gridSize / 2f, center.y - (r - 1) * gridSize / 2f);
+
+        // 특수 좌석 기즈모 표시 (하늘색 동그라미)
+        if (specialSeats != null)
+        {
+            foreach (var seat in specialSeats)
+            {
+                Vector2 seatPos = origin + new Vector2(seat.gridIndex.x * gridSize, seat.gridIndex.y * gridSize);
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(seatPos, gridSize * 0.4f);
             }
         }
     }
