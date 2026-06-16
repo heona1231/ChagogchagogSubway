@@ -11,6 +11,10 @@ public class ChapterManager : MonoBehaviour
     [SerializeField] private Transform stageGrid;
     [SerializeField] private Transform starGrid;
 
+    [Header("StageSprites")]
+    [SerializeField] private Sprite stageOpenSprite;
+    [SerializeField] private Sprite stageLockSprite;
+
     [Header("Star Sprites")]
     [SerializeField] private Sprite star1Sprite;
     [SerializeField] private Sprite star2Sprite;
@@ -23,6 +27,7 @@ public class ChapterManager : MonoBehaviour
     {
         UpdateTotalStarText();
         UpdateStageStarIcons();
+        UpdateStageLockIcons();
     }
 
     private void UpdateTotalStarText()
@@ -70,6 +75,29 @@ public class ChapterManager : MonoBehaviour
                 {
                     starImage.sprite = star3Sprite;
                 }
+            }
+        }
+    }
+
+    private void UpdateStageLockIcons()
+    {
+        int chapterNumber = GameManager.Instance.CurrentChapterNumber;
+
+        for (int i = 1; i <= TOTAL_STAGE_COUNT; i++)
+        {
+            bool isUnlocked = i == 1 || PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{i - 1}Star", 0) > 0;
+
+            Image stageImage = stageGrid.GetChild(i - 1).GetComponent<Image>();
+
+           if (isUnlocked)
+            {
+                stageImage.sprite = stageOpenSprite;
+                stageImage.raycastTarget = true;
+            }
+            else
+            {
+                stageImage.sprite = stageLockSprite;
+                stageImage.raycastTarget = true;
             }
         }
     }

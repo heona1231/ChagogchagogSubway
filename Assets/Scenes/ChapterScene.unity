@@ -1376,6 +1376,8 @@ MonoBehaviour:
   totalStarText: {fileID: 1352063836}
   stageGrid: {fileID: 1829126682}
   starGrid: {fileID: 903966575}
+  stageOpenSprite: {fileID: 21300000, guid: 66a988e2dcf8dcf4fa1bd02675b94f6f, type: 3}
+  stageLockSprite: {fileID: 21300000, guid: 2d9ea6abd4177e846b988f9481f6b41f, type: 3}
   star1Sprite: {fileID: 21300000, guid: d4506c41c34d8f149b81b49440f322ea, type: 3}
   star2Sprite: {fileID: 21300000, guid: c6732704b777ed2409b729fe665cab36, type: 3}
   star3Sprite: {fileID: 21300000, guid: 1fb516d7811579840b5f95f7fe1dff53, type: 3}
@@ -4308,6 +4310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   limitTime: 60
+  targetTime: 0
 --- !u!4 &1900145432
 Transform:
   m_ObjectHideFlags: 0
