@@ -15,9 +15,13 @@ public enum PassengerType
 
 public class Player : MonoBehaviour
 {
+    private Block block;
+    private BlockData blockData;
+
     // Block 클래스에 따라 변경 예정
     [SerializeField] private PassengerType currentType = PassengerType.Normal;
     public PassengerType CurrentType => currentType;
+
     [SerializeField] private Vector2 shapeOffset = Vector2.zero;
     // 블록이 차지하는 그리드 칸들의 로컬 인덱스 // ex. 가로 2칸: (0,0), (1,0) / 세로 2칸: (0,0), (0,1)
     [SerializeField] private Vector2Int[] shapeCells = { new Vector2Int(0, 0) };
@@ -41,6 +45,9 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        block = GetComponent<Block>();
+        blockData = GetComponent<BlockData>();
+
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -73,18 +80,22 @@ public class Player : MonoBehaviour
         if ((isHovering || isDragging) && Input.GetMouseButtonDown(1))
         {
             // Debug.Log("우클릭");
-            // 회전 함수 호출
+            if (block != null)
+            {
+                block.RotateBlock();
+            }
         }
     }
 
     private void OnMouseDown()
     {
-        switch (currentType)
+        switch (blockData.blockType)
         {
-            case PassengerType.Villain:
+            case BlockType.Minigame:
                 // 미니게임 함수 호출
-                // GetComponent<SpriteRenderer>().color = Color.red;
-                // 미니게임 성공 시 PassengerType을 Normal로 바꿀 것
+                MinigameMashClick minigameMashClick = GetComponent<MinigameMashClick>();
+                minigameMashClick. StartMinigame();
+                blockData.blockType = BlockType.Normal;
                 break;
 
             default: // Villain이 아니면 드래그 허용
@@ -122,11 +133,10 @@ public class Player : MonoBehaviour
 
         if (!isHovering)
         {
-            // GetComponent<SpriteRenderer>().color = Color.white;
-            // 호버시 블록에 아웃라인 꺼지도록 호출처리
+            block.ShowOutline(false);
         }
 
-        FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
+        // FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
         Vector2 rawPos = transform.position;
 
         // 게임 보드에 포함되는지 확인
@@ -209,8 +219,7 @@ public class Player : MonoBehaviour
         if (isAnyDragging) return;
 
         isHovering = true;
-        // GetComponent<SpriteRenderer>().color = Color.red;
-        // 호버시 블록에 아웃라인 뜨도록 호출처리
+        block.ShowOutline(true);
     }
 
     private void OnMouseExit()
@@ -220,8 +229,7 @@ public class Player : MonoBehaviour
 
         if (!isDragging)
         {
-            // GetComponent<SpriteRenderer>().color = Color.white;
-            // 호버시 블록에 아웃라인 꺼지도록 호출처리
+            block.ShowOutline(false);
         }
     }
 
