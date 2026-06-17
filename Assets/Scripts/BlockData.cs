@@ -1,5 +1,8 @@
+//서현아 작성
+
 using UnityEngine;
 
+//이건 승객 type과 다름 (미니게임 여부 -> 나중에 다른 기믹 추가 가능)
 public enum BlockType
 { 
     Normal,
