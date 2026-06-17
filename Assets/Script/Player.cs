@@ -1,30 +1,30 @@
-// °­Çı¿ø ÀÛ¼º
+// ê°•í˜œì› ì‘ì„±
 
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-// Block Å¬·¡½º¿¡ µû¶ó º¯°æ ¿¹Á¤
+// Block í´ë˜ìŠ¤ì— ë”°ë¼ ë³€ê²½ ì˜ˆì •
 public enum PassengerType
 {
     Normal,
     Villain,
-    Elderly,    // ³ë¾àÀÚ
-    Pregnant    // ÀÓ»êºÎ
+    Elderly,    // ë…¸ì•½ì
+    Pregnant    // ì„ì‚°ë¶€
 }
 
 public class Player : MonoBehaviour
 {
-    // Block Å¬·¡½º¿¡ µû¶ó º¯°æ ¿¹Á¤
+    // Block í´ë˜ìŠ¤ì— ë”°ë¼ ë³€ê²½ ì˜ˆì •
     [SerializeField] private PassengerType currentType = PassengerType.Normal;
     public PassengerType CurrentType => currentType;
     [SerializeField] private Vector2 shapeOffset = Vector2.zero;
-    // ºí·ÏÀÌ Â÷ÁöÇÏ´Â ±×¸®µå Ä­µéÀÇ ·ÎÄÃ ÀÎµ¦½º // ex. °¡·Î 2Ä­: (0,0), (1,0) / ¼¼·Î 2Ä­: (0,0), (0,1)
+    // ë¸”ë¡ì´ ì°¨ì§€í•˜ëŠ” ê·¸ë¦¬ë“œ ì¹¸ë“¤ì˜ ë¡œì»¬ ì¸ë±ìŠ¤ // ex. ê°€ë¡œ 2ì¹¸: (0,0), (1,0) / ì„¸ë¡œ 2ì¹¸: (0,0), (0,1)
     [SerializeField] private Vector2Int[] shapeCells = { new Vector2Int(0, 0) };
 
     [SerializeField] private bool isDragging = false;
     private bool isHovering = false;
-    public static bool isAnyDragging = false; // ¾î¶°ÇÑ ºí·°À» µå·¡±× ÁßÀÎÁö ÆÇ´Ü
+    public static bool isAnyDragging = false; // ì–´ë– í•œ ë¸”ëŸ­ì„ ë“œë˜ê·¸ ì¤‘ì¸ì§€ íŒë‹¨
 
     private Board currentBoard = null;
 
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     private int originalOrder;
     private int draggingOrder = 100;
 
-    private Vector2 startDragPosition; // µå·¡±×¸¦ ½ÃÀÛÇÑ ¿ø·¡ À§Ä¡¸¦ ÀúÀå
+    private Vector2 startDragPosition; // ë“œë˜ê·¸ë¥¼ ì‹œì‘í•œ ì›ë˜ ìœ„ì¹˜ë¥¼ ì €ì¥
 
     private void Start()
     {
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
             originalOrder = spriteRenderer.sortingOrder;
         }
 
-        // ¾î´À º¸µå¿¡ ÀÖ´ÂÁö È®ÀÎ ÈÄ ÇØ´ç ÀÚ¸®¸¦ true·Î º¯°æ
+        // ì–´ëŠ ë³´ë“œì— ìˆëŠ”ì§€ í™•ì¸ í›„ í•´ë‹¹ ìë¦¬ë¥¼ trueë¡œ ë³€ê²½
         if (Board.Main != null && Board.Main.IsValidPlacement(transform.position, shapeOffset, shapeCells))
         {
             ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset));
@@ -72,8 +72,8 @@ public class Player : MonoBehaviour
 
         if ((isHovering || isDragging) && Input.GetMouseButtonDown(1))
         {
-            // Debug.Log("¿ìÅ¬¸¯");
-            // È¸Àü ÇÔ¼ö È£Ãâ
+            // Debug.Log("ìš°í´ë¦­");
+            // íšŒì „ í•¨ìˆ˜ í˜¸ì¶œ
         }
     }
 
@@ -82,19 +82,19 @@ public class Player : MonoBehaviour
         switch (currentType)
         {
             case PassengerType.Villain:
-                // ¹Ì´Ï°ÔÀÓ ÇÔ¼ö È£Ãâ
+                // ë¯¸ë‹ˆê²Œì„ í•¨ìˆ˜ í˜¸ì¶œ
                 // GetComponent<SpriteRenderer>().color = Color.red;
-                // ¹Ì´Ï°ÔÀÓ ¼º°ø ½Ã PassengerTypeÀ» Normal·Î ¹Ù²Ü °Í
+                // ë¯¸ë‹ˆê²Œì„ ì„±ê³µ ì‹œ PassengerTypeì„ Normalë¡œ ë°”ê¿€ ê²ƒ
                 break;
 
-            default: // VillainÀÌ ¾Æ´Ï¸é µå·¡±× Çã¿ë
+            default: // Villainì´ ì•„ë‹ˆë©´ ë“œë˜ê·¸ í—ˆìš©
                 isDragging = true;
                 isAnyDragging = true;
                 Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
 
                 startDragPosition = transform.position;
 
-                // ÇØ´ç ºí·°ÀÇ ÀÚ¸®¸¦ false·Î º¯°æ
+                // í•´ë‹¹ ë¸”ëŸ­ì˜ ìë¦¬ë¥¼ falseë¡œ ë³€ê²½
                 if (currentBoard != null)
                 {
                     currentBoard.RemoveBlock(startDragPosition, shapeOffset, shapeCells);
@@ -123,45 +123,46 @@ public class Player : MonoBehaviour
         if (!isHovering)
         {
             // GetComponent<SpriteRenderer>().color = Color.white;
-            // È£¹ö½Ã ºí·Ï¿¡ ¾Æ¿ô¶óÀÎ ²¨Áöµµ·Ï È£ÃâÃ³¸®
+            // í˜¸ë²„ì‹œ ë¸”ë¡ì— ì•„ì›ƒë¼ì¸ êº¼ì§€ë„ë¡ í˜¸ì¶œì²˜ë¦¬
         }
 
+        FindFirstObjectByType<StageManager>().CheckClear(); // ë°•ì„¸ì€, í´ë¦¬ì–´ íŒë‹¨ ì½”ë“œ
         Vector2 rawPos = transform.position;
 
-        // °ÔÀÓ º¸µå¿¡ Æ÷ÇÔµÇ´ÂÁö È®ÀÎ
+        // ê²Œì„ ë³´ë“œì— í¬í•¨ë˜ëŠ”ì§€ í™•ì¸
         bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, shapeOffset, shapeCells);
 
         if (isOverlappingMain)
         {
-            // °ÔÀÓ º¸µå¿¡ Æ÷ÇÔµÇ¾ú´Ù¸é, °ÔÀÓ º¸µå¿¡¼­¸¸ ÆÇ´Ü
+            // ê²Œì„ ë³´ë“œì— í¬í•¨ë˜ì—ˆë‹¤ë©´, ê²Œì„ ë³´ë“œì—ì„œë§Œ íŒë‹¨
             if (Board.Main.IsValidPlacement(rawPos, shapeOffset, shapeCells))
             {
                 ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(rawPos, shapeOffset));
                 CheckGameClear();
-                // Debug.Log("°ÔÀÓ º¸µå¿¡ ¹èÄ¡ ¿Ï·á");
+                // Debug.Log("ê²Œì„ ë³´ë“œì— ë°°ì¹˜ ì™„ë£Œ");
             }
             else
             {
-                // °ÔÀÓ º¸µå¿¡ °ÉÃÆÀ¸³ª ¹èÄ¡ ºÒ°¡(°ãÄ§, ¹ÛÀ¸·Î Æ¢¾î³ª°¨ µî)¶ó¸é ¹«Á¶°Ç Á¦ÀÚ¸® º¹±Í
+                // ê²Œì„ ë³´ë“œì— ê±¸ì³¤ìœ¼ë‚˜ ë°°ì¹˜ ë¶ˆê°€(ê²¹ì¹¨, ë°–ìœ¼ë¡œ íŠ€ì–´ë‚˜ê° ë“±)ë¼ë©´ ë¬´ì¡°ê±´ ì œìë¦¬ ë³µê·€
                 ReturnToStart();
-                // Debug.Log("°ÔÀÓ º¸µå ¹èÄ¡ ½ÇÆĞ -> Á¦ÀÚ¸® º¹±Í");
+                // Debug.Log("ê²Œì„ ë³´ë“œ ë°°ì¹˜ ì‹¤íŒ¨ -> ì œìë¦¬ ë³µê·€");
             }
         }
-        // °ÔÀÓ º¸µå¿Í ÀüÇô ´êÁö ¾Ê¾Ò°í, ¹è°æ º¸µå¿¡ ¹èÄ¡ °¡´ÉÇÒ ¶§
+        // ê²Œì„ ë³´ë“œì™€ ì „í˜€ ë‹¿ì§€ ì•Šì•˜ê³ , ë°°ê²½ ë³´ë“œì— ë°°ì¹˜ ê°€ëŠ¥í•  ë•Œ
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, shapeOffset, shapeCells))
         {
             ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(rawPos, shapeOffset));
-            // Debug.Log("¹è°æ º¸µå¿¡ ¹èÄ¡ ¿Ï·á");
+            // Debug.Log("ë°°ê²½ ë³´ë“œì— ë°°ì¹˜ ì™„ë£Œ");
         }
-        // ¾î´À º¸µå¿¡µµ ¼ÓÇÏÁö ¾ÊÀ» ¶§
+        // ì–´ëŠ ë³´ë“œì—ë„ ì†í•˜ì§€ ì•Šì„ ë•Œ
         else
         {
             ReturnToStart();
-            // Debug.Log("¾î´À º¸µå¿¡µµ ¸ÂÁö ¾ÊÀ½ -> Á¦ÀÚ¸® º¹±Í");
+            // Debug.Log("ì–´ëŠ ë³´ë“œì—ë„ ë§ì§€ ì•ŠìŒ -> ì œìë¦¬ ë³µê·€");
         }
     }
 
-    // º¸µå¿¡ µî·ÏÇÏ°í À§Ä¡ ¼³Á¤
+    // ë³´ë“œì— ë“±ë¡í•˜ê³  ìœ„ì¹˜ ì„¤ì •
     private void ApplyToBoard(Board targetBoard, Vector2 targetPosition)
     {
         transform.position = targetPosition;
@@ -169,7 +170,7 @@ public class Player : MonoBehaviour
         currentBoard = targetBoard;
     }
 
-    // ½ÇÆĞ ½Ã ¿ø·¡ ÀÚ¸®·Î µÇµ¹¾Æ°¡´Â ÇÔ¼ö
+    // ì‹¤íŒ¨ ì‹œ ì›ë˜ ìë¦¬ë¡œ ë˜ëŒì•„ê°€ëŠ” í•¨ìˆ˜
     private void ReturnToStart()
     {
         transform.position = startDragPosition;
@@ -181,50 +182,50 @@ public class Player : MonoBehaviour
 
     private void CheckGameClear()
     {
-        // ¾À¿¡ Á¸ÀçÇÏ´Â ¸ğµç Player(ºí·Ï) ½ºÅ©¸³Æ®¸¦ Ã£¾Æ¿É´Ï´Ù.
+        // ì”¬ì— ì¡´ì¬í•˜ëŠ” ëª¨ë“  Player(ë¸”ë¡) ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì°¾ì•„ì˜µë‹ˆë‹¤.
         Player[] allBlocks = Object.FindObjectsByType<Player>(FindObjectsSortMode.None);
 
         foreach (Player block in allBlocks)
         {
-            // ´Ü ÇÏ³ª¶óµµ °ÔÀÓ º¸µå°¡ ¾Æ´Ñ °÷(´ë±â¿­ÀÌ³ª °øÁß)¿¡ ÀÖ´Ù¸é Å¬¸®¾î°¡ ¾Æ´Ô
+            // ë‹¨ í•˜ë‚˜ë¼ë„ ê²Œì„ ë³´ë“œê°€ ì•„ë‹Œ ê³³(ëŒ€ê¸°ì—´ì´ë‚˜ ê³µì¤‘)ì— ìˆë‹¤ë©´ í´ë¦¬ì–´ê°€ ì•„ë‹˜
             if (block.currentBoard != Board.Main)
             {
-                return; // °Ë»ç Áï½Ã Áß´Ü (¾ÆÁ÷ Å¬¸®¾î ¾Æ´Ô)
+                return; // ê²€ì‚¬ ì¦‰ì‹œ ì¤‘ë‹¨ (ì•„ì§ í´ë¦¬ì–´ ì•„ë‹˜)
             }
         }
 
-        // À§ÀÇ °Ë»ç¸¦ ¸ğµÎ Åë°úÇß´Ù¸é ¸ğµç ºí·ÏÀÌ ¸ŞÀÎ º¸µå¿¡ ÀÖ´Â °Í
-        // Debug.Log("[Å¬¸®¾î!] ¸ğµç ºí·ÏÀ» °ÔÀÓ º¸µå¿¡ ¼º°øÀûÀ¸·Î ¹èÄ¡Çß½À´Ï´Ù!");
+        // ìœ„ì˜ ê²€ì‚¬ë¥¼ ëª¨ë‘ í†µê³¼í–ˆë‹¤ë©´ ëª¨ë“  ë¸”ë¡ì´ ë©”ì¸ ë³´ë“œì— ìˆëŠ” ê²ƒ
+        // Debug.Log("[í´ë¦¬ì–´!] ëª¨ë“  ë¸”ë¡ì„ ê²Œì„ ë³´ë“œì— ì„±ê³µì ìœ¼ë¡œ ë°°ì¹˜í–ˆìŠµë‹ˆë‹¤!");
 
         // bool isSpecial = Board.Main.CheckAllSpecialSeatsSatisfied();
-        // Debug.Log($"[Æ¯¼öÁÂ¼® ¼º°ø ¿©ºÎ] {isSpecial}");
+        // Debug.Log($"[íŠ¹ìˆ˜ì¢Œì„ ì„±ê³µ ì—¬ë¶€] {isSpecial}");
 
-        // °ÔÀÓÀÌ Å¬¸®¾î µÇ°í ³­ ÀÌÈÄÀÇ Ã³¸® È£Ãâ
+        // ê²Œì„ì´ í´ë¦¬ì–´ ë˜ê³  ë‚œ ì´í›„ì˜ ì²˜ë¦¬ í˜¸ì¶œ
     }
 
     private void OnMouseEnter()
     {
-        // Debug.Log("È£¹ö ½ÃÀÛ");
+        // Debug.Log("í˜¸ë²„ ì‹œì‘");
         if (isAnyDragging) return;
 
         isHovering = true;
         // GetComponent<SpriteRenderer>().color = Color.red;
-        // È£¹ö½Ã ºí·Ï¿¡ ¾Æ¿ô¶óÀÎ ¶ßµµ·Ï È£ÃâÃ³¸®
+        // í˜¸ë²„ì‹œ ë¸”ë¡ì— ì•„ì›ƒë¼ì¸ ëœ¨ë„ë¡ í˜¸ì¶œì²˜ë¦¬
     }
 
     private void OnMouseExit()
     {
-        // Debug.Log("È£¹ö ³¡³²");
+        // Debug.Log("í˜¸ë²„ ëë‚¨");
         isHovering = false;
 
         if (!isDragging)
         {
             // GetComponent<SpriteRenderer>().color = Color.white;
-            // È£¹ö½Ã ºí·Ï¿¡ ¾Æ¿ô¶óÀÎ ²¨Áöµµ·Ï È£ÃâÃ³¸®
+            // í˜¸ë²„ì‹œ ë¸”ë¡ì— ì•„ì›ƒë¼ì¸ êº¼ì§€ë„ë¡ í˜¸ì¶œì²˜ë¦¬
         }
     }
 
-    // µå·¡±× ÁßÀÌ´ø ºí·ÏÀÌ °©ÀÚ±â ÆÄ±«/ºñÈ°¼ºÈ­ µÉ °æ¿ì¸¦ ´ëºñ
+    // ë“œë˜ê·¸ ì¤‘ì´ë˜ ë¸”ë¡ì´ ê°‘ìê¸° íŒŒê´´/ë¹„í™œì„±í™” ë  ê²½ìš°ë¥¼ ëŒ€ë¹„
     private void OnDisable()
     {
         if (isDragging)
