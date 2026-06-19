@@ -234,7 +234,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        Board.Main.CheckAllSpecialSeatsSatisfied();
         Debug.Log("[클리어!]");
+        FindFirstObjectByType<StageManager>().CheckClear();
     }
 }

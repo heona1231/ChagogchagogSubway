@@ -133,15 +133,15 @@ public class StageManager : MonoBehaviour
     public void CheckClear()
     {
         if (isCleared) return;
-        if (!IsPuzzleCleared())
+        /**if (!IsPuzzleCleared())
         {
             Debug.Log("퍼즐 미완성");
             return;
-        }
+        }**/
 
         isCleared = true; // 확인용
 
-        bool isSpecialSeatSuccess = IsSpecialSeatSuccess();
+        bool isSpecialSeatSuccess = Board.Main.CheckAllSpecialSeatsSatisfied();
 
         GameManager.Instance.ClearStage(isSpecialSeatSuccess);
     }
