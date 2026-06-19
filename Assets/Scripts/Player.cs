@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Texture2D defaultCursor;
     [SerializeField] private Texture2D dragCursor;
-    private Vector2 hotSpot = Vector2.zero; // 커서의 클릭 판정 지점
+    private Vector2 hotSpot = new Vector2 (0.5f, 0.5f); // 커서의 클릭 판정 지점
 
     private Block hoveredBlock = null;
     private Block draggingBlock = null;

@@ -220,12 +220,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9367be1b9d780948a5866bc9e97a193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockCell: {fileID: 0}
+  blockCell: {fileID: 6184373087568903882, guid: ee69fd86830b7d94e97a95d507084ea6, type: 3}
   gridSize: 1.32
   blockData: {fileID: 11400000, guid: d24b44057318af943898b38f69b81dd5, type: 2}
   blockSprite: {fileID: 1577142586665381432}
   blockOutlineSprite: {fileID: 1787531658977531778}
   currentType: 0
+  shapeOffset: {x: 0, y: 0}
   shapeCells: []
   currentBoard: {fileID: 0}
   startDragPosition: {x: 0, y: 0}
