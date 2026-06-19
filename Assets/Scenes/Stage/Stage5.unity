@@ -1536,11 +1536,7 @@ MonoBehaviour:
   - XOOOO
   - OOOXX
   - OXXXX
-  specialSeats:
-  - gridIndex: {x: 0, y: 1}
-    requiredType: 3
-  - gridIndex: {x: 0, y: 0}
-    requiredType: 3
+  specialSeats: []
 --- !u!4 &650345554
 Transform:
   m_ObjectHideFlags: 0
@@ -2358,7 +2354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.96
+      value: 2.64
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2431,11 +2427,11 @@ MonoBehaviour:
   gridSize: 1.32
   boardOffset: {x: 0, y: 0.64}
   boardShape:
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
+  - OOOOOOOOXXOO
+  - OOOOOOXXXXOO
+  - OOOOOOXXXXOO
+  - OOOOOXXXOOOO
+  - OOOOOXOOOOOO
   - OOOOOOOOOOOO
   specialSeats: []
 --- !u!212 &1091382670
