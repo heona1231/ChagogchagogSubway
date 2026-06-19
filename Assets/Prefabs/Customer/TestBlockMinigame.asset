@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: TestBlockMinigame
   blockSprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
   blockOutlineSprite: {fileID: 21300000, guid: 4398b93cbf0d2464db72eefa5f71e3c7, type: 3}
-  spriteOffset: {x: 0, y: 0.5}
+  spriteOffset: {x: 0, y: 0}
   blockType: 1
   shapeRows:
   - cols: 000100
