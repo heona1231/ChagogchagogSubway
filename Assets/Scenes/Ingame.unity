@@ -217,7 +217,6 @@ GameObject:
   - component: {fileID: 180212393}
   - component: {fileID: 180212392}
   - component: {fileID: 180212391}
-  - component: {fileID: 180212390}
   - component: {fileID: 180212394}
   m_Layer: 0
   m_Name: customer5N
@@ -226,27 +225,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &180212390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180212389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentType: 0
-  shapeOffset: {x: 0, y: -0.66}
-  shapeCells:
-  - {x: 0, y: 0}
-  - {x: -1, y: 0}
-  - {x: 1, y: 0}
-  isDragging: 0
-  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
-  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
 --- !u!61 &180212391
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -372,13 +350,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 180212389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9367be1b9d780948a5866bc9e97a193, type: 3}
+  m_Script: {fileID: 11500000, guid: 1357309d8df78ae4582b546e375f0a74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockSprite: {fileID: 0}
-  blockOutlineSprite: {fileID: 0}
-  blockCell: {fileID: 0}
-  gridSize: 1
+  currentType: 0
+  shapeOffset: {x: 0, y: -0.66}
+  shapeCells:
+  - {x: -1, y: 0}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  currentBoard: {fileID: 0}
+  startDragPosition: {x: 0, y: 0}
+  spriteRenderer: {fileID: 0}
+  originalOrder: 0
 --- !u!1 &242008333
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,7 +374,7 @@ GameObject:
   - component: {fileID: 242008335}
   - component: {fileID: 242008334}
   - component: {fileID: 242008337}
-  - component: {fileID: 242008336}
+  - component: {fileID: 242008338}
   m_Layer: 0
   m_Name: customer2N
   m_TagString: Untagged
@@ -468,26 +452,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &242008336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242008333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentType: 3
-  shapeOffset: {x: 0, y: 0}
-  shapeCells:
-  - {x: 0, y: 0}
-  - {x: 0, y: 1}
-  isDragging: 0
-  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
-  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
 --- !u!61 &242008337
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -534,6 +498,27 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.32, y: 2.64}
   m_EdgeRadius: 0
+--- !u!114 &242008338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242008333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1357309d8df78ae4582b546e375f0a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentType: 0
+  shapeOffset: {x: 0, y: 0}
+  shapeCells:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  currentBoard: {fileID: 0}
+  startDragPosition: {x: 0, y: 0}
+  spriteRenderer: {fileID: 0}
+  originalOrder: 0
 --- !u!1 &534447072
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,6 +1002,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &986312941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 986312943}
+  - component: {fileID: 986312942}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &986312942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986312941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
+  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
+--- !u!4 &986312943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986312941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.55716926, y: -1.0460337, z: -3.4661188}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1171011742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,7 +1059,7 @@ GameObject:
   - component: {fileID: 1171011744}
   - component: {fileID: 1171011743}
   - component: {fileID: 1171011746}
-  - component: {fileID: 1171011745}
+  - component: {fileID: 1171011747}
   m_Layer: 0
   m_Name: customer1N
   m_TagString: Untagged
@@ -1080,7 +1111,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b439be2eb8701ea4b9aef2adfb4dd718, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ca563ee99a12b64d8a76920edb16e27, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1106,25 +1137,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1171011745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171011742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentType: 2
-  shapeOffset: {x: 0, y: -0.66}
-  shapeCells:
-  - {x: 0, y: 0}
-  isDragging: 0
-  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
-  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
 --- !u!61 &1171011746
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1171,6 +1183,26 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.32, y: 1.32}
   m_EdgeRadius: 0
+--- !u!114 &1171011747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171011742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1357309d8df78ae4582b546e375f0a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentType: 0
+  shapeOffset: {x: 0, y: -0.66}
+  shapeCells:
+  - {x: 0, y: 0}
+  currentBoard: {fileID: 0}
+  startDragPosition: {x: 0, y: 0}
+  spriteRenderer: {fileID: 0}
+  originalOrder: 0
 --- !u!1 &1361616893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,18 +1394,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1361616893}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1357309d8df78ae4582b546e375f0a74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentType: 0
   shapeOffset: {x: -0.66, y: 0}
   shapeCells:
-  - {x: 0, y: 0}
   - {x: -1, y: 0}
+  - {x: 0, y: 0}
   - {x: 0, y: 1}
-  isDragging: 0
-  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
-  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
+  currentBoard: {fileID: 0}
+  startDragPosition: {x: 0, y: 0}
+  spriteRenderer: {fileID: 0}
+  originalOrder: 0
 --- !u!1 &1672328305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1612,19 +1645,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1672328305}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3baa89bdbcec7498f170e578b768f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1357309d8df78ae4582b546e375f0a74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentType: 0
   shapeOffset: {x: 0, y: 0}
   shapeCells:
-  - {x: 0, y: 0}
   - {x: -1, y: 0}
+  - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: 1}
-  isDragging: 0
-  defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
-  dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
+  currentBoard: {fileID: 0}
+  startDragPosition: {x: 0, y: 0}
+  spriteRenderer: {fileID: 0}
+  originalOrder: 0
 --- !u!1 &1703486669
 GameObject:
   m_ObjectHideFlags: 0
@@ -1864,3 +1898,4 @@ SceneRoots:
   - {fileID: 668056555}
   - {fileID: 1763212167}
   - {fileID: 2047742713}
+  - {fileID: 986312943}

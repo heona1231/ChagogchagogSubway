@@ -32,7 +32,7 @@ public class Board : MonoBehaviour
     private int rows;    // 보드의 세로 칸 수
 
     private bool[,] isPlayableCell; // 구멍(X)인지 정상 칸(O)인지 판별하는 배열
-    private Player[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
+    private BlockTest[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
     [SerializeField] private List<SpecialSeat> specialSeats = new List<SpecialSeat>(); // 특수좌석 위치
 
     private void Awake()
@@ -44,7 +44,7 @@ public class Board : MonoBehaviour
         rows = boardShape.Length;
         columns = rows > 0 ? boardShape[0].Length : 0;
 
-        occupiedCells = new Player[columns, rows];
+        occupiedCells = new BlockTest[columns, rows];
         isPlayableCell = new bool[columns, rows];
 
         // 인스펙터에 적힌 O, X를 분석하여 배열에 세팅
@@ -160,7 +160,7 @@ public class Board : MonoBehaviour
     }
 
     // 블록이 놓일 때 해당 칸들을 true으로 변경
-    public void PlaceBlock(Player player, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    public void PlaceBlock(BlockTest block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
@@ -175,7 +175,7 @@ public class Board : MonoBehaviour
 
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
-                occupiedCells[checkX, checkY] = player;
+                occupiedCells[checkX, checkY] = block;
             }
         }
     }
@@ -213,7 +213,7 @@ public class Board : MonoBehaviour
             int y = seat.gridIndex.y;
 
             // 해당 칸에 앉아있는 승객 확인
-            Player occupant = occupiedCells[x, y];
+            BlockTest occupant = occupiedCells[x, y];
 
             // 자리가 비어있거나, 앉아있는 승객의 타입이 요구 타입과 일치하지 않는다면 바로 false 반환
             if (occupant == null || occupant.CurrentType != seat.requiredType)
