@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: VillainCustomer1
   blockSprite: {fileID: 21300000, guid: da01cd84415e36a43a9b675fcd120cd1, type: 3}
-  blockOutlineSprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
+  blockOutlineSprite: {fileID: 21300000, guid: e569e698addd9ca468650d458ab31b7c, type: 3}
   spriteOffset: {x: 0, y: 0}
   blockType: 1
   shapeRows:
