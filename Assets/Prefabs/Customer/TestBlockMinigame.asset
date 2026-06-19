@@ -23,11 +23,9 @@ MonoBehaviour:
   - cols: 000100
   clearedBlockData: {fileID: 11400000, guid: d24b44057318af943898b38f69b81dd5, type: 2}
   gaugeSprites:
-  - gaugeValue: 100
-    sprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
   - gaugeValue: 60
-    sprite: {fileID: 21300000, guid: da01cd84415e36a43a9b675fcd120cd1, type: 3}
+    sprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
   - gaugeValue: 30
-    sprite: {fileID: 21300000, guid: f62603d242c50264386814f9f8eda009, type: 3}
+    sprite: {fileID: 21300000, guid: da01cd84415e36a43a9b675fcd120cd1, type: 3}
   - gaugeValue: 0
-    sprite: {fileID: 21300000, guid: c3204c135bb805744aaeb48ab230b03f, type: 3}
+    sprite: {fileID: 21300000, guid: f62603d242c50264386814f9f8eda009, type: 3}
