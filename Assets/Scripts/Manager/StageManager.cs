@@ -1,5 +1,6 @@
 // 박세은 작성
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class StageManager : MonoBehaviour
     [SerializeField] private GameObject clearPanel;
 
     [Header("Clear Star")]
-    [SerializeField] private SpriteRenderer clearStarRenderer;
+    [SerializeField] private Image clearStarImage;
     [SerializeField] private Sprite star0Sprite;
     [SerializeField] private Sprite star1Sprite;
     [SerializeField] private Sprite star2Sprite;
@@ -152,7 +153,7 @@ public class StageManager : MonoBehaviour
             return;
         }
 
-        if (clearStarRenderer == null)
+        if (clearStarImage == null)
         {
             Debug.LogError("ClearStarRenderer가 StageManager에 연결되지 않았습니다.");
             return;
@@ -166,19 +167,19 @@ public class StageManager : MonoBehaviour
 
         if (starCount == 0)
         {
-            clearStarRenderer.sprite = star0Sprite;
+            clearStarImage.sprite = star0Sprite;
         }
         else if (starCount == 1)
         {
-            clearStarRenderer.sprite = star1Sprite;
+            clearStarImage.sprite = star1Sprite;
         }
         else if (starCount == 2)
         {
-            clearStarRenderer.sprite = star2Sprite;
+            clearStarImage.sprite = star2Sprite;
         }
         else if (starCount == 3)
         {
-            clearStarRenderer.sprite = star3Sprite;
+            clearStarImage.sprite = star3Sprite;
         }
     }
 
