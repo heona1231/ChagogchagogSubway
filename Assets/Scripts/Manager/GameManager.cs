@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("게임 시작");
         SceneManager.LoadScene("ChapterScene");
     }
-    
+
     public void QuitGame()
     {
         Debug.Log("게임 종료");
@@ -81,6 +81,11 @@ public class GameManager : MonoBehaviour
 
     public void StartStage(float stageLimitTime, float stageTargetTime)
     {
+        if (CurrentStageNumber <= 0)
+        {
+            CurrentStageNumber = GetStageNumberFromCurrentScene();
+        }
+
         limitTime = stageLimitTime;
         targetTime = stageTargetTime;
 
@@ -135,7 +140,7 @@ public class GameManager : MonoBehaviour
 
         //SceneManager.LoadScene("ChapterScene");   // 테스트용
     }
-    
+
     public void NextStage()
     {
         int nextStageNumber = CurrentStageNumber + 1;
@@ -170,6 +175,11 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()   // 나중에 StageScene에서 재시작 버튼 만들고 연결해주면 됨
     {
+        if (CurrentStageNumber <= 0)
+        {
+            CurrentStageNumber = GetStageNumberFromCurrentScene();
+        }
+
         Debug.Log($"[GameManager] {CurrentStageNumber}번 스테이지 재시작");
         SceneManager.LoadScene($"Stage{CurrentStageNumber}");
     }
@@ -221,5 +231,20 @@ public class GameManager : MonoBehaviour
 
         float remainingTime = limitTime - currentTime;
         return Mathf.Clamp01(remainingTime / limitTime);
+    }
+
+    private int GetStageNumberFromCurrentScene()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        string numberText = sceneName.Replace("Stage", "");
+
+        if (int.TryParse(numberText, out int stageNumber))
+        {
+            return stageNumber;
+        }
+
+        Debug.LogError($"현재 씬 이름에서 스테이지 번호를 가져올 수 없습니다: {sceneName}");
+        return 1;
     }
 }
