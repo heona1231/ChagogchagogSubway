@@ -80,19 +80,21 @@ public class Board : MonoBehaviour
     // 위치를 보드 안쪽으로 강제 제한하여 반환
     public Vector2 GetSnappedPosition(Vector2 dropPosition, Vector2 blockOffset)
     {
-        Vector2 basePos = dropPosition - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
-        int gridX = Mathf.RoundToInt((dropPosition.x - origin.x) / gridSize);
-        int gridY = Mathf.RoundToInt((dropPosition.y - origin.y) / gridSize);
+        // 1. 블록의 0,0 기준 위치 계산
+        Vector2 basePos = dropPosition - blockOffset;
 
+        // 2. 가장 가까운 그리드 인덱스 찾기
+        int gridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
+        int gridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+
+        // 3. 보드 범위 내로 제한
         gridX = Mathf.Clamp(gridX, 0, columns - 1);
         gridY = Mathf.Clamp(gridY, 0, rows - 1);
 
-        float snappedX = origin.x + gridX * gridSize;
-        float snappedY = origin.y + gridY * gridSize;
-
-        return new Vector2(snappedX, snappedY) + blockOffset;
+        // 4. 스냅된 월드 좌표 반환
+        return new Vector2(origin.x + gridX * gridSize, origin.y + gridY * gridSize) + blockOffset;
     }
 
     // 해당 블럭이 보드 안쪽인지 체크
@@ -100,17 +102,16 @@ public class Board : MonoBehaviour
     {
         if (shapeCells == null) return false;
 
-        Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
 
-        // 블록의 기준점이 위치할 보드의 X, Y 인덱스를 구함
-        int baseGridX = Mathf.RoundToInt((position.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((position.y - origin.y) / gridSize);
+        // 1. 그리드 인덱스 계산 (Floor 대신 Round를 사용하여 그리드 정중앙 정렬 유도)
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
 
-        // 블록을 구성하는 모든 칸의 위치를 검사
+        // 2. 블록을 구성하는 모든 칸의 위치를 검사
         foreach (Vector2Int cellOffset in shapeCells)
         {
-            // 기준점 인덱스 + 현재 칸의 상대적 인덱스
             int checkX = baseGridX + cellOffset.x;
             int checkY = baseGridY + cellOffset.y;
 
@@ -145,8 +146,8 @@ public class Board : MonoBehaviour
     {
         if (shapeCells == null) return false;
 
-        Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
 
         int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
         int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
@@ -158,10 +159,7 @@ public class Board : MonoBehaviour
 
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
-                if (isPlayableCell[checkX, checkY])
-                {
-                    return true;
-                }
+                if (isPlayableCell[checkX, checkY]) return true;
             }
         }
         return false;
@@ -172,8 +170,8 @@ public class Board : MonoBehaviour
     {
         if (shapeCells == null) return;
 
-        Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
 
         int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
         int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
@@ -195,8 +193,8 @@ public class Board : MonoBehaviour
     {
         if (shapeCells == null) return;
 
-        Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
 
         int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
         int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
@@ -216,7 +214,6 @@ public class Board : MonoBehaviour
     // 모든 특수 좌석 조건이 만족되었는지 체크하여 bool을 반환하는 함수
     public bool CheckAllSpecialSeatsSatisfied()
     {
-        // 등록된 특수 좌석 조건이 없다면 검사할 필요 없이 false
         if (specialSeats == null || specialSeats.Count == 0) return true;
 
         foreach (SpecialSeat seat in specialSeats)
@@ -224,17 +221,10 @@ public class Board : MonoBehaviour
             int x = seat.gridIndex.x;
             int y = seat.gridIndex.y;
 
-            // 해당 칸에 앉아있는 승객 확인
             Block occupant = occupiedCells[x, y];
-
-            // 자리가 비어있거나, 앉아있는 승객의 타입이 요구 타입과 일치하지 않는다면 바로 false 반환
-            if (occupant == null || occupant.CurrentType != seat.requiredType)
-            {
-                return false;
-            }
+            if (occupant == null || occupant.CurrentType != seat.requiredType) return false;
         }
 
-        // 위의 모든 조건을 통과했다면 특수좌석에 배치한 것이므로 true 반환
         Debug.Log("특수 좌석 배치 완료");
         return true;
     }
@@ -248,7 +238,6 @@ public class Board : MonoBehaviour
         Vector2 center = (Vector2)transform.position + boardOffset;
         Vector2 origin = new Vector2(center.x - (c - 1) * gridSize / 2f, center.y - (r - 1) * gridSize / 2f);
 
-        // 특수 좌석 기즈모 표시 (하늘색 동그라미)
         if (specialSeats != null)
         {
             foreach (var seat in specialSeats)

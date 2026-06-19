@@ -74,34 +74,31 @@ public class Player : MonoBehaviour
                 // 회전 함수
                 targetToRotate.RotateBlock();
 
-                bool canPlace = true;
                 if (originalBoard != null)
                 {
-                    // 보드 위에 있던 블록이라면 회전 후 배치가 가능한지 확인
-                    canPlace = originalBoard.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
-                }
-
-                if (canPlace)
-                {
-                    Debug.Log("[회전 성공]");
-                    if (originalBoard != null)
+                    // 원래 위치(originalPos)가 회전 후에도 유효한지 체크
+                    if (originalBoard.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
                     {
                         targetToRotate.ApplyToBoard(originalBoard, originalPos);
                     }
-                }
-                else
-                {
-                    Debug.Log("[회전 실패] 배치가 불가능하여 회전 취소");
-
-                    // 회전 취소 (3번 더 돌리면 원래대로 돌아옴)
-                    targetToRotate.RotateBlock();
-                    targetToRotate.RotateBlock();
-                    targetToRotate.RotateBlock();
-
-                    // 원래 자리에 다시 배치
-                    if (originalBoard != null)
+                    else
                     {
-                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
+                        // 만약 제자리가 안된다면, 해당 보드 내에서 가장 가까운 가능한 위치로 다시 스냅 시도
+                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset);
+
+                        if (originalBoard.IsValidPlacement(snappedPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
+                        {
+                            targetToRotate.ApplyToBoard(originalBoard, snappedPos);
+                        }
+                        else
+                        {
+                            // 아예 놓을 데가 없으면 회전 취소 후 원위치
+                            targetToRotate.RotateBlock();
+                            targetToRotate.RotateBlock();
+                            targetToRotate.RotateBlock();
+                            targetToRotate.ApplyToBoard(originalBoard, originalPos);
+                            Debug.Log("[회전 실패] 배치 공간 부족");
+                        }
                     }
                 }
             }
@@ -235,6 +232,6 @@ public class Player : MonoBehaviour
         }
 
         Debug.Log("[클리어!]");
-        FindFirstObjectByType<StageManager>().CheckClear();
+        FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
     }
 }
