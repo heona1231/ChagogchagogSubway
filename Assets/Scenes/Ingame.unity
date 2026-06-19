@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
-      value: TestCustomer (3)
+      value: Customer4
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,23 +944,23 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 07c2a41db03db424691d0caa93a55c83, type: 2}
     - target: {fileID: 3304798138037706738, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: shapeOffset.y
-      value: 0
+      value: -0.66
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
-      value: TestCustomer (2)
+      value: Customer3
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1162,7 +1162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
-      value: TestCustomer (1)
+      value: Customer2
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2098,7 +2098,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
-      value: TestCustomer
+      value: Customer1
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2208,7 +2208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
-      value: TestCustomer (4)
+      value: VillainCustomer1
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
