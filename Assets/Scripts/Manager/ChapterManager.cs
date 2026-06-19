@@ -16,6 +16,7 @@ public class ChapterManager : MonoBehaviour
     [SerializeField] private Sprite stageLockSprite;
 
     [Header("Star Sprites")]
+    [SerializeField] private Sprite star0Sprite;
     [SerializeField] private Sprite star1Sprite;
     [SerializeField] private Sprite star2Sprite;
     [SerializeField] private Sprite star3Sprite;
@@ -57,7 +58,12 @@ public class ChapterManager : MonoBehaviour
 
             if (starCount <= 0)
             {
-                starImage.gameObject.SetActive(false);
+                starImage.gameObject.SetActive(false);    // 이거면 그냥 별 0개일 때 아예 별 안 띄우는 거임
+                //starImage.gameObject.SetActive(true);
+                //if (starCount == 0)
+                //{
+                //    starImage.sprite = star0Sprite;
+                //}
             }
             else
             {
@@ -97,7 +103,7 @@ public class ChapterManager : MonoBehaviour
             else
             {
                 stageImage.sprite = stageLockSprite;
-                stageImage.raycastTarget = true;
+                stageImage.raycastTarget = false;
             }
         }
     }

@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     private float currentTime;
     private float stageStartTime;
     private bool isPlaying;
+    private bool isPaused;
+    private float pauseStartTime;
+    private float totalPausedTime;
 
     private void Awake()
     {
@@ -35,9 +38,9 @@ public class GameManager : MonoBehaviour
             RestartGame();
         }
 
-        if (!isPlaying) return;
+        if (!isPlaying || isPaused) return;
 
-        currentTime = Time.realtimeSinceStartup - stageStartTime;
+        currentTime = Time.realtimeSinceStartup - stageStartTime - totalPausedTime;
 
         if (currentTime >= limitTime)
         {
@@ -55,6 +58,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("게임 종료");
         Application.Quit();
+    }
+
+    public void BackToChapter()
+    {
+        Debug.Log("챕터 화면으로 돌아가기");
+        SceneManager.LoadScene("ChapterScene");
     }
 
     public void BackToTitle()
@@ -75,11 +84,34 @@ public class GameManager : MonoBehaviour
         limitTime = stageLimitTime;
         targetTime = stageTargetTime;
 
+        totalPausedTime = 0f;
+        isPaused = false;
+
         stageStartTime = Time.realtimeSinceStartup;
         currentTime = 0f;
         isPlaying = true;
 
         Debug.Log($"스테이지 시작 | 제한 시간: {limitTime}초 / 목표 시간: {targetTime}초");
+    }
+
+    public void PauseStage()
+    {
+        if (!isPlaying || isPaused) return;
+
+        isPaused = true;
+        pauseStartTime = Time.realtimeSinceStartup;
+
+        Debug.Log("스테이지 일시정지");
+    }
+
+    public void ResumeStage()
+    {
+        if (!isPlaying || !isPaused) return;
+
+        totalPausedTime += Time.realtimeSinceStartup - pauseStartTime;
+        isPaused = false;
+
+        Debug.Log("스테이지 재시작");
     }
 
     public void ClearStage(bool isSpecialSeatSuccess)
@@ -94,12 +126,37 @@ public class GameManager : MonoBehaviour
 
         SaveStageStar(CurrentStageNumber, starCount);
 
-        SceneManager.LoadScene("ChapterScene");
+        StageManager stageManager = FindFirstObjectByType<StageManager>();
+
+        if (stageManager != null)
+        {
+            stageManager.OpenClearPanel(starCount);
+        }
+
+        //SceneManager.LoadScene("ChapterScene");   // 테스트용
+    }
+    
+    public void NextStage()
+    {
+
     }
 
     public void EndGame()
     {
         isPlaying = false;
+
+        StageManager stageManager = FindFirstObjectByType<StageManager>();
+
+        if (stageManager != null)
+        {
+            Debug.Log("StageManager와 연결되었습니다.");
+            stageManager.OpenClearPanel(0);
+        }
+        else
+        {
+            Debug.Log("StageManager를 찾을 수 없습니다.");
+        }
+
         Debug.Log("스테이지 종료");
     }
 
@@ -145,5 +202,16 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("별 저장 완료");
         }
+    }
+
+    public float GetRemainingTimeRatio()
+    {
+        if (limitTime <= 0)
+        {
+            return 0f;
+        }
+
+        float remainingTime = limitTime - currentTime;
+        return Mathf.Clamp01(remainingTime / limitTime);
     }
 }
