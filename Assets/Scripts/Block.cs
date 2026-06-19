@@ -84,17 +84,18 @@ public class Block : MonoBehaviour
         List<Vector2Int> cellsList = new List<Vector2Int>(); // 강혜원 작성, Board 전달용 shapeCells 생성
         int rotationCount = Mathf.RoundToInt(transform.eulerAngles.z / 90f) % 4; // 강혜원 작성, 초기 회전 값 적용 위함
 
+        // 강혜원 수정, 초기 회전 값 적용 위함
         for (int y = 0; y < 3; y++)
         {
             for (int x = 0; x < 3; x++)
             {
                 if (blockData.GetShapeAt(y,x))  
                 {
-                    // 1. 기본 상대 좌표 (데이터 기반)
+                    // 기본 상대 좌표 (데이터 기반)
                     int rx = x - 1;
                     int ry = 1 - y;
 
-                    // 2. 현재 회전 상태(rotationCount)만큼 좌표를 미리 회전시킴
+                    // 현재 회전 상태(rotationCount)만큼 좌표를 미리 회전시킴
                     for (int i = 0; i < rotationCount; i++)
                     {
                         int temp = rx;
@@ -104,7 +105,7 @@ public class Block : MonoBehaviour
 
                     GameObject cell = Instantiate(blockCell, transform);
 
-                    // 3. 회전된 좌표를 기반으로 배치
+                    // 회전된 좌표를 기반으로 배치
                     cell.transform.localPosition = new Vector3(rx * gridSize, ry * gridSize, 0);
 
                     if (cell.TryGetComponent<SpriteRenderer>(out var sr))
@@ -112,7 +113,7 @@ public class Block : MonoBehaviour
                         sr.color = Color.white;
                     }
 
-                    // 4. 회전이 반영된 최종 좌표를 Board 전달용 리스트에 추가
+                    // 회전이 반영된 최종 좌표를 Board 전달용 리스트에 추가
                     cellsList.Add(new Vector2Int(rx, ry));
                 }
             }
@@ -179,5 +180,11 @@ public class Block : MonoBehaviour
         {
             currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
         }
+    }
+
+    // 강혜원 작성, 아웃라인 활성화 상태를 반환(빌런 블럭 미니게임 후 사용)
+    public bool isOutlineActive()
+    {
+        return blockOutlineSprite.activeSelf;
     }
 }

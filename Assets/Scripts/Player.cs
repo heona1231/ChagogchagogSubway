@@ -43,6 +43,10 @@ public class Player : MonoBehaviour
             hoveredBlock = hitBlock;
             if (hoveredBlock != null) OnHoverEnter(hoveredBlock);
         }
+        else if (hitBlock != null && !hitBlock.isOutlineActive()) // 블럭 아웃라인이 활성화되어 있지 않다면
+        {
+            OnHoverEnter(hitBlock);
+        }
     }
 
     // 클릭 및 드래그 처리
@@ -155,8 +159,6 @@ public class Player : MonoBehaviour
             draggingBlock.spriteRenderer.sortingOrder = draggingBlock.originalOrder;
         }
 
-        draggingBlock.ShowOutline(false);
-
         Vector2 rawPos = draggingBlock.transform.position;
         bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
 
@@ -206,6 +208,8 @@ public class Player : MonoBehaviour
         // Debug.Log("호버 시작");
         if (block != null)
         {
+            if (block.blockData.blockType == BlockType.Minigame) return;
+
             block.ShowOutline(true);
         }
     }
@@ -215,6 +219,8 @@ public class Player : MonoBehaviour
         // Debug.Log("호버 끝남");
         if (block != null)
         {
+            if (block.blockData.blockType == BlockType.Minigame) return;
+
             block.ShowOutline(false);
         }
     }
