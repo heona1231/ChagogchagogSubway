@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class BlockSpawnData
 {
-    public GameObject blockPrefab;
+    public BlockData blockDataPrefab;
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
 }

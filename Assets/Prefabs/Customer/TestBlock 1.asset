@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 584bf822743ce534bb92d296da336f8d, type: 3}
-  m_Name: TestBlock
+  m_Name: TestBlock 1
   m_EditorClassIdentifier: 
-  blockName: TestBlock
-  blockSprite: {fileID: 21300000, guid: c3204c135bb805744aaeb48ab230b03f, type: 3}
+  blockName: TestBlock1
+  blockSprite: {fileID: 21300000, guid: 22e2b1c468a5cc542b308da645b2610f, type: 3}
   blockOutlineSprite: {fileID: 21300000, guid: 4398b93cbf0d2464db72eefa5f71e3c7, type: 3}
+  spriteOffset: {x: 0, y: 0}
   blockType: 0
-  spriteOffset: {x: 0, y: 0.66}
   shapeRows:
   - cols: 000000
   - cols: 010100

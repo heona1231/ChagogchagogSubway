@@ -21,10 +21,10 @@ public class BlockData : ScriptableObject
     //블럭 기본 옵션 설정
     [Header("BasicOption")]
     public string blockName;
-    public BlockType blockType;
     public Sprite blockSprite;
     public Sprite blockOutlineSprite;
     public Vector2 spriteOffset;
+    public BlockType blockType = BlockType.Normal;
 
     //블럭 모양 설정
     [Header("BlockShape")]
