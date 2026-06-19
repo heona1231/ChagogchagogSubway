@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     {
         CurrentStageNumber = stageNumber;
         Debug.Log($"{stageNumber}번 스테이지로 이동하기");
-        SceneManager.LoadScene("StageScene");
+        SceneManager.LoadScene($"Stage{stageNumber}");
     }
 
     public void StartStage(float stageLimitTime, float stageTargetTime)
@@ -138,7 +138,15 @@ public class GameManager : MonoBehaviour
     
     public void NextStage()
     {
+        int nextStageNumber = CurrentStageNumber + 1;
 
+        if (nextStageNumber > 5)
+        {
+            BackToChapter();    // 일단 스테이지 5개만 있어서 그 이상은 '다음으로' 버튼 눌렀을 때 챕터 화면으로 돌아가게 해뒀습니다~
+            return;
+        }
+
+        SelectStage(nextStageNumber);
     }
 
     public void EndGame()
@@ -163,7 +171,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()   // 나중에 StageScene에서 재시작 버튼 만들고 연결해주면 됨
     {
         Debug.Log($"[GameManager] {CurrentStageNumber}번 스테이지 재시작");
-        SceneManager.LoadScene("StageScene");
+        SceneManager.LoadScene($"Stage{CurrentStageNumber}");
     }
 
     private int CalculateStarCount(bool isSpecialSeatSuccess)
