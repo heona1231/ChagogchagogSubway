@@ -4,15 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-// Block 클래스에 따라 변경 예정
-public enum PassengerType
-{
-    Normal,
-    Villain,
-    Elderly,    // 노약자
-    Pregnant    // 임산부
-}
-
 public class BlockTest : MonoBehaviour
 {
     [SerializeField] private PassengerType currentType = PassengerType.Normal;
@@ -52,7 +43,7 @@ public class BlockTest : MonoBehaviour
     public void ApplyToBoard(Board targetBoard, Vector2 targetPosition)
     {
         transform.position = targetPosition;
-        targetBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
+        // targetBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
         currentBoard = targetBoard;
     }
 
@@ -62,7 +53,7 @@ public class BlockTest : MonoBehaviour
         transform.position = startDragPosition;
         if (currentBoard != null)
         {
-            currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
+            // currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
         }
     }
 }

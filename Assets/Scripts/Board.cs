@@ -32,7 +32,7 @@ public class Board : MonoBehaviour
     private int rows;    // 보드의 세로 칸 수
 
     private bool[,] isPlayableCell; // 구멍(X)인지 정상 칸(O)인지 판별하는 배열
-    private BlockTest[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
+    private Block[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
     [SerializeField] private List<SpecialSeat> specialSeats = new List<SpecialSeat>(); // 특수좌석 위치
 
     private void Awake()
@@ -44,7 +44,7 @@ public class Board : MonoBehaviour
         rows = boardShape.Length;
         columns = rows > 0 ? boardShape[0].Length : 0;
 
-        occupiedCells = new BlockTest[columns, rows];
+        occupiedCells = new Block[columns, rows];
         isPlayableCell = new bool[columns, rows];
 
         // 인스펙터에 적힌 O, X를 분석하여 배열에 세팅
@@ -83,8 +83,8 @@ public class Board : MonoBehaviour
         Vector2 basePos = dropPosition - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
-        int gridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int gridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int gridX = Mathf.RoundToInt((dropPosition.x - origin.x) / gridSize);
+        int gridY = Mathf.RoundToInt((dropPosition.y - origin.y) / gridSize);
 
         gridX = Mathf.Clamp(gridX, 0, columns - 1);
         gridY = Mathf.Clamp(gridY, 0, rows - 1);
@@ -98,12 +98,14 @@ public class Board : MonoBehaviour
     // 해당 블럭이 보드 안쪽인지 체크
     public bool IsValidPlacement(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
+        if (shapeCells == null) return false;
+
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
         // 블록의 기준점이 위치할 보드의 X, Y 인덱스를 구함
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int baseGridX = Mathf.RoundToInt((position.x - origin.x) / gridSize);
+        int baseGridY = Mathf.RoundToInt((position.y - origin.y) / gridSize);
 
         // 블록을 구성하는 모든 칸의 위치를 검사
         foreach (Vector2Int cellOffset in shapeCells)
@@ -115,28 +117,34 @@ public class Board : MonoBehaviour
             // 단 한 칸이라도 보드 범위를 벗어나면 설치 불가
             if (checkX < 0 || checkX >= columns || checkY < 0 || checkY >= rows)
             {
+                Debug.Log("[배치 실패] 범위를 벗어남");
                 return false;
             }
 
             // 해당 칸이 뚫려있는(X) 칸이면 설치 불가
             if (!isPlayableCell[checkX, checkY])
             {
+                Debug.Log("[배치 실패] 비활성 칸(X)");
                 return false;
             }
 
             // 다른 블록이 이미 채워져 있으면 설치 불가
             if (occupiedCells[checkX, checkY] != null)
             {
+                Debug.Log("[배치 실패] 이미 블록 있음");
                 return false;
             }
         }
 
+        Debug.Log("[배치 성공]");
         return true;
     }
 
     // 블록을 구성하는 칸 중 하나라도 보드 안쪽 인덱스에 들어온다면 true 반환
     public bool IsOverlappingBoard(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
+        if (shapeCells == null) return false;
+
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
@@ -160,8 +168,10 @@ public class Board : MonoBehaviour
     }
 
     // 블록이 놓일 때 해당 칸들을 true으로 변경
-    public void PlaceBlock(BlockTest block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    public void PlaceBlock(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
+        if (shapeCells == null) return;
+
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
@@ -183,6 +193,8 @@ public class Board : MonoBehaviour
     // 블록을 들어올릴 때 해당 칸들을 false으로 변경
     public void RemoveBlock(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
+        if (shapeCells == null) return;
+
         Vector2 basePos = position - blockOffset;
         Vector2 origin = GetBottomLeftOrigin();
 
@@ -213,7 +225,7 @@ public class Board : MonoBehaviour
             int y = seat.gridIndex.y;
 
             // 해당 칸에 앉아있는 승객 확인
-            BlockTest occupant = occupiedCells[x, y];
+            Block occupant = occupiedCells[x, y];
 
             // 자리가 비어있거나, 앉아있는 승객의 타입이 요구 타입과 일치하지 않는다면 바로 false 반환
             if (occupant == null || occupant.CurrentType != seat.requiredType)

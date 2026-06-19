@@ -11,8 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Texture2D dragCursor;
     private Vector2 hotSpot = Vector2.zero; // 커서의 클릭 판정 지점
 
-    private BlockTest hoveredBlock = null;
-    private BlockTest draggingBlock = null;
+    private Block hoveredBlock = null;
+    private Block draggingBlock = null;
     private int draggingOrder = 100;
 
     private void Start()
@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D hit = Physics2D.OverlapPoint(mousePos);
 
-        BlockTest hitBlock = hit != null ? hit.GetComponent<BlockTest>() : null;
+        Block hitBlock = hit != null ? hit.GetComponentInParent<Block>() : null;
 
         if (hitBlock != hoveredBlock)
         {
@@ -57,9 +57,53 @@ public class Player : MonoBehaviour
         // 우클릭 (회전)
         if (Input.GetMouseButtonDown(1))
         {
-            if (draggingBlock != null || hoveredBlock != null)
+            Block targetToRotate = draggingBlock != null ? draggingBlock : hoveredBlock;
+
+            if (targetToRotate != null)
             {
-                Debug.Log("우클릭 - 회전 함수 호출");
+                // 회전 전 현재 상태 저장
+                Vector2 originalPos = targetToRotate.transform.position;
+                Board originalBoard = targetToRotate.currentBoard;
+
+                // 기존 보드 점유 지우기
+                if (originalBoard != null)
+                {
+                    originalBoard.RemoveBlock(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
+                }
+
+                // 회전 함수
+                targetToRotate.RotateBlock();
+
+                bool canPlace = true;
+                if (originalBoard != null)
+                {
+                    // 보드 위에 있던 블록이라면 회전 후 배치가 가능한지 확인
+                    canPlace = originalBoard.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
+                }
+
+                if (canPlace)
+                {
+                    Debug.Log("[회전 성공]");
+                    if (originalBoard != null)
+                    {
+                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
+                    }
+                }
+                else
+                {
+                    Debug.Log("[회전 실패] 배치가 불가능하여 회전 취소");
+
+                    // 회전 취소 (3번 더 돌리면 원래대로 돌아옴)
+                    targetToRotate.RotateBlock();
+                    targetToRotate.RotateBlock();
+                    targetToRotate.RotateBlock();
+
+                    // 원래 자리에 다시 배치
+                    if (originalBoard != null)
+                    {
+                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
+                    }
+                }
             }
         }
 
@@ -78,9 +122,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void StartDrag(BlockTest targetBlock)
+    private void StartDrag(Block targetBlock)
     {
-        if (targetBlock.CurrentType == PassengerType.Villain)
+        if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출
             targetBlock.spriteRenderer.color = Color.red;
@@ -112,6 +156,8 @@ public class Player : MonoBehaviour
             draggingBlock.spriteRenderer.sortingOrder = draggingBlock.originalOrder;
         }
 
+        draggingBlock.ShowOutline(false);
+
         Vector2 rawPos = draggingBlock.transform.position;
         bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
 
@@ -119,7 +165,11 @@ public class Player : MonoBehaviour
         {
             if (Board.Main.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
             {
-                draggingBlock.ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset));
+                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                draggingBlock.ApplyToBoard(Board.Main, snappedPos);
+
+                Debug.Log($"<color=cyan>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Main 보드</b>에 배치되었습니다. 위치: {snappedPos}");
+
                 CheckGameClear();
             }
             else
@@ -129,7 +179,10 @@ public class Player : MonoBehaviour
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
         {
-            draggingBlock.ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset));
+            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+            draggingBlock.ApplyToBoard(Board.Background, snappedPos);
+
+            Debug.Log($"<color=yellow>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Background 보드</b>로 이동했습니다. 위치: {snappedPos}");
         }
         else
         {
@@ -137,7 +190,7 @@ public class Player : MonoBehaviour
         }
 
         // 드래그 종료 처리
-        BlockTest currentDroppingBlock = draggingBlock;
+        Block currentDroppingBlock = draggingBlock;
         draggingBlock = null;
 
         // 드래그를 놓은 후 마우스가 벗어났는지 확인
@@ -149,23 +202,29 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnHoverEnter(BlockTest block)
+    private void OnHoverEnter(Block block)
     {
         // Debug.Log("호버 시작");
-        block.spriteRenderer.color = Color.red;
+        if (block != null)
+        {
+            block.ShowOutline(true);
+        }
     }
 
-    private void OnHoverExit(BlockTest block)
+    private void OnHoverExit(Block block)
     {
         // Debug.Log("호버 끝남");
-        block.spriteRenderer.color = Color.white;
+        if (block != null)
+        {
+            block.ShowOutline(false);
+        }
     }
 
     private void CheckGameClear()
     {
-        BlockTest[] allBlocks = Object.FindObjectsByType<BlockTest>(FindObjectsSortMode.None);
+        Block[] allBlocks = Object.FindObjectsByType<Block>(FindObjectsSortMode.None);
 
-        foreach (BlockTest block in allBlocks)
+        foreach (Block block in allBlocks)
         {
             if (block.currentBoard != Board.Main)
             {
