@@ -16,11 +16,7 @@ public class Player : MonoBehaviour
     private int draggingOrder = 100;
 
     private void Start()
-    {
-        block = GetComponent<Block>();
-        blockData = GetComponent<BlockData>();
-
-        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
+    {Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
     }
 
     private void Update()
