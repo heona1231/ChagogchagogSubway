@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
             // Debug.Log("우클릭");
             if (block != null)
             {
-                block.RotateBlock();
+                //block.RotateBlock();
             }
         }
     }
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
 
         if (!isHovering)
         {
-            block.ShowOutline(false);
+            //block.ShowOutline(false);
         }
 
         // FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
         if (isAnyDragging) return;
 
         isHovering = true;
-        block.ShowOutline(true);
+        //block.ShowOutline(true);
     }
 
     private void OnMouseExit()
@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
 
         if (!isDragging)
         {
-            block.ShowOutline(false);
+            //block.ShowOutline(false);
         }
     }
 

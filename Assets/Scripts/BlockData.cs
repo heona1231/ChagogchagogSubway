@@ -24,6 +24,7 @@ public class BlockData : ScriptableObject
     public BlockType blockType;
     public Sprite blockSprite;
     public Sprite blockOutlineSprite;
+    public Vector2 spriteOffset;
 
     //블럭 모양 설정
     [Header("BlockShape")]
