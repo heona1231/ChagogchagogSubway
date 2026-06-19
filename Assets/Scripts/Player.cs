@@ -9,14 +9,15 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Texture2D defaultCursor;
     [SerializeField] private Texture2D dragCursor;
-    private Vector2 hotSpot = Vector2.zero; // Ŀ���� Ŭ�� ���� ����
+    private Vector2 hotSpot = Vector2.zero; // 커서의 클릭 판정 지점
 
     private BlockTest hoveredBlock = null;
     private BlockTest draggingBlock = null;
     private int draggingOrder = 100;
 
     private void Start()
-    {Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
+    {
+        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
     }
 
     private void Update()
@@ -25,10 +26,10 @@ public class Player : MonoBehaviour
         HandleInput();
     }
 
-    // ���콺 ��ġ�� ������ �ִ��� ����
+    // 마우스 위치에 블록이 있는지 감지
     private void HandleHover()
     {
-        // �巡�� ���� ���� �ٸ� ���� ȣ�� ����
+        // 드래그 중일 때는 다른 블록 호버 무시
         if (draggingBlock != null) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -44,25 +45,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Ŭ�� �� �巡�� ó��
+    // 클릭 및 드래그 처리
     private void HandleInput()
     {
-        // ��Ŭ�� (�巡�� ����)
+        // 좌클릭 (드래그 시작)
         if (Input.GetMouseButtonDown(0) && hoveredBlock != null)
         {
             StartDrag(hoveredBlock);
         }
 
-        // ��Ŭ�� (ȸ��)
+        // 우클릭 (회전)
         if (Input.GetMouseButtonDown(1))
         {
             if (draggingBlock != null || hoveredBlock != null)
             {
-                Debug.Log("��Ŭ�� - ȸ�� �Լ� ȣ��");
+                Debug.Log("우클릭 - 회전 함수 호출");
             }
         }
 
-        // �巡�� �� ��ġ �̵�
+        // 드래그 중 위치 이동
         if (Input.GetMouseButton(0) && draggingBlock != null)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -70,7 +71,7 @@ public class Player : MonoBehaviour
             draggingBlock.transform.position = mousePos;
         }
 
-        // ��Ŭ�� �� (�巡�� ���� �� ��ġ)
+        // 좌클릭 업 (드래그 종료 및 배치)
         if (Input.GetMouseButtonUp(0) && draggingBlock != null)
         {
             EndDrag();
@@ -81,7 +82,7 @@ public class Player : MonoBehaviour
     {
         if (targetBlock.CurrentType == PassengerType.Villain)
         {
-            // �̴ϰ��� �Լ� ȣ��
+            // 미니게임 함수 호출
             targetBlock.spriteRenderer.color = Color.red;
             return;
         }
@@ -111,8 +112,6 @@ public class Player : MonoBehaviour
             draggingBlock.spriteRenderer.sortingOrder = draggingBlock.originalOrder;
         }
 
-        // FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
-
         Vector2 rawPos = draggingBlock.transform.position;
         bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
 
@@ -137,11 +136,11 @@ public class Player : MonoBehaviour
             draggingBlock.ReturnToStart();
         }
 
-        // �巡�� ���� ó��
+        // 드래그 종료 처리
         BlockTest currentDroppingBlock = draggingBlock;
         draggingBlock = null;
 
-        // �巡�׸� ���� �� ���콺�� ������� Ȯ��
+        // 드래그를 놓은 후 마우스가 벗어났는지 확인
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePos) == null)
         {
@@ -152,13 +151,13 @@ public class Player : MonoBehaviour
 
     private void OnHoverEnter(BlockTest block)
     {
-        // Debug.Log("ȣ�� ����");
+        // Debug.Log("호버 시작");
         block.spriteRenderer.color = Color.red;
     }
 
     private void OnHoverExit(BlockTest block)
     {
-        // Debug.Log("ȣ�� ����");
+        // Debug.Log("호버 끝남");
         block.spriteRenderer.color = Color.white;
     }
 
@@ -170,9 +169,11 @@ public class Player : MonoBehaviour
         {
             if (block.currentBoard != Board.Main)
             {
-                return; // Ŭ���� �ƴ�
+                return; // 클리어 아님
             }
         }
-        Debug.Log("[Ŭ����!]");
+
+        Board.Main.CheckAllSpecialSeatsSatisfied();
+        Debug.Log("[클리어!]");
     }
 }

@@ -223,6 +223,7 @@ public class Board : MonoBehaviour
         }
 
         // 위의 모든 조건을 통과했다면 특수좌석에 배치한 것이므로 true 반환
+        Debug.Log("특수 좌석 배치 완료");
         return true;
     }
 
