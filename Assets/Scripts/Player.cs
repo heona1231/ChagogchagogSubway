@@ -127,7 +127,9 @@ public class Player : MonoBehaviour
         if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출
-            targetBlock.spriteRenderer.color = Color.red;
+            //targetBlock.spriteRenderer.color = Color.red;
+            Debug.Log("미니게임 호출");
+            targetBlock.GetComponent<MinigameMashClick>().StartMinigame();
             return;
         }
 
