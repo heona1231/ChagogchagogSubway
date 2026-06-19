@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e71bcd4167a774438a314d7113d8db9, type: 3}
+  m_Name: TestBlockMinigame
+  m_EditorClassIdentifier: 
+  blockName: TestBlockMinigame
+  blockSprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
+  blockOutlineSprite: {fileID: 21300000, guid: 4398b93cbf0d2464db72eefa5f71e3c7, type: 3}
+  spriteOffset: {x: 0, y: 0.5}
+  blockType: 1
+  shapeRows:
+  - cols: 000100
+  - cols: 000100
+  - cols: 000100
+  clearedBlockData: {fileID: 11400000, guid: d24b44057318af943898b38f69b81dd5, type: 2}
+  gaugeSprites:
+  - gaugeValue: 100
+    sprite: {fileID: 21300000, guid: e772c594c9d58df46ace72fc7da739fe, type: 3}
+  - gaugeValue: 60
+    sprite: {fileID: 21300000, guid: da01cd84415e36a43a9b675fcd120cd1, type: 3}
+  - gaugeValue: 30
+    sprite: {fileID: 21300000, guid: f62603d242c50264386814f9f8eda009, type: 3}
+  - gaugeValue: 0
+    sprite: {fileID: 21300000, guid: c3204c135bb805744aaeb48ab230b03f, type: 3}

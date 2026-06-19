@@ -64,9 +64,10 @@ public class Block : MonoBehaviour
     //blockType에 따라 컴포넌트 추가 부여
     private void GetGimmickComponenet()
     {
-        if (blockData.blockType == BlockType.Minigame)
+        if (blockData.blockType == BlockType.Minigame && blockData is BlockDataMinigame minigameData)
         {
             gameObject.AddComponent<MinigameMashClick>();
+            this.GetComponent<MinigameMashClick>().SetMinigameBlock(minigameData);
         }
     }
 

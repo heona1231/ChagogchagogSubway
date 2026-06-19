@@ -7,21 +7,15 @@ using UnityEngine.UIElements;
 
 public class MinigameMashClick : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField]
-    private GameObject minigameCanvas;
-    private Slider slider;
-
     [Header("guage")]
-    [SerializeField]
-    private float maxGauge = 100f;
-    private float autoChargeSpeed = 1f; //초당 게이지 차오르는 속도
-    private float clickDecreaseAmount = 5f; //클릭 한 번당 깎이는 양
+    [SerializeField] private float maxGauge = 100f;
+    [SerializeField] private float autoChargeSpeed = 1f; //초당 게이지 차오르는 속도
+    [SerializeField] private float clickDecreaseAmount = 5f; //클릭 한 번당 깎이는 양
 
     [Header("sprite")]
     [SerializeField]
     //key 값인 int 까지는 sprite를 보여줌
-    private Dictionary<int, Sprite> spriteTillGauge = new Dictionary<int, Sprite>();
+    private List<GaugeSpritePair> myGaugeSprites = new List<GaugeSpritePair>();
 
     [Header("clearBlockData")]
     [SerializeField]
@@ -34,10 +28,13 @@ public class MinigameMashClick : MonoBehaviour
     private void Awake()
     {
         block = GetComponent<Block>();
-        if(minigameCanvas != null)
-        {
-            minigameCanvas.SetActive(false);
-        }
+    }
+
+    //미니게임 세팅
+    public void SetMinigameBlock(BlockDataMinigame inputBlockData)
+    {
+        clearedBlockData = inputBlockData.clearedBlockData;
+        myGaugeSprites = inputBlockData.gaugeSprites;
     }
 
     //미니게임 시작 함수
@@ -48,21 +45,19 @@ public class MinigameMashClick : MonoBehaviour
         isGameActive = true;
         currentGauge = maxGauge;
         
-        slider.value = currentGauge;
-
-        minigameCanvas.SetActive(true);
+        MinigameManager.Instance.StartMashClickMinigame(this.transform.position, maxGauge);
         UpdateSprite();
-
         StartCoroutine(MinigameLoop());
     }
 
     private void UpdateSprite()
     {
-        foreach(var num in spriteTillGauge.Keys)
+        foreach (var pair in myGaugeSprites)
         {
-            if(currentGauge > num)
+            if (currentGauge > pair.gaugeValue)
             {
-                block.ChangeBlockSprite(spriteTillGauge[num]);
+                block.ChangeBlockSprite(pair.sprite);
+                break;
             }
         }
     }
@@ -78,8 +73,6 @@ public class MinigameMashClick : MonoBehaviour
                 {
                     currentGauge = 0;
                 }
-
-                UpdateSprite();
             }
             else
             {
@@ -88,11 +81,11 @@ public class MinigameMashClick : MonoBehaviour
                 {
                     currentGauge = maxGauge;
                 }
-
-                UpdateSprite();
             }
 
-            slider.value = currentGauge;
+            MinigameManager.Instance.ReceiveCurrentGauge(currentGauge);
+            UpdateSprite();
+
             if (currentGauge <= 0)
             {
                 Clear();
@@ -109,8 +102,8 @@ public class MinigameMashClick : MonoBehaviour
         isGameActive = false;
 
         block.Initialize(clearedBlockData);
-        minigameCanvas.SetActive(false);
-        
+        MinigameManager.Instance.EndMinigame();
+
         this.enabled = false;
     }
 }
