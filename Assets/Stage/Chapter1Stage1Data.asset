@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapterNumber: 1
   stageNumber: 1
-  limitTime: 60
-  targetTime: 30
+  limitTime: 10
+  targetTime: 5
+  boardPrefab: {fileID: 0}
+  blockSpawnDatas: []
