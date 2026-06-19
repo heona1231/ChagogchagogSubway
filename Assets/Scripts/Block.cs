@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer blockSprite;
-    [SerializeField] private SpriteRenderer blockOutlineSprite;
+
     [SerializeField] private GameObject blockCell;
     [SerializeField] private float gridSize = 1f;
+    [SerializeField] private BlockData blockData;
 
-    private BlockData blockData;
+    [SerializeField] private GameObject blockSprite;
+    [SerializeField] private GameObject blockOutlineSprite;
+
+    private void Start()
+    {
+        if (blockData != null)
+        {
+            Initialize(blockData);
+        }
+    }
 
     public void Initialize(BlockData inputBlockData)
     {
@@ -22,20 +31,24 @@ public class Block : MonoBehaviour
     //blockData를 토대로 모양 구성
     private void BuildBlock()
     {
-        blockSprite.sprite = blockData.blockSprite;
-        blockOutlineSprite.sprite = blockData.blockOutlineSprite;
+        blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
+        blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
         blockOutlineSprite.gameObject.SetActive(false);
+
+        Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
+        blockSprite.transform.localPosition = offsetPosition;
+        blockOutlineSprite.transform.localPosition = offsetPosition;
 
         for (int y = 0; y < 3; y++)
         {
             for (int x = 0; x < 3; x++)
             {
-                if (blockData.GetShapeAt(x, y))
+                if (blockData.GetShapeAt(y,x))  
                 {
                     GameObject cell = Instantiate(blockCell, transform);
 
                     float localX = (x - 1) * gridSize;
-                    float localY = (y - 1) * gridSize;
+                    float localY = (1 - y) * gridSize;
 
                     cell.transform.localPosition = new Vector3(localX, localY, 0);
                     
@@ -78,6 +91,6 @@ public class Block : MonoBehaviour
     //블럭 sprite 변경
     public void ChangeBlockSprite(Sprite sprite)
     {
-        blockSprite.sprite = sprite;
+        blockSprite.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 }
