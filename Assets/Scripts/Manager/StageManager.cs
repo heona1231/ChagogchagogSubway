@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class StageManager : MonoBehaviour
 {
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    [SerializeField] private StageData[] stageDatas;
+    //[SerializeField] private StageData[] stageDatas;
+    [SerializeField] private float limitTime = 60f;
+    [SerializeField] private float targetTime = 30f;
 
     [Header("Timer")]
     [SerializeField] private Transform timerFill;
@@ -21,7 +23,13 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Sprite star2Sprite;
     [SerializeField] private Sprite star3Sprite;
 
-    private StageData currentStageData;
+    [Header("Clear(Next) Button")]
+    [SerializeField] private Button nextButton;
+    [SerializeField] private Image nextButtonImage;
+    [SerializeField] private Sprite nextButtonActiveSprite;
+    [SerializeField] private Sprite nextButtonDisabledSprite;
+
+    //private StageData currentStageData;
     private bool isCleared = false;
     private Vector3 timerFillStartScale;
     //private Vector3 timerFillStartPosition;
@@ -31,9 +39,9 @@ public class StageManager : MonoBehaviour
     private void Start()
     {
         int currentStageNumber = GameManager.Instance.CurrentStageNumber;
-        currentStageData = FindStageData(currentStageNumber);
+        //currentStageData = FindStageData(currentStageNumber);
 
-        if (currentStageData == null) return;
+        //if (currentStageData == null) return;
 
         if (clearPanel != null)
         {
@@ -52,12 +60,15 @@ public class StageManager : MonoBehaviour
 
         SetTargetTimeMarker();
 
-        GameManager.Instance.StartStage(
-            currentStageData.limitTime,
-            currentStageData.targetTime
-        );
+        //GameManager.Instance.StartStage(
+        //    currentStageData.limitTime,
+        //    currentStageData.targetTime
+        //);
 
-        Debug.Log($"챕터{currentStageData.chapterNumber} 스테이지{currentStageData.stageNumber} 시작");
+        //Debug.Log($"챕터{currentStageData.chapterNumber} 스테이지{currentStageData.stageNumber} 시작");
+
+        GameManager.Instance.StartStage(limitTime, targetTime);
+        Debug.Log($"{currentStageNumber}번 스테이지 시작");
     }
 
     private void Update()
@@ -65,32 +76,34 @@ public class StageManager : MonoBehaviour
         UpdateTimerBar();
     }
 
-    private StageData FindStageData(int stageNumber)
-    {
-        int chapterNumber = GameManager.Instance.CurrentChapterNumber;
+    // StageData 사용하지 않으면서 주석 처리
+    //private StageData FindStageData(int stageNumber)
+    //{
+    //    int chapterNumber = GameManager.Instance.CurrentChapterNumber;
 
-        foreach (StageData data in stageDatas)
-        {
-            if (data.chapterNumber == chapterNumber && data.stageNumber == stageNumber)
-            {
-                return data;
-            }
-        }
+    //    foreach (StageData data in stageDatas)
+    //    {
+    //        if (data.chapterNumber == chapterNumber && data.stageNumber == stageNumber)
+    //        {
+    //            return data;
+    //        }
+    //    }
 
-        Debug.LogError($"챕터{chapterNumber} {stageNumber}번 스테이지 데이터를 찾을 수 없습니다.");
-        return null;
-    }
+    //    Debug.LogError($"챕터{chapterNumber} {stageNumber}번 스테이지 데이터를 찾을 수 없습니다.");
+    //    return null;
+    //}
 
     private void SetTargetTimeMarker()
     {
-        if (targetTimeMarker == null || timerFill == null || currentStageData == null)
+        if (targetTimeMarker == null || timerFill == null) //|| currentStageData == null)
         {
             return;
         }
 
         SpriteRenderer timerRenderer = timerFill.GetComponent<SpriteRenderer>();
 
-        float ratio = currentStageData.targetTime / currentStageData.limitTime;
+        //float ratio = currentStageData.targetTime / currentStageData.limitTime;
+        float ratio = targetTime / limitTime;
 
         float leftX = timerRenderer.bounds.min.x;
         float rightX = timerRenderer.bounds.max.x;
@@ -145,6 +158,22 @@ public class StageManager : MonoBehaviour
         return false;
     }
 
+    private void SetNextButtonState(int starCount)
+    {
+        bool canGoNext = starCount > 0;
+
+        nextButton.interactable = canGoNext;
+
+        if (canGoNext)
+        {
+            nextButtonImage.sprite = nextButtonActiveSprite;
+        }
+        else
+        {
+            nextButtonImage.sprite = nextButtonDisabledSprite;
+        }
+    }
+
     public void OpenClearPanel(int starCount)
     {
         if (clearPanel == null)
@@ -181,6 +210,8 @@ public class StageManager : MonoBehaviour
         {
             clearStarImage.sprite = star3Sprite;
         }
+
+        SetNextButtonState(starCount);
     }
 
     //public void SaveStageStar(int stageNumber, int starCount)

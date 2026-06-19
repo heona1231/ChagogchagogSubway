@@ -887,19 +887,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3304798138037706738, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: shapeOffset.y
-      value: -0.66
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5522294474519839909, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
