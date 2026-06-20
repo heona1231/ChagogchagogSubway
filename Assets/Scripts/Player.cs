@@ -125,6 +125,17 @@ public class Player : MonoBehaviour
 
     private void StartDrag(Block targetBlock)
     {
+        //서현아 수정 : 다른 블럭 클릭 시 미니게임 초기화
+        var activeMinigame = MinigameManager.Instance.CurrentlyActiveMinigame;
+        if (activeMinigame != null)
+        {
+            if (targetBlock.gameObject != activeMinigame.gameObject)
+            {
+                activeMinigame.ResetMinigame();
+                MinigameManager.Instance.EndMinigame();
+            }
+        }
+
         if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출

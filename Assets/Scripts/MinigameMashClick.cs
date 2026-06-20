@@ -9,7 +9,7 @@ public class MinigameMashClick : MonoBehaviour
 {
     [Header("guage")]
     [SerializeField] private float maxGauge = 100f;
-    [SerializeField] private float autoChargeSpeed = 1f; //초당 게이지 차오르는 속도
+    [SerializeField] private float autoChargeSpeed = 8f; //초당 게이지 차오르는 속도
     [SerializeField] private float clickDecreaseAmount = 5f; //클릭 한 번당 깎이는 양
 
     [Header("sprite")]
@@ -24,6 +24,7 @@ public class MinigameMashClick : MonoBehaviour
     private float currentGauge;
     private bool isGameActive = false;
     private Block block;
+    private float fullGaugeTimer;
 
     private void Awake()
     {
@@ -43,9 +44,9 @@ public class MinigameMashClick : MonoBehaviour
         if (isGameActive) return;
 
         isGameActive = true;
-        currentGauge = maxGauge;
+        currentGauge = 80;
         
-        MinigameManager.Instance.StartMashClickMinigame(this.transform.position, maxGauge);
+        MinigameManager.Instance.StartMashClickMinigame(this, this.transform.position, maxGauge);
         UpdateSprite();
         StartCoroutine(MinigameLoop());
     }
@@ -74,17 +75,31 @@ public class MinigameMashClick : MonoBehaviour
                     currentGauge = 0;
                 }
             }
-            else
+
+            currentGauge += autoChargeSpeed * Time.deltaTime;
+            if (currentGauge > maxGauge)
             {
-                currentGauge += autoChargeSpeed * Time.deltaTime;
-                if(currentGauge >maxGauge)
-                {
-                    currentGauge = maxGauge;
-                }
+                currentGauge = maxGauge;
             }
 
             MinigameManager.Instance.ReceiveCurrentGauge(currentGauge);
             UpdateSprite();
+
+            if (currentGauge >= maxGauge)
+            {
+                fullGaugeTimer += Time.deltaTime;
+
+                if (fullGaugeTimer >= 1f)
+                {
+                    ResetMinigame();
+                    MinigameManager.Instance.EndMinigame();
+                    yield break;
+                }
+            }
+            else
+            {
+                fullGaugeTimer = 0f;
+            }
 
             if (currentGauge <= 0)
             {
@@ -105,5 +120,16 @@ public class MinigameMashClick : MonoBehaviour
         MinigameManager.Instance.EndMinigame();
 
         this.enabled = false;
+    }
+
+    //미니게임 리셋
+    public void ResetMinigame()
+    {
+        StopAllCoroutines();
+        isGameActive = false;
+
+        currentGauge = maxGauge;
+
+        UpdateSprite();
     }
 }
