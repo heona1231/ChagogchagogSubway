@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
         {
             starCount = 2;
         }
-        if (isSpecialSeatSuccess)
+        if (isSpecialSeatSuccess && currentTime <= targetTime)
         {
             starCount = 3;
         }

@@ -139,7 +139,7 @@ public class StageManager : MonoBehaviour
             return;
         }**/
 
-        isCleared = true; // 확인용
+        // isCleared = true; // 확인용
 
         bool isSpecialSeatSuccess = Board.Main.CheckAllSpecialSeatsSatisfied();
 
