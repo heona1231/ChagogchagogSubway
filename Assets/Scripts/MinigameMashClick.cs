@@ -9,7 +9,7 @@ public class MinigameMashClick : MonoBehaviour
 {
     [Header("guage")]
     [SerializeField] private float maxGauge = 100f;
-    [SerializeField] private float autoChargeSpeed = 8f; //초당 게이지 차오르는 속도
+    [SerializeField] private float autoChargeSpeed = 6f; //초당 게이지 차오르는 속도
     [SerializeField] private float clickDecreaseAmount = 5f; //클릭 한 번당 깎이는 양
 
     [Header("sprite")]
@@ -67,19 +67,19 @@ public class MinigameMashClick : MonoBehaviour
     {
         while (isGameActive)
         {
-            if(Input.GetMouseButtonDown(0))
+            currentGauge += autoChargeSpeed * Time.deltaTime;
+            if (currentGauge > maxGauge)
+            {
+                currentGauge = maxGauge;
+            }
+
+            if (Input.GetMouseButtonDown(0))
             {
                 currentGauge -= clickDecreaseAmount;
                 if(currentGauge < 0)
                 {
                     currentGauge = 0;
                 }
-            }
-
-            currentGauge += autoChargeSpeed * Time.deltaTime;
-            if (currentGauge > maxGauge)
-            {
-                currentGauge = maxGauge;
             }
 
             MinigameManager.Instance.ReceiveCurrentGauge(currentGauge);
