@@ -8,8 +8,10 @@ public class ChapterManager : MonoBehaviour
     [SerializeField] private TMP_Text totalStarText;
 
     [Header("Stage")]
-    [SerializeField] private Transform stageGrid;
-    [SerializeField] private Transform starGrid;
+    [SerializeField] private Transform stageGridLeft;
+    [SerializeField] private Transform starGridLeft;
+    [SerializeField] private Transform stageGridRight;
+    [SerializeField] private Transform starGridRight;
 
     [Header("StageSprites")]
     [SerializeField] private Sprite stageOpenSprite;
@@ -21,7 +23,8 @@ public class ChapterManager : MonoBehaviour
     [SerializeField] private Sprite star2Sprite;
     [SerializeField] private Sprite star3Sprite;
 
-    private const int TOTAL_STAGE_COUNT = 15;
+    private const int TOTAL_STAGE_COUNT = 30;
+    private const int STAGE_COUNT_PER_GRID = 15;
     private const int MAX_STAR_PER_STAGE = 3;
 
     private void Start()
@@ -54,7 +57,7 @@ public class ChapterManager : MonoBehaviour
 
             int starCount = PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{i}Star", 0);
 
-            Image starImage = starGrid.GetChild(i - 1).GetComponent<Image>();
+            Image starImage = GetStarGrid(i).GetChild(GetChildIndex(i)).GetComponent<Image>();
 
             if (starCount <= 0)
             {
@@ -93,7 +96,7 @@ public class ChapterManager : MonoBehaviour
         {
             bool isUnlocked = i == 1 || PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{i - 1}Star", 0) > 0;
 
-            Image stageImage = stageGrid.GetChild(i - 1).GetComponent<Image>();
+            Image stageImage = GetStageGrid(i).GetChild(GetChildIndex(i)).GetComponent<Image>();
 
            if (isUnlocked)
             {
@@ -106,5 +109,22 @@ public class ChapterManager : MonoBehaviour
                 stageImage.raycastTarget = false;
             }
         }
+    }
+
+
+    // Grid Left/Right로 나누면서 추가됨
+    private Transform GetStageGrid(int stageNumber)
+    {
+        return stageNumber <= STAGE_COUNT_PER_GRID ? stageGridLeft : stageGridRight;
+    }
+
+    private Transform GetStarGrid(int stageNumber)
+    {
+        return stageNumber <= STAGE_COUNT_PER_GRID ? starGridLeft : starGridRight;
+    }
+
+    private int GetChildIndex(int stageNumber)
+    {
+        return (stageNumber - 1) % STAGE_COUNT_PER_GRID;
     }
 }
