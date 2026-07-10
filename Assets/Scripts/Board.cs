@@ -3,60 +3,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BoardType
-{
-    Main,       // 게임 보드
-    Background  // 배경 보드
-}
-
-// 특수 좌석 설정을 위한 구조체
-[System.Serializable]
-public struct SpecialSeat
-{
-    public Vector2Int gridIndex;       // 좌석의 (X, Y) 인덱스 위치
-    public PassengerType requiredType; // 이 자리에 앉아야 하는 승객 타입
-}
-
 public class Board : MonoBehaviour
 {
     public static Board Main { get; private set; }
     public static Board Background { get; private set; }
 
-    [SerializeField] private BoardType type;
+    [SerializeField] private BoardData data;
 
-    [SerializeField] private float gridSize = 1.32f;
-    [SerializeField] private Vector2 boardOffset = Vector2.zero;
-
-    [SerializeField] private string[] boardShape = new string[] { };
     private int columns; // 보드의 가로 칸 수
     private int rows;    // 보드의 세로 칸 수
 
     private bool[,] isPlayableCell; // 구멍(X)인지 정상 칸(O)인지 판별하는 배열
     private Block[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
-    [SerializeField] private List<SpecialSeat> specialSeats = new List<SpecialSeat>(); // 특수좌석 위치
-
+    
     private void Awake()
     {
-        if (type == BoardType.Main) Main = this;
-        else if (type == BoardType.Background) Background = this;
+        if (data.type == BoardType.Main) Main = this;
+        else if (data.type == BoardType.Background) Background = this;
+        
+        InitializeBoard();
+    }
+
+    private void InitializeBoard()
+    {
+        if (data == null) return;
 
         // 문자열 배열에 맞춰 가로/세로 크기 계산
-        rows = boardShape.Length;
-        columns = rows > 0 ? boardShape[0].Length : 0;
+        rows = data.boardShape.Length;
+        columns = rows > 0 ? data.boardShape[0].Length : 0;
 
         occupiedCells = new Block[columns, rows];
         isPlayableCell = new bool[columns, rows];
+
+        Vector2 origin = GetBottomLeftOrigin();
 
         // 인스펙터에 적힌 O, X를 분석하여 배열에 세팅
         for (int y = 0; y < rows; y++)
         {
             // 인스펙터의 첫 번째 줄(index 0)이 시각적으로 맨 위쪽(가장 큰 y)이 되도록 역순 매핑
-            string rowStr = boardShape[rows - 1 - y];
+            string rowStr = data.boardShape[rows - 1 - y];
             for (int x = 0; x < columns; x++)
             {
                 if (x < rowStr.Length && (rowStr[x] == 'O' || rowStr[x] == 'o'))
                 {
                     isPlayableCell[x, y] = true;  // O면 배치 가능한 자리
+
+                    // Main 보드일 경우 타일 생성
+                    if (data.type == BoardType.Main && data.tilePrefab != null)
+                    {
+                        Vector2 pos = origin + new Vector2(x * data.gridSize, y * data.gridSize) + data.tileOffset;
+                        Instantiate(data.tilePrefab, pos, Quaternion.identity, transform);
+                    }
                 }
                 else
                 {
@@ -69,10 +66,10 @@ public class Board : MonoBehaviour
     // 보드의 왼쪽 아래 칸의 월드 좌표를 계산
     private Vector2 GetBottomLeftOrigin()
     {
-        Vector2 center = (Vector2)transform.position + boardOffset;
+        Vector2 center = (Vector2)transform.position + data.boardOffset;
 
-        float startX = center.x - (columns - 1) * gridSize / 2f;
-        float startY = center.y - (rows - 1) * gridSize / 2f;
+        float startX = center.x - (columns - 1) * data.gridSize / 2f;
+        float startY = center.y - (rows - 1) * data.gridSize / 2f;
 
         return new Vector2(startX, startY);
     }
@@ -86,15 +83,15 @@ public class Board : MonoBehaviour
         Vector2 basePos = dropPosition - blockOffset;
 
         // 2. 가장 가까운 그리드 인덱스 찾기
-        int gridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int gridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int gridX = Mathf.RoundToInt((basePos.x - origin.x) / data.gridSize);
+        int gridY = Mathf.RoundToInt((basePos.y - origin.y) / data.gridSize);
 
         // 3. 보드 범위 내로 제한
         gridX = Mathf.Clamp(gridX, 0, columns - 1);
         gridY = Mathf.Clamp(gridY, 0, rows - 1);
 
         // 4. 스냅된 월드 좌표 반환
-        return new Vector2(origin.x + gridX * gridSize, origin.y + gridY * gridSize) + blockOffset;
+        return new Vector2(origin.x + gridX * data.gridSize, origin.y + gridY * data.gridSize) + blockOffset;
     }
 
     // 해당 블럭이 보드 안쪽인지 체크
@@ -106,8 +103,8 @@ public class Board : MonoBehaviour
         Vector2 basePos = position - blockOffset;
 
         // 1. 그리드 인덱스 계산 (Floor 대신 Round를 사용하여 그리드 정중앙 정렬 유도)
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / data.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / data.gridSize);
 
         // 2. 블록을 구성하는 모든 칸의 위치를 검사
         foreach (Vector2Int cellOffset in shapeCells)
@@ -149,8 +146,8 @@ public class Board : MonoBehaviour
         Vector2 origin = GetBottomLeftOrigin();
         Vector2 basePos = position - blockOffset;
 
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / data.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / data.gridSize);
 
         foreach (Vector2Int cellOffset in shapeCells)
         {
@@ -173,8 +170,8 @@ public class Board : MonoBehaviour
         Vector2 origin = GetBottomLeftOrigin();
         Vector2 basePos = position - blockOffset;
 
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / data.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / data.gridSize);
 
         foreach (Vector2Int cellOffset in shapeCells)
         {
@@ -196,8 +193,8 @@ public class Board : MonoBehaviour
         Vector2 origin = GetBottomLeftOrigin();
         Vector2 basePos = position - blockOffset;
 
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / gridSize);
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / data.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / data.gridSize);
 
         foreach (Vector2Int cellOffset in shapeCells)
         {
@@ -214,9 +211,9 @@ public class Board : MonoBehaviour
     // 모든 특수 좌석 조건이 만족되었는지 체크하여 bool을 반환하는 함수
     public bool CheckAllSpecialSeatsSatisfied()
     {
-        if (specialSeats == null || specialSeats.Count == 0) return true;
+        if (data.specialSeats == null || data.specialSeats.Count == 0) return true;
 
-        foreach (SpecialSeat seat in specialSeats)
+        foreach (SpecialSeat seat in data.specialSeats)
         {
             int x = seat.gridIndex.x;
             int y = seat.gridIndex.y;
@@ -231,20 +228,20 @@ public class Board : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (boardShape == null || boardShape.Length == 0) return;
+        if (data.boardShape == null || data.boardShape.Length == 0) return;
 
-        int r = boardShape.Length;
-        int c = boardShape[0].Length;
-        Vector2 center = (Vector2)transform.position + boardOffset;
-        Vector2 origin = new Vector2(center.x - (c - 1) * gridSize / 2f, center.y - (r - 1) * gridSize / 2f);
+        int r = data.boardShape.Length;
+        int c = data.boardShape[0].Length;
+        Vector2 center = (Vector2)transform.position + data.boardOffset;
+        Vector2 origin = new Vector2(center.x - (c - 1) * data.gridSize / 2f, center.y - (r - 1) * data.gridSize / 2f);
 
-        if (specialSeats != null)
+        if (data.specialSeats != null)
         {
-            foreach (var seat in specialSeats)
+            foreach (var seat in data.specialSeats)
             {
-                Vector2 seatPos = origin + new Vector2(seat.gridIndex.x * gridSize, seat.gridIndex.y * gridSize);
+                Vector2 seatPos = origin + new Vector2(seat.gridIndex.x * data.gridSize, seat.gridIndex.y * data.gridSize);
                 Gizmos.color = Color.cyan;
-                Gizmos.DrawWireSphere(seatPos, gridSize * 0.4f);
+                Gizmos.DrawWireSphere(seatPos, data.gridSize * 0.4f);
             }
         }
     }
