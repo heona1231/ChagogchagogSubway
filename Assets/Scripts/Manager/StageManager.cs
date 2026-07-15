@@ -29,6 +29,10 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Sprite nextButtonActiveSprite;
     [SerializeField] private Sprite nextButtonDisabledSprite;
 
+    [Header("Board")] // 강혜원 작성, board 오브젝트 변수 설정
+    [SerializeField] private Board bgBoard;
+    [SerializeField] private Board gameBoard;
+
     //private StageData currentStageData;
     private bool isCleared = false;
     private Vector3 timerFillStartScale;
@@ -57,6 +61,14 @@ public class StageManager : MonoBehaviour
             timerFillStartWidth = timerRenderer.bounds.size.x;
             //timerFillStartPosition = timerFill.position;
         }
+
+        // 강혜원 작성, 배경&게임 보드 데이터 stageData의 값으로 설정
+        /**
+        bgBoard.boardData = stageData.bgBoardData;
+        gameBoard.boardData = stageData.gameBoardData;
+        bgBoard.Initialize(stageData.bgBoardData);
+        gameBoard.Initialize(stageData.gameBoardData);
+        **/
 
         SetTargetTimeMarker();
 
