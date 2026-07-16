@@ -1078,6 +1078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
   dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
+  menuIcon: {fileID: 515707750}
 --- !u!4 &524859727
 Transform:
   m_ObjectHideFlags: 0

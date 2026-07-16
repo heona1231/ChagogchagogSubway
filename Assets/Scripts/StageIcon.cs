@@ -45,4 +45,30 @@ public class StageIcon : MonoBehaviour
     {
         GameManager.Instance.NextStage();
     }
+
+
+    public bool IsMenuOpen()
+    {
+        return menuPanel != null && menuPanel.activeSelf;
+    }
+
+    public void ToggleMenu()
+    {
+        if (menuPanel == null)
+        {
+            Debug.LogError("MenuPanel이 연결되지 않았습니다.");
+            return;
+        }
+
+        if (menuPanel.activeSelf)
+        {
+            menuPanel.SetActive(false);
+            GameManager.Instance.ResumeStage();
+        }
+        else
+        {
+            menuPanel.SetActive(true);
+            GameManager.Instance.PauseStage();
+        }
+    }
 }
