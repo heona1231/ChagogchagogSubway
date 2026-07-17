@@ -73,6 +73,13 @@ public class Block : MonoBehaviour
     //blockData를 토대로 모양 구성
     private void BuildBlock()
     {
+        foreach (Transform child in transform)
+        {
+            if (child == blockSprite.transform || child == blockOutlineSprite.transform)
+                continue;
+            Destroy(child.gameObject);
+        }
+
         blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
         blockOutlineSprite.gameObject.SetActive(false);
