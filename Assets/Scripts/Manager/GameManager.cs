@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private float pauseStartTime;
     private float totalPausedTime;
 
+    public bool IsPaused => isPaused;
+
     private void Awake()
     {
         if (Instance != null)
@@ -33,10 +35,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isPlaying && Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();
-        }
+        // 박세은 수정: 키 바인딩을 Player.cs에서 사용해야 하므로 주석 처리(영향X)
+        //if (isPlaying && Input.GetKeyDown(KeyCode.R))
+        //{
+        //    RestartGame();
+        //}
 
         if (!isPlaying || isPaused) return;
 

@@ -73,7 +73,7 @@ public class MinigameMashClick : MonoBehaviour
                 currentGauge = maxGauge;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
             {
                 currentGauge -= clickDecreaseAmount;
                 if(currentGauge < 0)

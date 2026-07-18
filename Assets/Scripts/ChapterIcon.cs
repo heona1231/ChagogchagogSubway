@@ -3,13 +3,10 @@ using UnityEngine;
 
 public class ChapterIcon : MonoBehaviour
 {
-    [SerializeField] private bool isBackIcon = false;
+    //[SerializeField] private bool isBackIcon = false;
 
-    private void OnMouseDown()
+    public void BackToTitle()
     {
-        if (isBackIcon)
-        {
-            GameManager.Instance.BackToTitle();
-        }
+        GameManager.Instance.BackToTitle();
     }
 }
