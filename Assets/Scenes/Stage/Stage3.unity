@@ -1751,7 +1751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac4f9132767014a8ea7828d77874e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardData: {fileID: 0}
+  boardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
 --- !u!212 &1091382670
 SpriteRenderer:
   m_ObjectHideFlags: 0
