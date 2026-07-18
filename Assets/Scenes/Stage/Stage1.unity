@@ -1078,6 +1078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultCursor: {fileID: 2800000, guid: a893a4b55e9252549a1c0d1a400a5509, type: 3}
   dragCursor: {fileID: 2800000, guid: fcc18a9a40753664689e01931c14f057, type: 3}
+  isClickToAttach: 0
 --- !u!4 &524859727
 Transform:
   m_ObjectHideFlags: 0
@@ -1122,7 +1123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac4f9132767014a8ea7828d77874e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: ebe5f2dd67ed6b84188cbed0bc26a8b1, type: 2}
+  boardData: {fileID: 11400000, guid: ebe5f2dd67ed6b84188cbed0bc26a8b1, type: 2}
 --- !u!4 &650345554
 Transform:
   m_ObjectHideFlags: 0
@@ -1749,7 +1750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac4f9132767014a8ea7828d77874e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
+  boardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
 --- !u!212 &1091382670
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2251,6 +2252,8 @@ MonoBehaviour:
   nextButtonImage: {fileID: 1237758000}
   nextButtonActiveSprite: {fileID: 21300000, guid: a9cbc948c73042f4c900365cd1aa68e5, type: 3}
   nextButtonDisabledSprite: {fileID: 21300000, guid: b524010c3e5f5a54aa4e88565bc0ad1c, type: 3}
+  bgBoard: {fileID: 1091382669}
+  gameBoard: {fileID: 650345553}
 --- !u!4 &1546721632
 Transform:
   m_ObjectHideFlags: 0

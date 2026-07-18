@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private Block draggingBlock = null;
     private int draggingOrder = 100;
 
+    [SerializeField] private bool isClickToAttach = false; // true: 클릭, false: 드래그
+
     private void Start()
     {
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
@@ -52,10 +54,19 @@ public class Player : MonoBehaviour
     // 클릭 및 드래그 처리
     private void HandleInput()
     {
-        // 좌클릭 (드래그 시작)
-        if (Input.GetMouseButtonDown(0) && hoveredBlock != null)
+        // 좌클릭
+        if (Input.GetMouseButtonDown(0))
         {
-            StartDrag(hoveredBlock);
+            if (draggingBlock != null)
+            {
+                // 이미 들고 있다면 놓기 (클릭 모드에서만 가능)
+                if (isClickToAttach) EndDrag();
+            }
+            else if (hoveredBlock != null)
+            {
+                // 들고 있지 않다면 잡기
+                StartDrag(hoveredBlock);
+            }
         }
 
         // 우클릭 (회전)
@@ -108,18 +119,18 @@ public class Player : MonoBehaviour
             }
         }
 
-        // 드래그 중 위치 이동
-        if (Input.GetMouseButton(0) && draggingBlock != null)
+        // 블록 이동 처리
+        if (draggingBlock != null)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f;
             draggingBlock.transform.position = mousePos;
-        }
 
-        // 좌클릭 업 (드래그 종료 및 배치)
-        if (Input.GetMouseButtonUp(0) && draggingBlock != null)
-        {
-            EndDrag();
+            // 드래그 모드 전용 - 마우스를 떼면 배치
+            if (!isClickToAttach && Input.GetMouseButtonUp(0))
+            {
+                EndDrag();
+            }
         }
     }
 

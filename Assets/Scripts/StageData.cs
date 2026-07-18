@@ -20,7 +20,10 @@ public class StageData : ScriptableObject
     public float targetTime = 30f;
 
     [Header("Stage Layout")]
-    public GameObject boardPrefab;
+    // 강혜원 작성, 프리팹 설정이 아닌 board 데이터 설정으로 수정
+    public BoardData bgBoardData; 
+    public BoardData gameBoardData;
+
     public BlockSpawnData[] blockSpawnDatas;
 
     //public BlockAnswerData[] blockAnswers;
