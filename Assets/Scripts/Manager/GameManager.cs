@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private bool isPaused;
     private float pauseStartTime;
     private float totalPausedTime;
+    private bool canGoNextStage;
 
     public bool IsPaused => isPaused;
 
@@ -40,6 +41,13 @@ public class GameManager : MonoBehaviour
         //{
         //    RestartGame();
         //}
+
+        if (canGoNextStage && Input.GetKeyDown(KeyCode.C))
+        {
+            canGoNextStage = false;
+            NextStage();
+            return;
+        }
 
         if (!isPlaying || isPaused) return;
 
@@ -94,6 +102,7 @@ public class GameManager : MonoBehaviour
 
         totalPausedTime = 0f;
         isPaused = false;
+        canGoNextStage = false;
 
         stageStartTime = Time.realtimeSinceStartup;
         currentTime = 0f;
@@ -125,6 +134,7 @@ public class GameManager : MonoBehaviour
     public void ClearStage(bool isSpecialSeatSuccess)
     {
         isPlaying = false;
+        canGoNextStage = true;
 
         int starCount = CalculateStarCount(isSpecialSeatSuccess);
 
@@ -160,6 +170,7 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         isPlaying = false;
+        canGoNextStage = false;
 
         StageManager stageManager = FindFirstObjectByType<StageManager>();
 
