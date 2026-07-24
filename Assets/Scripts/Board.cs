@@ -52,20 +52,36 @@ public class Board : MonoBehaviour
             string rowStr = boardData.boardShape[rows - 1 - y];
             for (int x = 0; x < columns; x++)
             {
-                if (x < rowStr.Length && (rowStr[x] == 'O' || rowStr[x] == 'o'))
+                if (x < rowStr.Length && (rowStr[x] == '1' || rowStr[x] == '2'))
                 {
-                    isPlayableCell[x, y] = true;  // O면 배치 가능한 자리
+                    isPlayableCell[x, y] = true;  // 1 또는 2이면 배치 가능한 자리
 
                     // Main 보드일 경우 타일 생성
                     if (boardData.type == BoardType.Main && boardData.tilePrefab != null)
                     {
                         Vector2 pos = origin + new Vector2(x * boardData.gridSize, y * boardData.gridSize) + boardData.tileOffset;
-                        Instantiate(boardData.tilePrefab, pos, Quaternion.identity, transform);
+
+                        // 1과 2에 따라 생성할 프리팹 결정
+                        GameObject prefabToInstantiate = null;
+                        if (rowStr[x] == '1')
+                        {
+                            prefabToInstantiate = boardData.tilePrefab; // 일반 타일 프리팹
+                        }
+                        else if (rowStr[x] == '2')
+                        {
+                            prefabToInstantiate = boardData.chairPrefab; // 의자 프리팹
+                        }
+
+                        // 프리팹이 할당되어 있다면 생성
+                        if (prefabToInstantiate != null)
+                        {
+                            Instantiate(prefabToInstantiate, pos, Quaternion.identity, transform);
+                        }
                     }
                 }
                 else
                 {
-                    isPlayableCell[x, y] = false; // X면 뚫려있는 빈 공간
+                    isPlayableCell[x, y] = false; // 0이면 뚫려있는 빈 공간
                 }
             }
         }

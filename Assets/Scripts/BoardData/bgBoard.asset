@@ -15,12 +15,12 @@ MonoBehaviour:
   gridSize: 1.33
   type: 1
   boardShape:
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
-  - OOOOOOOOOOOO
+  - 111111111111
+  - 111111111111
+  - 111111111111
+  - 111111111111
+  - 111111111111
+  - 111111111111
   boardOffset: {x: 0, y: 0.66}
   specialSeats: []
   tilePrefab: {fileID: 0}
