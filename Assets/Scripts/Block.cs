@@ -171,6 +171,19 @@ public class Block : MonoBehaviour
         blockSprite.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
+    //앉았을때 블럭 sprite 변경
+    public void ChangeBlockSpriteSitdown(bool isSit)
+    {
+        if(isSit)
+        {
+            ChangeBlockSprite(blockData.blockSpriteSit);
+        }
+        else
+        {
+            ChangeBlockSprite(blockData.blockSprite);
+        }
+    }
+
     // 강혜원 작성, 보드에 등록하고 위치 설정
     public void ApplyToBoard(Board targetBoard, Vector2 targetPosition)
     {

@@ -22,6 +22,7 @@ public class BlockData : ScriptableObject
     [Header("BasicOption")]
     public string blockName;
     public Sprite blockSprite;
+    public Sprite blockSpriteSit;
     public Sprite blockOutlineSprite;
     public Vector2 spriteOffset;
     public BlockType blockType = BlockType.Normal;
