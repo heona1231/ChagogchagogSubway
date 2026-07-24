@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
+  menuPanel: {fileID: 391279090}
 --- !u!114 &109336321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,9 +290,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 109336320}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectWindowedMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -964,7 +964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &391279091
 RectTransform:
   m_ObjectHideFlags: 0
@@ -988,8 +988,8 @@ RectTransform:
   - {fileID: 482494982}
   - {fileID: 109336319}
   - {fileID: 831827926}
-  - {fileID: 1918576738}
   - {fileID: 1713342588}
+  - {fileID: 1918576738}
   - {fileID: 1025589458}
   m_Father: {fileID: 1887873358}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1223,7 +1223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
+  menuPanel: {fileID: 391279090}
 --- !u!114 &482494984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1268,9 +1268,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 482494983}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectDragPickup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2114,6 +2114,68 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &712444667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 712444669}
+  - component: {fileID: 712444668}
+  m_Layer: 0
+  m_Name: OptionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &712444668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712444667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b037e16d9a68d144bceed4fba507649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  koreanButtonImage: {fileID: 937016992}
+  koreanSelectedSprite: {fileID: 21300000, guid: 1669c4fb861666f4bb0f11ff1902a3c2, type: 3}
+  koreanUnselectedSprite: {fileID: 21300000, guid: aa9161de16d71284d909d0cc6a5241f6, type: 3}
+  englishButtonImage: {fileID: 1256860427}
+  englishSelectedSprite: {fileID: 21300000, guid: ed1b434c76db57b4bbf391c5d3c2069b, type: 3}
+  englishUnselectedSprite: {fileID: 21300000, guid: df30f095cb61d1148a0764848f6ed016, type: 3}
+  clickButtonImage: {fileID: 938566112}
+  clickSelectedSprite: {fileID: 21300000, guid: dc9168747a0315944b5bc24af797112f, type: 3}
+  clickUnselectedSprite: {fileID: 21300000, guid: 8db11452c69246d48b31afdcd53a1d3f, type: 3}
+  dragButtonImage: {fileID: 482494985}
+  dragSelectedSprite: {fileID: 21300000, guid: 829907b3db40e014488e4544f5a8c67c, type: 3}
+  dragUnselectedSprite: {fileID: 21300000, guid: ee981e2fb06af9540ba8261836b5317d, type: 3}
+  windowedButtonImage: {fileID: 109336322}
+  windowedSelectedSprite: {fileID: 21300000, guid: 2a24a5d9b9a4a3d4f928400ed57ed43b, type: 3}
+  windowedUnselectedSprite: {fileID: 21300000, guid: 0fe59f4d58afed74c8e6aca82d31a5fc, type: 3}
+  fullscreenButtonImage: {fileID: 831827929}
+  fullscreenSelectedSprite: {fileID: 21300000, guid: 6c2ad59f3fd0e6f42a808313a9b526b9, type: 3}
+  fullscreenUnselectedSprite: {fileID: 21300000, guid: 308a9dc21cbd5024daf4699a242f21f0, type: 3}
+--- !u!4 &712444669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712444667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 762.95026, y: 438.08936, z: -6.3366256}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &762791050
 GameObject:
   m_ObjectHideFlags: 0
@@ -2414,7 +2476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
+  menuPanel: {fileID: 391279090}
 --- !u!114 &831827928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2459,9 +2521,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831827927}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectFullscreenMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2671,7 +2733,7 @@ GameObject:
   - component: {fileID: 937016993}
   - component: {fileID: 937016992}
   - component: {fileID: 937016991}
-  - component: {fileID: 937016990}
+  - component: {fileID: 937016994}
   m_Layer: 5
   m_Name: iconImageKoreanButton
   m_TagString: Untagged
@@ -2698,19 +2760,6 @@ RectTransform:
   m_AnchoredPosition: {x: -232, y: 67.5}
   m_SizeDelta: {x: 238, y: 63.5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &937016990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937016988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
 --- !u!114 &937016991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2755,9 +2804,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 937016990}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectKorean
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2805,6 +2854,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937016988}
   m_CullTransparentMesh: 1
+--- !u!114 &937016994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937016988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPanel: {fileID: 391279090}
 --- !u!1 &938566108
 GameObject:
   m_ObjectHideFlags: 0
@@ -2856,7 +2918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
+  menuPanel: {fileID: 391279090}
 --- !u!114 &938566111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2901,9 +2963,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 938566110}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectClickPickup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3002,7 +3064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
+  menuPanel: {fileID: 391279090}
 --- !u!114 &1025589460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3047,9 +3109,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1025589459}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: ResetSaveData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3329,7 +3391,7 @@ GameObject:
   - component: {fileID: 1256860428}
   - component: {fileID: 1256860427}
   - component: {fileID: 1256860426}
-  - component: {fileID: 1256860425}
+  - component: {fileID: 1256860429}
   m_Layer: 5
   m_Name: iconImageEnglishButton
   m_TagString: Untagged
@@ -3356,19 +3418,6 @@ RectTransform:
   m_AnchoredPosition: {x: -94, y: 67.5}
   m_SizeDelta: {x: 238, y: 63.5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1256860425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1256860423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1680789207}
 --- !u!114 &1256860426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3413,9 +3462,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1256860425}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
-        m_MethodName: GoToNextStage
+      - m_Target: {fileID: 712444668}
+        m_TargetAssemblyTypeName: OptionManager, Assembly-CSharp
+        m_MethodName: SelectEnglish
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3463,6 +3512,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1256860423}
   m_CullTransparentMesh: 1
+--- !u!114 &1256860429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256860423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2c997a5f8cc014592b7d1114a048db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPanel: {fileID: 391279090}
 --- !u!1 &1260289288
 GameObject:
   m_ObjectHideFlags: 0
@@ -4520,7 +4582,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1888528470
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4592,7 +4654,7 @@ GameObject:
   - component: {fileID: 1918576740}
   - component: {fileID: 1918576739}
   m_Layer: 5
-  m_Name: iconImageKeyDropButton (1)
+  m_Name: iconImageKeyDropButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4857,6 +4919,7 @@ SceneRoots:
   - {fileID: 410880301}
   - {fileID: 1704400116}
   - {fileID: 1546721632}
+  - {fileID: 712444669}
   - {fileID: 1197140111}
   - {fileID: 264763594}
   - {fileID: 1887873358}
