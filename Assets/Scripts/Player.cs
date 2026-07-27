@@ -225,6 +225,10 @@ public class Player : MonoBehaviour
                 Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
 
+                // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
+                bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                draggingBlock.ChangeBlockSpriteSitdown(isChair);
+
                 Debug.Log($"<color=cyan>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Main 보드</b>에 배치되었습니다. 위치: {snappedPos}");
 
                 CheckGameClear();
@@ -239,11 +243,17 @@ public class Player : MonoBehaviour
             Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
             draggingBlock.ApplyToBoard(Board.Background, snappedPos);
 
+            // Background 보드로 갈 때는 일반 모양(서 있는 모양)으로 설정
+            draggingBlock.ChangeBlockSpriteSitdown(false);
+
             Debug.Log($"<color=yellow>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Background 보드</b>로 이동했습니다. 위치: {snappedPos}");
         }
         else
         {
             draggingBlock.ReturnToStart();
+
+            // 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
+            draggingBlock.ChangeBlockSpriteSitdown(false);
         }
 
         // 드래그 종료 처리

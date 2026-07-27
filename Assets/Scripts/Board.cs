@@ -250,6 +250,36 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    // 해당 그리드 위치가 의자 타일(2)인지 판별
+    public bool IsChairCell(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        if (shapeCells == null) return false;
+
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
+
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
+ 
+        // 블록이 닿는 칸 중 '2'가 하나라도 포함되어 있는지 검사
+        foreach (Vector2Int cellOffset in shapeCells)
+        {
+            int checkX = baseGridX + cellOffset.x;
+            int checkY = baseGridY + cellOffset.y;
+
+            if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
+            {
+                string rowStr = boardData.boardShape[rows - 1 - checkY];
+                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /** 디버깅용이므로 주석처리
     private void OnDrawGizmos()
     {
