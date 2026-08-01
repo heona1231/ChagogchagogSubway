@@ -154,6 +154,18 @@ public class Player : MonoBehaviour
             mousePos.z = 0f;
             draggingBlock.transform.position = mousePos;
 
+            // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
+            if (Board.Main != null)
+            {
+                Vector2 rawPos = draggingBlock.transform.position;
+                if (Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+                {
+                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                    // 마우스가 위치한 곳의 의자들에 블록의 현재 방향을 실시간 반영
+                    Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                }
+            }
+
             // 드래그 모드 전용 - 마우스를 떼면 배치
             if (!isClickToAttach && Input.GetMouseButtonUp(0))
             {

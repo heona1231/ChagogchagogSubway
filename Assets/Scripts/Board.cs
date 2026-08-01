@@ -15,6 +15,7 @@ public class Board : MonoBehaviour
 
     private bool[,] isPlayableCell; // 구멍(X)인지 정상 칸(O)인지 판별하는 배열
     private Block[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
+    private GameObject[,] chairObjects; // 의자 타일 오브젝트들을 기억하는 배열
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class Board : MonoBehaviour
 
         occupiedCells = new Block[columns, rows];
         isPlayableCell = new bool[columns, rows];
+        chairObjects = new GameObject[columns, rows];
 
         Vector2 origin = GetBottomLeftOrigin();
 
@@ -75,7 +77,36 @@ public class Board : MonoBehaviour
                         // 프리팹이 할당되어 있다면 생성
                         if (prefabToInstantiate != null)
                         {
-                            Instantiate(prefabToInstantiate, pos, Quaternion.identity, transform);
+                            BlockDirection spawnDir = BlockDirection.Down; // 기본값
+                            if (boardData.specialSeats != null)
+                            {
+                                foreach (var seat in boardData.specialSeats)
+                                {
+                                    if (seat.gridIndex.x == x && seat.gridIndex.y == y)
+                                    {
+                                        spawnDir = seat.initialDirection;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 방향에 따른 초기 각도 계산
+                            float initAngle = 0f;
+                            switch (spawnDir)
+                            {
+                                case BlockDirection.Down: initAngle = 0f; break;
+                                case BlockDirection.Right: initAngle = 90f; break;
+                                case BlockDirection.Up: initAngle = 180f; break;
+                                case BlockDirection.Left: initAngle = 270f; break;
+                            }
+
+                            // 계산된 회전값을 적용하여 생성
+                            GameObject spawnedTile = Instantiate(prefabToInstantiate, pos, Quaternion.Euler(0, 0, initAngle), transform);
+
+                            if (rowStr[x] == '2')
+                            {
+                                chairObjects[x, y] = spawnedTile;
+                            }
                         }
                     }
                 }
@@ -197,6 +228,18 @@ public class Board : MonoBehaviour
         int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
         int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
 
+        BlockDirection currentDir = block.GetCurrentDirection();
+        float chairAngle = 0f;
+
+        // 블록 방향에 따른 회전 각도 계산
+        switch (currentDir)
+        {
+            case BlockDirection.Down: chairAngle = 0f; break;
+            case BlockDirection.Left: chairAngle = 90f; break;
+            case BlockDirection.Up: chairAngle = 180f; break;
+            case BlockDirection.Right: chairAngle = 270f; break;
+        }
+
         foreach (Vector2Int cellOffset in shapeCells)
         {
             int checkX = baseGridX + cellOffset.x;
@@ -205,6 +248,16 @@ public class Board : MonoBehaviour
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
                 occupiedCells[checkX, checkY] = block;
+
+                // 해당 자리가 의자('2')라면 생성되어 있는 의자 타일의 회전값을 바로 변경
+                string rowStr = boardData.boardShape[rows - 1 - checkY];
+                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                {
+                    if (chairObjects[checkX, checkY] != null)
+                    {
+                        chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                    }
+                }
             }
         }
     }
@@ -278,6 +331,47 @@ public class Board : MonoBehaviour
         }
 
         return false;
+    }
+
+    // 드래그 중일 때 마우스 위치의 의자 방향을 블록에 맞춰 실시간으로 변경
+    public void UpdateChairsDirectionForBlock(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        if (shapeCells == null) return;
+
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
+
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
+
+        BlockDirection currentDir = block.GetCurrentDirection();
+        float chairAngle = 0f;
+
+        switch (currentDir)
+        {
+            case BlockDirection.Down: chairAngle = 0f; break;
+            case BlockDirection.Left: chairAngle = 90f; break;
+            case BlockDirection.Up: chairAngle = 180f; break;
+            case BlockDirection.Right: chairAngle = 270f; break;
+        }
+
+        foreach (Vector2Int cellOffset in shapeCells)
+        {
+            int checkX = baseGridX + cellOffset.x;
+            int checkY = baseGridY + cellOffset.y;
+
+            if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
+            {
+                string rowStr = boardData.boardShape[rows - 1 - checkY];
+                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                {
+                    if (chairObjects[checkX, checkY] != null)
+                    {
+                        chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                    }
+                }
+            }
+        }
     }
 
     /** 디버깅용이므로 주석처리
