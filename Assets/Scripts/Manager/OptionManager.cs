@@ -57,7 +57,10 @@ public class OptionManager : MonoBehaviour
 
     private void Start()
     {
-        settingsPanel.SetActive(false);
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
 
         LoadOptions();
         RefreshAllButtons();
