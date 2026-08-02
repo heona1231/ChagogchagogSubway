@@ -154,6 +154,18 @@ public class Player : MonoBehaviour
             mousePos.z = 0f;
             draggingBlock.transform.position = mousePos;
 
+            // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
+            if (Board.Main != null)
+            {
+                Vector2 rawPos = draggingBlock.transform.position;
+                if (Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+                {
+                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                    // 마우스가 위치한 곳의 의자들에 블록의 현재 방향을 실시간 반영
+                    Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                }
+            }
+
             // 드래그 모드 전용 - 마우스를 떼면 배치
             if (!isClickToAttach && Input.GetMouseButtonUp(0))
             {
@@ -225,6 +237,10 @@ public class Player : MonoBehaviour
                 Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
 
+                // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
+                bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                draggingBlock.ChangeBlockSpriteSitdown(isChair);
+
                 Debug.Log($"<color=cyan>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Main 보드</b>에 배치되었습니다. 위치: {snappedPos}");
 
                 CheckGameClear();
@@ -239,11 +255,17 @@ public class Player : MonoBehaviour
             Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
             draggingBlock.ApplyToBoard(Board.Background, snappedPos);
 
+            // Background 보드로 갈 때는 일반 모양(서 있는 모양)으로 설정
+            draggingBlock.ChangeBlockSpriteSitdown(false);
+
             Debug.Log($"<color=yellow>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Background 보드</b>로 이동했습니다. 위치: {snappedPos}");
         }
         else
         {
             draggingBlock.ReturnToStart();
+
+            // 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
+            draggingBlock.ChangeBlockSpriteSitdown(false);
         }
 
         // 드래그 종료 처리

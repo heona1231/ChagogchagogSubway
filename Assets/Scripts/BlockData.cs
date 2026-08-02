@@ -9,6 +9,15 @@ public enum BlockType
     Minigame
 }
 
+// 강혜원 작성, 블럭 방향
+public enum BlockDirection
+{
+    Down = 0,   // 아래(기본)
+    Left = 90,  // 왼쪽
+    Up = 180,   // 위
+    Right = 270 // 오른쪽
+}
+
 [System.Serializable]
 public struct BlockRow
 {
@@ -26,6 +35,7 @@ public class BlockData : ScriptableObject
     public Sprite blockOutlineSprite;
     public Vector2 spriteOffset;
     public BlockType blockType = BlockType.Normal;
+    public BlockDirection defaultDirection = BlockDirection.Down; // 강헤원 작성, 기본 방향 (아래)
 
     //블럭 모양 설정
     [Header("BlockShape")]

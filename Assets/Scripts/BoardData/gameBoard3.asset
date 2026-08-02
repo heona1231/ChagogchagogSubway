@@ -22,7 +22,22 @@ MonoBehaviour:
   - 000000000000
   - 000000000000
   boardOffset: {x: 0, y: 0.66}
-  specialSeats: []
+  specialSeats:
+  - gridIndex: {x: 7, y: 2}
+    requiredType: 0
+    initialDirection: 0
+  - gridIndex: {x: 9, y: 2}
+    requiredType: 0
+    initialDirection: 0
+  - gridIndex: {x: 8, y: 3}
+    requiredType: 0
+    initialDirection: 0
+  - gridIndex: {x: 7, y: 4}
+    requiredType: 0
+    initialDirection: 0
+  - gridIndex: {x: 9, y: 4}
+    requiredType: 0
+    initialDirection: 0
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
   chairPrefab: {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
   tileOffset: {x: 0, y: -0.66}
