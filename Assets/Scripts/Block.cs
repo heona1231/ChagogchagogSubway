@@ -172,15 +172,22 @@ public class Block : MonoBehaviour
     }
 
     //앉았을때 블럭 sprite 변경
-    public void ChangeBlockSpriteSitdown(bool isSit)
+    public void ChangeBlockSpriteSitdown(int sitState)
     {
-        if(isSit)
+        switch (sitState)
         {
-            ChangeBlockSprite(blockData.blockSpriteSit);
-        }
-        else
-        {
-            ChangeBlockSprite(blockData.blockSprite);
+            case 0:
+                ChangeBlockSprite(blockData.blockSprite);
+                break;
+            case 1:
+                ChangeBlockSprite(blockData.blockSpriteSit[0]);
+                break;
+            case 2:
+                ChangeBlockSprite(blockData.blockSpriteSit[1]);
+                break;
+            case 3:
+                ChangeBlockSprite(blockData.blockSpriteSit[2]);
+                break;
         }
     }
 
