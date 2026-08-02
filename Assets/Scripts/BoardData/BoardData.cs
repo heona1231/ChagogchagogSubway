@@ -15,6 +15,7 @@ public struct SpecialSeat
 {
     public Vector2Int gridIndex;       // 좌석의 (X, Y) 인덱스 위치
     public PassengerType requiredType; // 이 자리에 앉아야 하는 승객 타입
+    public BlockDirection initialDirection; // 의자의 초기 방향 설정
 }
 
 [CreateAssetMenu(fileName = "BoardData", menuName = "Scriptable Objects/BoardData")]

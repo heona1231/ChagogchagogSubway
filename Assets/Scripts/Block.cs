@@ -214,4 +214,19 @@ public class Block : MonoBehaviour
     {
         return blockOutlineSprite.activeSelf;
     }
+
+    // 강혜원 작성, 현재 블럭의 회전 각도를 기반으로 방향을 반환하는 함수
+    public BlockDirection GetCurrentDirection()
+    {
+        int angle = Mathf.RoundToInt(transform.eulerAngles.z) % 360;
+        if (angle < 0) angle += 360;
+
+        switch (angle)
+        {
+            case 90: return BlockDirection.Left;
+            case 180: return BlockDirection.Up;
+            case 270: return BlockDirection.Right;
+            default: return BlockDirection.Down;    // 기본 아래
+        }
+    }
 }
