@@ -9,6 +9,14 @@ public enum BlockType
     Minigame
 }
 
+public enum PassengerType
+{
+    Normal,
+    Villain,
+    Elderly,    // 노약자
+    Pregnant    // 임산부
+}
+
 // 강혜원 작성, 블럭 방향
 public enum BlockDirection
 {
@@ -36,6 +44,7 @@ public class BlockData : ScriptableObject
     public Vector2 spriteOffset;
     public BlockType blockType = BlockType.Normal;
     public BlockDirection defaultDirection = BlockDirection.Down; // 강헤원 작성, 기본 방향 (아래)
+    public PassengerType passengerType;
 
     //블럭 모양 설정
     [Header("BlockShape")]

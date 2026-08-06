@@ -295,8 +295,9 @@ public class Board : MonoBehaviour
             int x = seat.gridIndex.x;
             int y = seat.gridIndex.y;
 
+            //서현아 수정, getPassengerType 으로 함수 변경
             Block occupant = occupiedCells[x, y];
-            if (occupant == null || occupant.CurrentType != seat.requiredType) return false;
+            if (occupant == null || occupant.GetPassengerType() != seat.requiredType) return false;
         }
 
         Debug.Log("특수 좌석 배치 완료");

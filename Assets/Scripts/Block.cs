@@ -3,15 +3,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 강혜원 작성
-public enum PassengerType
-{
-    Normal,
-    Villain,
-    Elderly,    // 노약자
-    Pregnant    // 임산부
-}
-
 public class Block : MonoBehaviour
 {
     [SerializeField] private GameObject blockCell;
@@ -22,8 +13,9 @@ public class Block : MonoBehaviour
     [SerializeField] private GameObject blockOutlineSprite;
 
     // 강혜원 작성
-    [SerializeField] private PassengerType currentType = PassengerType.Normal;
-    public PassengerType CurrentType => currentType;
+    //[SerializeField] private PassengerType currentType = PassengerType.Normal;
+    //public PassengerType CurrentType => currentType;
+    //서현아 수정, blockData에서 설정하도록 옮김
     [SerializeField] public Vector2 shapeOffset = Vector2.zero;
     [HideInInspector] public Vector2Int[] shapeCells;
     [HideInInspector] public Board currentBoard = null;
@@ -228,5 +220,10 @@ public class Block : MonoBehaviour
             case 270: return BlockDirection.Right;
             default: return BlockDirection.Down;    // 기본 아래
         }
+    }
+
+    public PassengerType GetPassengerType()
+    {
+        return blockData.passengerType;
     }
 }
