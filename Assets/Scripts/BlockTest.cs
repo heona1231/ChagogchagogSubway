@@ -31,11 +31,11 @@ public class BlockTest : MonoBehaviour
         // 생성 시 어느 보드에 있는지 확인 후 해당 자리를 true로 변경
         if (Board.Main != null && Board.Main.IsValidPlacement(transform.position, shapeOffset, shapeCells))
         {
-            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset));
+            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(transform.position, shapeOffset, shapeCells))
         {
-            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset));
+            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
         }
     }
 

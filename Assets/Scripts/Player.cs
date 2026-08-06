@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
                     else
                     {
                         // 만약 제자리가 안된다면, 해당 보드 내에서 가장 가까운 가능한 위치로 다시 스냅 시도
-                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset);
+                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
 
                         if (originalBoard.IsValidPlacement(snappedPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
                         {
@@ -160,11 +160,14 @@ public class Player : MonoBehaviour
                 Vector2 rawPos = draggingBlock.transform.position;
                 if (Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
                 {
-                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                     // 마우스가 위치한 곳의 의자들에 블록의 현재 방향을 실시간 반영
                     Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 }
             }
+
+            // 보드에 놓여질 위치 보기 활성화
+            UpdatePreview(draggingBlock, draggingBlock.transform.position);
 
             // 드래그 모드 전용 - 마우스를 떼면 배치
             if (!isClickToAttach && Input.GetMouseButtonUp(0))
@@ -220,6 +223,10 @@ public class Player : MonoBehaviour
 
     private void EndDrag()
     {
+        // 보드에 놓여질 위치 보기 비활성화
+        if (Board.Main != null) Board.Main.HidePreview();
+        if (Board.Background != null) Board.Background.HidePreview();
+
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
 
         if (draggingBlock.spriteRenderer != null)
@@ -234,7 +241,7 @@ public class Player : MonoBehaviour
         {
             if (Board.Main.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
             {
-                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
 
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
@@ -252,7 +259,7 @@ public class Player : MonoBehaviour
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
         {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
             draggingBlock.ApplyToBoard(Board.Background, snappedPos);
 
             // Background 보드로 갈 때는 일반 모양(서 있는 모양)으로 설정
@@ -346,6 +353,10 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 보드에 놓여질 위치 보기 비활성화
+        if (Board.Main != null) Board.Main.HidePreview();
+        if (Board.Background != null) Board.Background.HidePreview();
+
         // 잡을 블럭이 없다면 실행 X
         if (hoveredBlock == null)
         {
@@ -399,6 +410,9 @@ public class Player : MonoBehaviour
 
         mousePos.z = 0f;
         keyboardHeldBlock.transform.position = mousePos;
+
+        // 보드에 놓여질 위치 보기 활성화
+        UpdatePreview(keyboardHeldBlock, mousePos);
     }
 
     private void EndKeyboardPickUp()
@@ -418,7 +432,7 @@ public class Player : MonoBehaviour
 
         if (isOverlappingMain && Board.Main.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
         {
-            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, blockToPlace.shapeOffset);
+            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
 
             blockToPlace.ApplyToBoard(Board.Main, snappedPos);
             isPlaced = true;
@@ -428,7 +442,7 @@ public class Player : MonoBehaviour
         else if (Board.Background != null &&
             Board.Background.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
         {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, blockToPlace.shapeOffset);
+            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
 
             blockToPlace.ApplyToBoard(Board.Background, snappedPos);
 
@@ -454,6 +468,28 @@ public class Player : MonoBehaviour
         if (isPlaced)
         {
             CheckGameClear();
+        }
+    }
+
+    // Main과 Background 중 어느 보드에 미리보기를 띄울지 결정하는 함수
+    private void UpdatePreview(Block block, Vector2 rawPos)
+    {
+        if (block == null) return;
+
+        // Main 보드에 조금이라도 걸쳐있는지 확인
+        bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, block.shapeOffset, block.shapeCells);
+
+        if (isOverlappingMain)
+        {
+            // Main에 걸쳤다면 Main에 보여주고 Background 프리뷰는 끔
+            if (Board.Main != null) Board.Main.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
+            if (Board.Background != null) Board.Background.HidePreview();
+        }
+        else
+        {
+            // Main에 안 걸쳤다면 Background에 띄우기 시도
+            if (Board.Main != null) Board.Main.HidePreview();
+            if (Board.Background != null) Board.Background.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
         }
     }
 }
