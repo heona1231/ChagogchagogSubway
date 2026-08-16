@@ -56,13 +56,7 @@ public class Player : MonoBehaviour
 
         if (hitBlock != hoveredBlock)
         {
-            if (hoveredBlock != null) OnHoverExit(hoveredBlock);
             hoveredBlock = hitBlock;
-            if (hoveredBlock != null) OnHoverEnter(hoveredBlock);
-        }
-        else if (hitBlock != null && !hitBlock.isOutlineActive()) // 블럭 아웃라인이 활성화되어 있지 않다면
-        {
-            OnHoverEnter(hitBlock);
         }
     }
 
@@ -100,7 +94,7 @@ public class Player : MonoBehaviour
         // 우클릭 (회전)
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) // 박세은, R키 바인딩
         {
-            Block targetToRotate = draggingBlock != null ? draggingBlock : hoveredBlock;
+            Block targetToRotate = draggingBlock != null ? draggingBlock : (keyboardHeldBlock != null ? keyboardHeldBlock : hoveredBlock);
 
             if (targetToRotate != null)
             {
@@ -152,6 +146,13 @@ public class Player : MonoBehaviour
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f;
+
+            // 배경 보드의 경계를 벗어나는 경우 블록의 위치를 강제
+            if (Board.Background != null)
+            {
+                mousePos = Board.Background.GetClampedRawPosition(mousePos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            }
+
             draggingBlock.transform.position = mousePos;
 
             // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
@@ -175,12 +176,6 @@ public class Player : MonoBehaviour
                 EndDrag();
             }
         }
-
-        // 박세은 추가, 키 바인딩(E키)
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            HandleKeyboardPickUp();
-        }
     }
 
     private void StartDrag(Block targetBlock)
@@ -199,7 +194,6 @@ public class Player : MonoBehaviour
         if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출
-            //targetBlock.spriteRenderer.color = Color.red;
             Debug.Log("미니게임 호출");
             targetBlock.GetComponent<MinigameMashClick>().StartMinigame();
             return;
@@ -213,6 +207,7 @@ public class Player : MonoBehaviour
         if (draggingBlock.currentBoard != null)
         {
             draggingBlock.currentBoard.RemoveBlock(draggingBlock.startDragPosition, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            draggingBlock.currentBoard = null;
         }
 
         if (draggingBlock.spriteRenderer != null)
@@ -239,10 +234,12 @@ public class Player : MonoBehaviour
 
         if (isOverlappingMain)
         {
-            if (Board.Main.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+
+            if (Board.Main.IsValidPlacement(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
             {
-                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
+
 
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
                 bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
@@ -283,30 +280,7 @@ public class Player : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePos) == null)
         {
-            OnHoverExit(currentDroppingBlock);
             hoveredBlock = null;
-        }
-    }
-
-    private void OnHoverEnter(Block block)
-    {
-        // Debug.Log("호버 시작");
-        if (block != null)
-        {
-            if (block.blockData.blockType == BlockType.Minigame) return;
-
-            block.ShowOutline(true);
-        }
-    }
-
-    private void OnHoverExit(Block block)
-    {
-        // Debug.Log("호버 끝남");
-        if (block != null)
-        {
-            if (block.blockData.blockType == BlockType.Minigame) return;
-
-            block.ShowOutline(false);
         }
     }
 
@@ -409,7 +383,25 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         mousePos.z = 0f;
+
+        // 배경 보드의 경계를 벗어나는 경우 블록의 위치를 강제
+        if (Board.Background != null)
+        {
+            mousePos = Board.Background.GetClampedRawPosition(mousePos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+        }
+
         keyboardHeldBlock.transform.position = mousePos;
+
+        // 강혜원 수정, E키로 이동 중에도 의자 방향 회전 실시간 반영
+        if (Board.Main != null)
+        {
+            Vector2 rawPos = keyboardHeldBlock.transform.position;
+            if (Board.Main.IsOverlappingBoard(rawPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells))
+            {
+                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells);
+                Board.Main.UpdateChairsDirectionForBlock(keyboardHeldBlock, snappedPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells);
+            }
+        }
 
         // 보드에 놓여질 위치 보기 활성화
         UpdatePreview(keyboardHeldBlock, mousePos);
@@ -422,6 +414,10 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 강혜원 수정, 보드에 놓여지는 위치 보기 비활성화
+        if (Board.Main != null) Board.Main.HidePreview();
+        if (Board.Background != null) Board.Background.HidePreview();
+
         Block blockToPlace = keyboardHeldBlock;
         Vector2 rawPos = blockToPlace.transform.position;
 
@@ -430,14 +426,21 @@ public class Player : MonoBehaviour
         bool isOverlappingMain = Board.Main != null &&
             Board.Main.IsOverlappingBoard(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
 
-        if (isOverlappingMain && Board.Main.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
+        if (isOverlappingMain)
         {
             Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
 
-            blockToPlace.ApplyToBoard(Board.Main, snappedPos);
-            isPlaced = true;
+            if (Board.Main.IsValidPlacement(snappedPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
+            {
+                blockToPlace.ApplyToBoard(Board.Main, snappedPos);
 
-            Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Main 보드에 배치되었습니다.");
+                // 강혜원 수정, Main 보드에 둘 때 모양 변경 (앉은 모습)
+                bool isChair = Board.Main.IsChairCell(snappedPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
+                blockToPlace.ChangeBlockSpriteSitdown(1);
+
+                isPlaced = true;
+                Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Main 보드에 배치되었습니다.");
+            }
         }
         else if (Board.Background != null &&
             Board.Background.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
@@ -445,6 +448,9 @@ public class Player : MonoBehaviour
             Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
 
             blockToPlace.ApplyToBoard(Board.Background, snappedPos);
+
+            // 강혜원 수정, Background 보드로 갈 때는 일반 모양(서 있는 모양)
+            blockToPlace.ChangeBlockSpriteSitdown(0);
 
             isPlaced = true;
 
@@ -454,6 +460,10 @@ public class Player : MonoBehaviour
         if (!isPlaced)
         {
             blockToPlace.ReturnToStart();
+
+            // 강혜원 수정, 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
+            blockToPlace.ChangeBlockSpriteSitdown(0);
+
             Debug.Log("[E키 배치 실패] 원래 위치로 돌아갑니다.");
         }
 
@@ -464,6 +474,13 @@ public class Player : MonoBehaviour
 
         keyboardHeldBlock = null;
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
+
+        // 강혜원 수정, 드래그를 놓은 후 마우스가 벗어났는지 확인하여 호버 초기화
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (Physics2D.OverlapPoint(mousePos) == null)
+        {
+            hoveredBlock = null;
+        }
 
         if (isPlaced)
         {

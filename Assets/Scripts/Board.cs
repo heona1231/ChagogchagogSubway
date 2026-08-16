@@ -181,6 +181,42 @@ public class Board : MonoBehaviour
         return new Vector2(origin.x + gridX * boardData.gridSize, origin.y + gridY * boardData.gridSize) + blockOffset;
     }
 
+    // 위치를 보드 안쪽으로 강제 제한하여 반환 (드래그 시 밖으로 못 나가게 막는 용도)
+    public Vector2 GetClampedRawPosition(Vector2 rawPosition, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = rawPosition - blockOffset;
+
+        int minX = 0, maxX = columns - 1;
+        int minY = 0, maxY = rows - 1;
+
+        if (shapeCells != null && shapeCells.Length > 0)
+        {
+            minX = int.MaxValue; maxX = int.MinValue;
+            minY = int.MaxValue; maxY = int.MinValue;
+
+            foreach (Vector2Int cell in shapeCells)
+            {
+                if (cell.x < minX) minX = cell.x;
+                if (cell.x > maxX) maxX = cell.x;
+                if (cell.y < minY) minY = cell.y;
+                if (cell.y > maxY) maxY = cell.y;
+            }
+        }
+
+        // 보드의 실제 월드 좌표 경계 계산 (블록의 크기도 고려됨)
+        float minWorldX = origin.x + (-minX) * boardData.gridSize;
+        float maxWorldX = origin.x + (columns - 1 - maxX) * boardData.gridSize;
+        float minWorldY = origin.y + (-minY) * boardData.gridSize;
+        float maxWorldY = origin.y + (rows - 1 - maxY) * boardData.gridSize;
+
+        // 경계선을 벗어나려 하면 끝부분으로 위치를 강제(Clamp)
+        float clampedX = Mathf.Clamp(basePos.x, minWorldX, maxWorldX);
+        float clampedY = Mathf.Clamp(basePos.y, minWorldY, maxWorldY);
+
+        return new Vector2(clampedX, clampedY) + blockOffset;
+    }
+
     // 해당 블럭이 보드 안쪽인지 체크
     public bool IsValidPlacement(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
@@ -418,20 +454,12 @@ public class Board : MonoBehaviour
         previewObject.SetActive(true);
         previewRenderer.sprite = block.blockData.blockOutlineSprite;
 
-        // 회전 적용
-        BlockDirection currentDir = block.GetCurrentDirection();
-        float angle = 0f;
-        switch (currentDir)
-        {
-            case BlockDirection.Down: angle = 0f; break;
-            case BlockDirection.Left: angle = 90f; break;
-            case BlockDirection.Up: angle = 180f; break;
-            case BlockDirection.Right: angle = 270f; break;
-        }
-        previewObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+        // 블록의 실제 회전값을 그대로 프리뷰에 복사
+        previewObject.transform.rotation = block.transform.rotation;
 
-        // 위치 적용 (스냅된 위치 + 블록의 스프라이트 오프셋)
-        previewObject.transform.position = snappedPos + block.blockData.spriteOffset;
+        // 블록이 회전한 각도만큼 오프셋(offset)도 같이 회전시켜서 더해줌
+        Vector3 rotatedOffset = block.transform.rotation * (Vector3)block.blockData.spriteOffset;
+        previewObject.transform.position = (Vector3)snappedPos + rotatedOffset;
 
         // 배치 가능 여부에 따라 아웃라인 색상 변경
         bool isValid = IsValidPlacement(snappedPos, blockOffset, shapeCells);
