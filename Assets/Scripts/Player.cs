@@ -20,8 +20,6 @@ public class Player : MonoBehaviour
     [Header("Keyboard Interaction")]
     [SerializeField] private StageIcon menuIcon;
 
-    private Block keyboardHeldBlock = null;
-
     private void Start()
     {
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
@@ -40,14 +38,13 @@ public class Player : MonoBehaviour
 
         HandleHover();
         HandleInput();
-        HandleKeyboardHeldBlock();
     }
 
     // 마우스 위치에 블록이 있는지 감지
     private void HandleHover()
     {
         // 드래그 중일 때는 다른 블록 호버 무시
-        if (draggingBlock != null || keyboardHeldBlock != null) return; // 박세은, 수정
+        if (draggingBlock != null) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D hit = Physics2D.OverlapPoint(mousePos);
@@ -63,26 +60,16 @@ public class Player : MonoBehaviour
     // 클릭 및 드래그 처리
     private void HandleInput()
     {
-        // 박세은 추가, E키로 집기&놓기(마우스 드래그와 함께)
-        if (keyboardHeldBlock != null && Input.GetMouseButtonDown(0))
-        {
-            EndKeyboardPickUp();
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            HandleKeyboardPickUp();
-            return;
-        }
-
         // 좌클릭 (드래그 시작)
-        if (Input.GetMouseButtonDown(0) && hoveredBlock != null && keyboardHeldBlock == null)   // 박세은, 마우스 드래그와 E키의 동시 사용 막음
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
         {
             if (draggingBlock != null)
             {
                 // 이미 들고 있다면 놓기 (클릭 모드에서만 가능)
-                if (isClickToAttach) EndDrag();
+                if (isClickToAttach || Input.GetKeyDown(KeyCode.E))
+                {
+                    EndDrag();
+                }
             }
             else if (hoveredBlock != null)
             {
@@ -94,7 +81,7 @@ public class Player : MonoBehaviour
         // 우클릭 (회전)
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) // 박세은, R키 바인딩
         {
-            Block targetToRotate = draggingBlock != null ? draggingBlock : (keyboardHeldBlock != null ? keyboardHeldBlock : hoveredBlock);
+            Block targetToRotate = draggingBlock != null ? draggingBlock : hoveredBlock;
 
             if (targetToRotate != null)
             {
@@ -315,177 +302,6 @@ public class Player : MonoBehaviour
         }
 
         menuIcon.ToggleMenu();
-    }
-
-    // E키 바인딩
-    private void HandleKeyboardPickUp()
-    {
-        // 이미 E키로 블럭을 들고 있다면 놓기
-        if (keyboardHeldBlock != null)
-        {
-            EndKeyboardPickUp();
-            return;
-        }
-
-        // 보드에 놓여질 위치 보기 비활성화
-        if (Board.Main != null) Board.Main.HidePreview();
-        if (Board.Background != null) Board.Background.HidePreview();
-
-        // 잡을 블럭이 없다면 실행 X
-        if (hoveredBlock == null)
-        {
-            return;
-        }
-
-        if (hoveredBlock.blockData.blockType == BlockType.Minigame)
-        {
-            hoveredBlock.GetComponent<MinigameMashClick>()?.StartMinigame();
-            return;
-        }
-
-        StartKeyBoardPickUp(hoveredBlock);
-    }
-
-    private void StartKeyBoardPickUp(Block targetBlock)
-    {
-        keyboardHeldBlock = targetBlock;
-
-        Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
-
-        keyboardHeldBlock.startDragPosition = keyboardHeldBlock.transform.position;
-
-        if (keyboardHeldBlock.currentBoard != null)
-        {
-            keyboardHeldBlock.currentBoard.RemoveBlock(
-                keyboardHeldBlock.startDragPosition,
-                keyboardHeldBlock.shapeOffset,
-                keyboardHeldBlock.shapeCells
-                );
-
-            keyboardHeldBlock.currentBoard = null;
-        }
-
-        if (keyboardHeldBlock.spriteRenderer != null)
-        {
-            keyboardHeldBlock.spriteRenderer.sortingOrder = draggingOrder;
-        }
-
-        Debug.Log($"[E키 집기] {keyboardHeldBlock.name}");
-    }
-
-    private void HandleKeyboardHeldBlock()
-    {
-        if (keyboardHeldBlock == null)
-        {
-            return;
-        }
-
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        mousePos.z = 0f;
-
-        // 배경 보드의 경계를 벗어나는 경우 블록의 위치를 강제
-        if (Board.Background != null)
-        {
-            mousePos = Board.Background.GetClampedRawPosition(mousePos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
-        }
-
-        keyboardHeldBlock.transform.position = mousePos;
-
-        // 강혜원 수정, E키로 이동 중에도 의자 방향 회전 실시간 반영
-        if (Board.Main != null)
-        {
-            Vector2 rawPos = keyboardHeldBlock.transform.position;
-            if (Board.Main.IsOverlappingBoard(rawPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells))
-            {
-                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells);
-                Board.Main.UpdateChairsDirectionForBlock(keyboardHeldBlock, snappedPos, keyboardHeldBlock.shapeOffset, keyboardHeldBlock.shapeCells);
-            }
-        }
-
-        // 보드에 놓여질 위치 보기 활성화
-        UpdatePreview(keyboardHeldBlock, mousePos);
-    }
-
-    private void EndKeyboardPickUp()
-    {
-        if (keyboardHeldBlock == null)
-        {
-            return;
-        }
-
-        // 강혜원 수정, 보드에 놓여지는 위치 보기 비활성화
-        if (Board.Main != null) Board.Main.HidePreview();
-        if (Board.Background != null) Board.Background.HidePreview();
-
-        Block blockToPlace = keyboardHeldBlock;
-        Vector2 rawPos = blockToPlace.transform.position;
-
-        bool isPlaced = false;
-
-        bool isOverlappingMain = Board.Main != null &&
-            Board.Main.IsOverlappingBoard(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
-
-        if (isOverlappingMain)
-        {
-            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
-
-            if (Board.Main.IsValidPlacement(snappedPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
-            {
-                blockToPlace.ApplyToBoard(Board.Main, snappedPos);
-
-                // 강혜원 수정, Main 보드에 둘 때 모양 변경 (앉은 모습)
-                bool isChair = Board.Main.IsChairCell(snappedPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
-                blockToPlace.ChangeBlockSpriteSitdown(1);
-
-                isPlaced = true;
-                Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Main 보드에 배치되었습니다.");
-            }
-        }
-        else if (Board.Background != null &&
-            Board.Background.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
-        {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
-
-            blockToPlace.ApplyToBoard(Board.Background, snappedPos);
-
-            // 강혜원 수정, Background 보드로 갈 때는 일반 모양(서 있는 모양)
-            blockToPlace.ChangeBlockSpriteSitdown(0);
-
-            isPlaced = true;
-
-            Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Background 보드에 배치되었습니다.");
-        }
-
-        if (!isPlaced)
-        {
-            blockToPlace.ReturnToStart();
-
-            // 강혜원 수정, 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
-            blockToPlace.ChangeBlockSpriteSitdown(0);
-
-            Debug.Log("[E키 배치 실패] 원래 위치로 돌아갑니다.");
-        }
-
-        if (blockToPlace.spriteRenderer != null)
-        {
-            blockToPlace.spriteRenderer.sortingOrder = blockToPlace.originalOrder;
-        }
-
-        keyboardHeldBlock = null;
-        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
-
-        // 강혜원 수정, 드래그를 놓은 후 마우스가 벗어났는지 확인하여 호버 초기화
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Physics2D.OverlapPoint(mousePos) == null)
-        {
-            hoveredBlock = null;
-        }
-
-        if (isPlaced)
-        {
-            CheckGameClear();
-        }
     }
 
     // Main과 Background 중 어느 보드에 미리보기를 띄울지 결정하는 함수
