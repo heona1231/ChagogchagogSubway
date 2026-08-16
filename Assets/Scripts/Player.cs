@@ -20,8 +20,6 @@ public class Player : MonoBehaviour
     [Header("Keyboard Interaction")]
     [SerializeField] private StageIcon menuIcon;
 
-    private Block keyboardHeldBlock = null;
-
     private void Start()
     {
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
@@ -40,14 +38,13 @@ public class Player : MonoBehaviour
 
         HandleHover();
         HandleInput();
-        HandleKeyboardHeldBlock();
     }
 
     // 마우스 위치에 블록이 있는지 감지
     private void HandleHover()
     {
         // 드래그 중일 때는 다른 블록 호버 무시
-        if (draggingBlock != null || keyboardHeldBlock != null) return; // 박세은, 수정
+        if (draggingBlock != null) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D hit = Physics2D.OverlapPoint(mousePos);
@@ -56,39 +53,23 @@ public class Player : MonoBehaviour
 
         if (hitBlock != hoveredBlock)
         {
-            if (hoveredBlock != null) OnHoverExit(hoveredBlock);
             hoveredBlock = hitBlock;
-            if (hoveredBlock != null) OnHoverEnter(hoveredBlock);
-        }
-        else if (hitBlock != null && !hitBlock.isOutlineActive()) // 블럭 아웃라인이 활성화되어 있지 않다면
-        {
-            OnHoverEnter(hitBlock);
         }
     }
 
     // 클릭 및 드래그 처리
     private void HandleInput()
     {
-        // 박세은 추가, E키로 집기&놓기(마우스 드래그와 함께)
-        if (keyboardHeldBlock != null && Input.GetMouseButtonDown(0))
-        {
-            EndKeyboardPickUp();
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            HandleKeyboardPickUp();
-            return;
-        }
-
         // 좌클릭 (드래그 시작)
-        if (Input.GetMouseButtonDown(0) && hoveredBlock != null && keyboardHeldBlock == null)   // 박세은, 마우스 드래그와 E키의 동시 사용 막음
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
         {
             if (draggingBlock != null)
             {
                 // 이미 들고 있다면 놓기 (클릭 모드에서만 가능)
-                if (isClickToAttach) EndDrag();
+                if (isClickToAttach || Input.GetKeyDown(KeyCode.E))
+                {
+                    EndDrag();
+                }
             }
             else if (hoveredBlock != null)
             {
@@ -127,7 +108,7 @@ public class Player : MonoBehaviour
                     else
                     {
                         // 만약 제자리가 안된다면, 해당 보드 내에서 가장 가까운 가능한 위치로 다시 스냅 시도
-                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset);
+                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
 
                         if (originalBoard.IsValidPlacement(snappedPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
                         {
@@ -152,6 +133,13 @@ public class Player : MonoBehaviour
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f;
+
+            // 배경 보드의 경계를 벗어나는 경우 블록의 위치를 강제
+            if (Board.Background != null)
+            {
+                mousePos = Board.Background.GetClampedRawPosition(mousePos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            }
+
             draggingBlock.transform.position = mousePos;
 
             // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
@@ -160,23 +148,20 @@ public class Player : MonoBehaviour
                 Vector2 rawPos = draggingBlock.transform.position;
                 if (Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
                 {
-                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                     // 마우스가 위치한 곳의 의자들에 블록의 현재 방향을 실시간 반영
                     Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 }
             }
+
+            // 보드에 놓여질 위치 보기 활성화
+            UpdatePreview(draggingBlock, draggingBlock.transform.position);
 
             // 드래그 모드 전용 - 마우스를 떼면 배치
             if (!isClickToAttach && Input.GetMouseButtonUp(0))
             {
                 EndDrag();
             }
-        }
-
-        // 박세은 추가, 키 바인딩(E키)
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            HandleKeyboardPickUp();
         }
     }
 
@@ -196,7 +181,6 @@ public class Player : MonoBehaviour
         if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출
-            //targetBlock.spriteRenderer.color = Color.red;
             Debug.Log("미니게임 호출");
             targetBlock.GetComponent<MinigameMashClick>().StartMinigame();
             return;
@@ -210,6 +194,7 @@ public class Player : MonoBehaviour
         if (draggingBlock.currentBoard != null)
         {
             draggingBlock.currentBoard.RemoveBlock(draggingBlock.startDragPosition, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            draggingBlock.currentBoard = null;
         }
 
         if (draggingBlock.spriteRenderer != null)
@@ -220,6 +205,10 @@ public class Player : MonoBehaviour
 
     private void EndDrag()
     {
+        // 보드에 놓여질 위치 보기 비활성화
+        if (Board.Main != null) Board.Main.HidePreview();
+        if (Board.Background != null) Board.Background.HidePreview();
+
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
 
         if (draggingBlock.spriteRenderer != null)
@@ -232,10 +221,12 @@ public class Player : MonoBehaviour
 
         if (isOverlappingMain)
         {
-            if (Board.Main.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+
+            if (Board.Main.IsValidPlacement(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
             {
-                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
+
 
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
                 bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
@@ -252,7 +243,7 @@ public class Player : MonoBehaviour
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
         {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
             draggingBlock.ApplyToBoard(Board.Background, snappedPos);
 
             // Background 보드로 갈 때는 일반 모양(서 있는 모양)으로 설정
@@ -276,30 +267,7 @@ public class Player : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePos) == null)
         {
-            OnHoverExit(currentDroppingBlock);
             hoveredBlock = null;
-        }
-    }
-
-    private void OnHoverEnter(Block block)
-    {
-        // Debug.Log("호버 시작");
-        if (block != null)
-        {
-            if (block.blockData.blockType == BlockType.Minigame) return;
-
-            block.ShowOutline(true);
-        }
-    }
-
-    private void OnHoverExit(Block block)
-    {
-        // Debug.Log("호버 끝남");
-        if (block != null)
-        {
-            if (block.blockData.blockType == BlockType.Minigame) return;
-
-            block.ShowOutline(false);
         }
     }
 
@@ -336,124 +304,25 @@ public class Player : MonoBehaviour
         menuIcon.ToggleMenu();
     }
 
-    // E키 바인딩
-    private void HandleKeyboardPickUp()
+    // Main과 Background 중 어느 보드에 미리보기를 띄울지 결정하는 함수
+    private void UpdatePreview(Block block, Vector2 rawPos)
     {
-        // 이미 E키로 블럭을 들고 있다면 놓기
-        if (keyboardHeldBlock != null)
+        if (block == null) return;
+
+        // Main 보드에 조금이라도 걸쳐있는지 확인
+        bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, block.shapeOffset, block.shapeCells);
+
+        if (isOverlappingMain)
         {
-            EndKeyboardPickUp();
-            return;
+            // Main에 걸쳤다면 Main에 보여주고 Background 프리뷰는 끔
+            if (Board.Main != null) Board.Main.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
+            if (Board.Background != null) Board.Background.HidePreview();
         }
-
-        // 잡을 블럭이 없다면 실행 X
-        if (hoveredBlock == null)
+        else
         {
-            return;
-        }
-
-        if (hoveredBlock.blockData.blockType == BlockType.Minigame)
-        {
-            hoveredBlock.GetComponent<MinigameMashClick>()?.StartMinigame();
-            return;
-        }
-
-        StartKeyBoardPickUp(hoveredBlock);
-    }
-
-    private void StartKeyBoardPickUp(Block targetBlock)
-    {
-        keyboardHeldBlock = targetBlock;
-
-        Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
-
-        keyboardHeldBlock.startDragPosition = keyboardHeldBlock.transform.position;
-
-        if (keyboardHeldBlock.currentBoard != null)
-        {
-            keyboardHeldBlock.currentBoard.RemoveBlock(
-                keyboardHeldBlock.startDragPosition,
-                keyboardHeldBlock.shapeOffset,
-                keyboardHeldBlock.shapeCells
-                );
-
-            keyboardHeldBlock.currentBoard = null;
-        }
-
-        if (keyboardHeldBlock.spriteRenderer != null)
-        {
-            keyboardHeldBlock.spriteRenderer.sortingOrder = draggingOrder;
-        }
-
-        Debug.Log($"[E키 집기] {keyboardHeldBlock.name}");
-    }
-
-    private void HandleKeyboardHeldBlock()
-    {
-        if (keyboardHeldBlock == null)
-        {
-            return;
-        }
-
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        mousePos.z = 0f;
-        keyboardHeldBlock.transform.position = mousePos;
-    }
-
-    private void EndKeyboardPickUp()
-    {
-        if (keyboardHeldBlock == null)
-        {
-            return;
-        }
-
-        Block blockToPlace = keyboardHeldBlock;
-        Vector2 rawPos = blockToPlace.transform.position;
-
-        bool isPlaced = false;
-
-        bool isOverlappingMain = Board.Main != null &&
-            Board.Main.IsOverlappingBoard(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells);
-
-        if (isOverlappingMain && Board.Main.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
-        {
-            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, blockToPlace.shapeOffset);
-
-            blockToPlace.ApplyToBoard(Board.Main, snappedPos);
-            isPlaced = true;
-
-            Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Main 보드에 배치되었습니다.");
-        }
-        else if (Board.Background != null &&
-            Board.Background.IsValidPlacement(rawPos, blockToPlace.shapeOffset, blockToPlace.shapeCells))
-        {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, blockToPlace.shapeOffset);
-
-            blockToPlace.ApplyToBoard(Board.Background, snappedPos);
-
-            isPlaced = true;
-
-            Debug.Log($"[E키 배치 성공] {blockToPlace.name} 블럭이 Background 보드에 배치되었습니다.");
-        }
-
-        if (!isPlaced)
-        {
-            blockToPlace.ReturnToStart();
-            Debug.Log("[E키 배치 실패] 원래 위치로 돌아갑니다.");
-        }
-
-        if (blockToPlace.spriteRenderer != null)
-        {
-            blockToPlace.spriteRenderer.sortingOrder = blockToPlace.originalOrder;
-        }
-
-        keyboardHeldBlock = null;
-        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
-
-        if (isPlaced)
-        {
-            CheckGameClear();
+            // Main에 안 걸쳤다면 Background에 띄우기 시도
+            if (Board.Main != null) Board.Main.HidePreview();
+            if (Board.Background != null) Board.Background.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
         }
     }
 }

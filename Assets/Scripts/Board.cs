@@ -17,6 +17,10 @@ public class Board : MonoBehaviour
     private Block[,] occupiedCells; // 보드의 어느 칸이 채워져 있는지 기억하는 2차원 배열
     private GameObject[,] chairObjects; // 의자 타일 오브젝트들을 기억하는 배열
 
+    // 블럭이 놓여질 위치를 보여주는 오브젝트 선언
+    private GameObject previewObject;
+    private SpriteRenderer previewRenderer;
+
     private void Awake()
     {
         Initialize(boardData); // stageData 사용 안 할 때만 사용
@@ -116,6 +120,18 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        // 블럭이 놓여질 위치를 보여주는 오브젝트 동적 생성
+        if (previewObject == null)
+        {
+            previewObject = new GameObject("BlockPreview");
+            previewObject.transform.SetParent(this.transform);
+
+            previewRenderer = previewObject.AddComponent<SpriteRenderer>();
+            previewRenderer.sortingOrder = 100; // 다른 블록들보다 항상 위에 보이도록 설정
+
+            previewObject.SetActive(false); // 처음에는 숨겨둠
+        }
     }
 
     // 보드의 왼쪽 아래 칸의 월드 좌표를 계산
@@ -130,23 +146,75 @@ public class Board : MonoBehaviour
     }
 
     // 위치를 보드 안쪽으로 강제 제한하여 반환
-    public Vector2 GetSnappedPosition(Vector2 dropPosition, Vector2 blockOffset)
+    public Vector2 GetSnappedPosition(Vector2 dropPosition, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
         Vector2 origin = GetBottomLeftOrigin();
-
-        // 1. 블록의 0,0 기준 위치 계산
         Vector2 basePos = dropPosition - blockOffset;
 
-        // 2. 가장 가까운 그리드 인덱스 찾기
         int gridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
         int gridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
 
-        // 3. 보드 범위 내로 제한
-        gridX = Mathf.Clamp(gridX, 0, columns - 1);
-        gridY = Mathf.Clamp(gridY, 0, rows - 1);
+        if (shapeCells != null && shapeCells.Length > 0)
+        {
+            // 블록을 구성하는 칸들의 최소/최대 인덱스(범위) 구하기
+            int minX = int.MaxValue, maxX = int.MinValue;
+            int minY = int.MaxValue, maxY = int.MinValue;
 
-        // 4. 스냅된 월드 좌표 반환
+            foreach (Vector2Int cell in shapeCells)
+            {
+                if (cell.x < minX) minX = cell.x;
+                if (cell.x > maxX) maxX = cell.x;
+                if (cell.y < minY) minY = cell.y;
+                if (cell.y > maxY) maxY = cell.y;
+            }
+
+            // 블록의 어느 한 칸도 보드를 벗어나지 않도록 기준점의 위치를 강제 제한
+            gridX = Mathf.Clamp(gridX, -minX, columns - 1 - maxX);
+            gridY = Mathf.Clamp(gridY, -minY, rows - 1 - maxY);
+        }
+        else
+        {
+            gridX = Mathf.Clamp(gridX, 0, columns - 1);
+            gridY = Mathf.Clamp(gridY, 0, rows - 1);
+        }
+
         return new Vector2(origin.x + gridX * boardData.gridSize, origin.y + gridY * boardData.gridSize) + blockOffset;
+    }
+
+    // 위치를 보드 안쪽으로 강제 제한하여 반환 (드래그 시 밖으로 못 나가게 막는 용도)
+    public Vector2 GetClampedRawPosition(Vector2 rawPosition, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = rawPosition - blockOffset;
+
+        int minX = 0, maxX = columns - 1;
+        int minY = 0, maxY = rows - 1;
+
+        if (shapeCells != null && shapeCells.Length > 0)
+        {
+            minX = int.MaxValue; maxX = int.MinValue;
+            minY = int.MaxValue; maxY = int.MinValue;
+
+            foreach (Vector2Int cell in shapeCells)
+            {
+                if (cell.x < minX) minX = cell.x;
+                if (cell.x > maxX) maxX = cell.x;
+                if (cell.y < minY) minY = cell.y;
+                if (cell.y > maxY) maxY = cell.y;
+            }
+        }
+
+        // 보드의 실제 월드 좌표 경계 계산 (블록의 크기도 고려됨)
+        float minWorldX = origin.x + (-minX) * boardData.gridSize;
+        float maxWorldX = origin.x + (columns - 1 - maxX) * boardData.gridSize;
+        float minWorldY = origin.y + (-minY) * boardData.gridSize;
+        float maxWorldY = origin.y + (rows - 1 - maxY) * boardData.gridSize;
+
+        // 경계선을 벗어나려 하면 끝부분으로 위치를 강제(Clamp)
+        float clampedX = Mathf.Clamp(basePos.x, minWorldX, maxWorldX);
+        float clampedY = Mathf.Clamp(basePos.y, minWorldY, maxWorldY);
+
+        return new Vector2(clampedX, clampedY) + blockOffset;
     }
 
     // 해당 블럭이 보드 안쪽인지 체크
@@ -372,6 +440,48 @@ public class Board : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    // 보드에 놓여질 위치 보기 활성화
+    public void ShowPreview(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        if (block == null || block.blockData.blockOutlineSprite == null) return;
+
+        // 마우스 위치를 기반으로 보드판에 스냅된 월드 좌표 계산
+        Vector2 snappedPos = GetSnappedPosition(position, blockOffset, shapeCells);
+
+        // 프리뷰 오브젝트 활성화 및 이미지 적용
+        previewObject.SetActive(true);
+        previewRenderer.sprite = block.blockData.blockOutlineSprite;
+
+        // 블록의 실제 회전값을 그대로 프리뷰에 복사
+        previewObject.transform.rotation = block.transform.rotation;
+
+        // 블록이 회전한 각도만큼 오프셋(offset)도 같이 회전시켜서 더해줌
+        Vector3 rotatedOffset = block.transform.rotation * (Vector3)block.blockData.spriteOffset;
+        previewObject.transform.position = (Vector3)snappedPos + rotatedOffset;
+
+        // 배치 가능 여부에 따라 아웃라인 색상 변경
+        bool isValid = IsValidPlacement(snappedPos, blockOffset, shapeCells);
+        if (isValid)
+        {
+            // 빈 자리면 반투명 하얀색
+            previewRenderer.color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {
+            // 겹치거나 X칸이면 반투명 빨간색
+            previewRenderer.color = new Color(1f, 0f, 0f, 0.5f);
+        }
+    }
+
+    // 보드에 놓여질 위치 보기 비활성화
+    public void HidePreview()
+    {
+        if (previewObject != null)
+        {
+            previewObject.SetActive(false);
         }
     }
 
