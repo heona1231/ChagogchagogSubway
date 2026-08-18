@@ -24,7 +24,7 @@ public class BoardData : ScriptableObject
     public float gridSize = 1.32f;
 
     public BoardType type;
-    public string[] boardShape; // O, X로 이루어진 보드 모양
+    public string[] boardShape; // 0, 1로 이루어진 보드 모양
     public Vector2 boardOffset = Vector2.zero;
 
     public List<SpecialSeat> specialSeats = new List<SpecialSeat>();
