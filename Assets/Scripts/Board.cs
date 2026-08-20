@@ -508,7 +508,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    // 의자 타일인지 판별하는 헬퍼 함수
+    // 의자 타일인지 판별
     private bool IsChairChar(char c)
     {
         return c == '2' || c == '3' || c == '4';
@@ -519,7 +519,32 @@ public class Board : MonoBehaviour
     {
         return c >= '1' && c <= '4';
     }
-    
+
+    // 회전 시 블록이 보드 경계 안에 전체가 들어가는지 판별
+    public bool IsFullyWithinBoard(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
+    {
+        if (shapeCells == null) return false;
+
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
+
+        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
+        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
+
+        foreach (Vector2Int cellOffset in shapeCells)
+        {
+            int checkX = baseGridX + cellOffset.x;
+            int checkY = baseGridY + cellOffset.y;
+
+            // 보드의 실제 물리적 크기 또는 비활성(0) 칸을 벗어나면 false
+            if (checkX < 0 || checkX >= columns || checkY < 0 || checkY >= rows || !isPlayableCell[checkX, checkY])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /** 디버깅용이므로 주석 처리
     private void OnDrawGizmos()
     {

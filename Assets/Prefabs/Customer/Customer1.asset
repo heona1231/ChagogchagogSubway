@@ -14,10 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Customer1
   blockSprite: {fileID: 21300000, guid: 1ca563ee99a12b64d8a76920edb16e27, type: 3}
-  blockSpriteSit: {fileID: 21300000, guid: c3204c135bb805744aaeb48ab230b03f, type: 3}
+  blockSpriteSit:
+  - {fileID: 21300000, guid: 1ca563ee99a12b64d8a76920edb16e27, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   blockOutlineSprite: {fileID: 21300000, guid: ff3e439c6ef74704ca51fe965e1f5538, type: 3}
   spriteOffset: {x: 0, y: 0}
   blockType: 0
+  defaultDirection: 0
+  passengerType: 0
   shapeRows:
   - cols: 000000
   - cols: 000100

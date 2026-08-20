@@ -81,63 +81,11 @@ public class Player : MonoBehaviour
         // 우클릭 (회전)
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) // 박세은, R키 바인딩
         {
-            Block targetToRotate = draggingBlock != null ? draggingBlock : hoveredBlock;
+            Block targetBlock = draggingBlock != null ? draggingBlock : hoveredBlock;
 
-            if (targetToRotate != null)
+            if (targetBlock != null)
             {
-                Vector2 originalPos = targetToRotate.transform.position;
-                Board originalBoard = targetToRotate.currentBoard;
-
-                // 보드에 놓여진 상태에서 회전할 때
-                if (originalBoard != null)
-                {
-                    // 기존 보드 점유 지우기
-                    originalBoard.RemoveBlock(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
-
-                    // 일단 회전
-                    targetToRotate.RotateBlock();
-
-                    // 회전 후 메인 보드 영역을 침범하는지 확인 (걸침 방지용)
-                    bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
-                    bool canRotate = false;
-
-                    if (originalBoard == Board.Main)
-                    {
-                        // 메인 보드에 있던 블록은 회전 후에도 메인 보드 안에 완전히 있어야 함
-                        if (Board.Main.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
-                        {
-                            canRotate = true;
-                        }
-                    }
-                    else if (originalBoard == Board.Background)
-                    {
-                        // 배경 보드에 있던 블록은 회전 후 메인 보드를 침범해선 안 되며, 배경 보드 안에서 유효해야 함
-                        if (!isOverlappingMain && Board.Background.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
-                        {
-                            canRotate = true;
-                        }
-                    }
-
-                    if (canRotate)
-                    {
-                        // 제자리에서 회전이 완벽히 가능하면 보드에 다시 배치
-                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
-                    }
-                    else
-                    {
-                        // 스냅 시도 없이, 제자리가 안 되면 즉시 회전 취소(3번 더 돌려서 원상복구)
-                        targetToRotate.RotateBlock();
-                        targetToRotate.RotateBlock();
-                        targetToRotate.RotateBlock();
-                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
-                        Debug.Log("[회전 실패] 배치 공간이 부족하거나 두 보드에 걸칩니다.");
-                    }
-                }
-                else
-                {
-                    // 드래그 중일 때는 자유롭게 회전 (currentBoard == null)
-                    targetToRotate.RotateBlock();
-                }
+                TryRotateBlock(targetBlock);
             }
         }
 
@@ -203,6 +151,7 @@ public class Player : MonoBehaviour
         Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
 
         draggingBlock.startDragPosition = draggingBlock.transform.position;
+        draggingBlock.SaveOriginalState();
 
         if (draggingBlock.currentBoard != null)
         {
@@ -281,6 +230,59 @@ public class Player : MonoBehaviour
         if (Physics2D.OverlapPoint(mousePos) == null)
         {
             hoveredBlock = null;
+        }
+    }
+
+    private void TryRotateBlock(Block targetBlock)
+    {
+        // 다음 회전 시의 가상 좌표를 계산
+        Vector2Int[] currentCells = targetBlock.shapeCells;
+        Vector2Int[] nextCells = new Vector2Int[currentCells.Length];
+        for (int i = 0; i < currentCells.Length; i++)
+        {
+            nextCells[i] = new Vector2Int(-currentCells[i].y, currentCells[i].x);
+        }
+
+        Vector2 currentPos = targetBlock.transform.position;
+        bool isDragging = (targetBlock == draggingBlock);
+
+        // 바닥에 놓여있는 상태일 때의 예외 처리
+        if (!isDragging)
+        {
+            Board board = targetBlock.currentBoard;
+            if (board != null)
+            {
+                // 현재 자리에서 블록을 임시로 빼고 회전 시 배치 가능한지 검사
+                board.RemoveBlock(currentPos, targetBlock.shapeOffset, currentCells);
+                bool isValid = board.IsValidPlacement(currentPos, targetBlock.shapeOffset, nextCells);
+
+                // 배경 보드에 있는 블록이 회전하면서 메인 보드 영역을 침범하는지 검사
+                if (isValid && board == Board.Background && Board.Main != null)
+                {
+                    if (Board.Main.IsOverlappingBoard(currentPos, targetBlock.shapeOffset, nextCells))
+                    {
+                        isValid = false; // 메인 보드와 겹치면 회전 불가
+                    }
+                }
+
+                if (!isValid)
+                {
+                    // 불가능하면 원상복구하고 회전 취소
+                    board.PlaceBlock(targetBlock, currentPos, targetBlock.shapeOffset, currentCells);
+                    // 회전 실패 시 피드백 추가
+                    return;
+                }
+            }
+        }
+
+        // 모든 예외 처리를 통과했으므로 블록 실제 회전
+        targetBlock.RotateBlock();
+
+        // 바닥에 놓여있던 블록이면 갱신된 형태로 보드에 다시 등록
+        if (!isDragging && targetBlock.currentBoard != null)
+        {
+            // RotateBlock() 내부에서 targetBlock.shapeCells가 갱신되었으므로 이를 사용해 다시 배치
+            targetBlock.currentBoard.PlaceBlock(targetBlock, currentPos, targetBlock.shapeOffset, targetBlock.shapeCells);
         }
     }
 

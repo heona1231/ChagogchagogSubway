@@ -16,26 +16,26 @@ MonoBehaviour:
   type: 0
   boardShape:
   - 000000000000
-  - 000000021200
+  - 000000031200
   - 000000012100
   - 000000021200
   - 000000000000
   - 000000000000
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
-  - gridIndex: {x: 7, y: 2}
+  - gridIndex: {x: 7, y: 1}
+    requiredType: 2
+    initialDirection: 270
+  - gridIndex: {x: 9, y: 1}
     requiredType: 0
     initialDirection: 0
-  - gridIndex: {x: 9, y: 2}
+  - gridIndex: {x: 8, y: 2}
     requiredType: 0
-    initialDirection: 0
-  - gridIndex: {x: 8, y: 3}
+    initialDirection: 180
+  - gridIndex: {x: 7, y: 3}
     requiredType: 0
-    initialDirection: 0
-  - gridIndex: {x: 7, y: 4}
-    requiredType: 0
-    initialDirection: 0
-  - gridIndex: {x: 9, y: 4}
+    initialDirection: 90
+  - gridIndex: {x: 9, y: 3}
     requiredType: 0
     initialDirection: 0
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}

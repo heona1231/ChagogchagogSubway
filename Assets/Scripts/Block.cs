@@ -23,6 +23,11 @@ public class Block : MonoBehaviour
     [HideInInspector] public SpriteRenderer spriteRenderer;
     [HideInInspector] public int originalOrder;
 
+    // 강혜원 작성, 블록의 현재 상태 저장용 변수들
+    [HideInInspector] public Board originalBoard;
+    private Quaternion originalRotation;
+    private Vector2Int[] originalShapeCells;
+
     private void Awake()
     {
         // 강혜원 작성, sprite order 초기값 저장
@@ -194,11 +199,31 @@ public class Block : MonoBehaviour
     // 강혜원 작성, 실패 시 원래 자리로 되돌아가는 함수
     public void ReturnToStart()
     {
+        // 위치, 회전, 모양 배열을 드래그 시작 전 상태로 완벽 복구
         transform.position = startDragPosition;
+        transform.rotation = originalRotation;
+        shapeCells = originalShapeCells;
+
+        // 소속 보드 복구 및 재등록
+        currentBoard = originalBoard;
         if (currentBoard != null)
         {
             currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
+            // 원래 메인 보드였다면 앉은 모습(1), 배경이었다면 서 있는 모습(0)
+            ChangeBlockSpriteSitdown(0);
         }
+        else
+        {
+            ChangeBlockSpriteSitdown(0);
+        }
+    }
+
+    // 강혜원 작성, 드래그 시작 시점의 원본 상태를 저장
+    public void SaveOriginalState()
+    {
+        originalBoard = currentBoard;
+        originalRotation = transform.rotation;
+        originalShapeCells = (Vector2Int[])shapeCells.Clone(); // 참조가 꼬이지 않게 복제해서 백업
     }
 
     // 강혜원 작성, 아웃라인 활성화 상태를 반환(빌런 블럭 미니게임 후 사용)
