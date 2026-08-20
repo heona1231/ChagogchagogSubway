@@ -51,31 +51,42 @@ public class Board : MonoBehaviour
 
         Vector2 origin = GetBottomLeftOrigin();
 
-        // 인스펙터에 적힌 O, X를 분석하여 배열에 세팅
+        // 인스펙터에 적힌 문자를 분석하여 배열에 세팅
         for (int y = 0; y < rows; y++)
         {
             // 인스펙터의 첫 번째 줄(index 0)이 시각적으로 맨 위쪽(가장 큰 y)이 되도록 역순 매핑
             string rowStr = boardData.boardShape[rows - 1 - y];
             for (int x = 0; x < columns; x++)
             {
-                if (x < rowStr.Length && (rowStr[x] == '1' || rowStr[x] == '2'))
+                // 범위를 벗어나면 기본값 '0'으로 처리
+                char cellChar = x < rowStr.Length ? rowStr[x] : '0';
+
+                if (IsPlayableChar(cellChar))
                 {
-                    isPlayableCell[x, y] = true;  // 1 또는 2이면 배치 가능한 자리
+                    isPlayableCell[x, y] = true;  // 배치 가능한 자리
 
                     // Main 보드일 경우 타일 생성
                     if (boardData.type == BoardType.Main && boardData.tilePrefab != null)
                     {
                         Vector2 pos = origin + new Vector2(x * boardData.gridSize, y * boardData.gridSize) + boardData.tileOffset;
 
-                        // 1과 2에 따라 생성할 프리팹 결정
+                        // 문자에 따라 생성할 프리팹 결정
                         GameObject prefabToInstantiate = null;
-                        if (rowStr[x] == '1')
+                        if (cellChar == '1')
                         {
-                            prefabToInstantiate = boardData.tilePrefab; // 일반 타일 프리팹
+                            prefabToInstantiate = boardData.tilePrefab;
                         }
-                        else if (rowStr[x] == '2')
+                        else if (cellChar == '2' && boardData.chairPrefabs.Length > 0)
                         {
-                            prefabToInstantiate = boardData.chairPrefab; // 의자 프리팹
+                            prefabToInstantiate = boardData.chairPrefabs[0]; // 일반석
+                        }
+                        else if (cellChar == '3' && boardData.chairPrefabs.Length > 1)
+                        {
+                            prefabToInstantiate = boardData.chairPrefabs[1]; // 노약자석
+                        }
+                        else if (cellChar == '4' && boardData.chairPrefabs.Length > 2)
+                        {
+                            prefabToInstantiate = boardData.chairPrefabs[2]; // 임산부석
                         }
 
                         // 프리팹이 할당되어 있다면 생성
@@ -86,7 +97,7 @@ public class Board : MonoBehaviour
                             {
                                 foreach (var seat in boardData.specialSeats)
                                 {
-                                    if (seat.gridIndex.x == x && seat.gridIndex.y == y)
+                                    if (seat.gridIndex.x == x && (rows - 1 - seat.gridIndex.y) == y)
                                     {
                                         spawnDir = seat.initialDirection;
                                         break;
@@ -107,7 +118,7 @@ public class Board : MonoBehaviour
                             // 계산된 회전값을 적용하여 생성
                             GameObject spawnedTile = Instantiate(prefabToInstantiate, pos, Quaternion.Euler(0, 0, initAngle), transform);
 
-                            if (rowStr[x] == '2')
+                            if (IsChairChar(cellChar))
                             {
                                 chairObjects[x, y] = spawnedTile;
                             }
@@ -242,7 +253,7 @@ public class Board : MonoBehaviour
                 return false;
             }
 
-            // 해당 칸이 뚫려있는(X) 칸이면 설치 불가
+            // 해당 칸이 뚫려있는('0') 칸이면 설치 불가
             if (!isPlayableCell[checkX, checkY])
             {
                 Debug.Log("[배치 실패] 비활성 칸(X)");
@@ -317,13 +328,17 @@ public class Board : MonoBehaviour
             {
                 occupiedCells[checkX, checkY] = block;
 
-                // 해당 자리가 의자('2')라면 생성되어 있는 의자 타일의 회전값을 바로 변경
+                // 해당 자리가 의자라면 생성되어 있는 의자 타일의 회전값을 바로 변경
                 string rowStr = boardData.boardShape[rows - 1 - checkY];
-                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                if (checkX < rowStr.Length)
                 {
-                    if (chairObjects[checkX, checkY] != null)
+                    char c = rowStr[checkX];
+                    if (IsChairChar(c))
                     {
-                        chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                        if (chairObjects[checkX, checkY] != null)
+                        {
+                            chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                        }
                     }
                 }
             }
@@ -361,7 +376,7 @@ public class Board : MonoBehaviour
         foreach (SpecialSeat seat in boardData.specialSeats)
         {
             int x = seat.gridIndex.x;
-            int y = seat.gridIndex.y;
+            int y = rows - 1 - seat.gridIndex.y;
 
             //서현아 수정, getPassengerType 으로 함수 변경
             Block occupant = occupiedCells[x, y];
@@ -383,7 +398,7 @@ public class Board : MonoBehaviour
         int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
         int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
  
-        // 블록이 닿는 칸 중 '2'가 하나라도 포함되어 있는지 검사
+        // 블록이 닿는 칸 중 의자가 포함되어 있는지 검사
         foreach (Vector2Int cellOffset in shapeCells)
         {
             int checkX = baseGridX + cellOffset.x;
@@ -392,9 +407,13 @@ public class Board : MonoBehaviour
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
                 string rowStr = boardData.boardShape[rows - 1 - checkY];
-                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                if (checkX < rowStr.Length)
                 {
-                    return true;
+                    char c = rowStr[checkX];
+                    if (IsChairChar(c))
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -432,11 +451,15 @@ public class Board : MonoBehaviour
             if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
             {
                 string rowStr = boardData.boardShape[rows - 1 - checkY];
-                if (checkX < rowStr.Length && rowStr[checkX] == '2')
+                if (checkX < rowStr.Length)
                 {
-                    if (chairObjects[checkX, checkY] != null)
+                    char c = rowStr[checkX];
+                    if (IsChairChar(c))
                     {
-                        chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                        if (chairObjects[checkX, checkY] != null)
+                        {
+                            chairObjects[checkX, checkY].transform.rotation = Quaternion.Euler(0, 0, chairAngle);
+                        }
                     }
                 }
             }
@@ -485,7 +508,19 @@ public class Board : MonoBehaviour
         }
     }
 
-    /** 디버깅용이므로 주석처리
+    // 의자 타일인지 판별하는 헬퍼 함수
+    private bool IsChairChar(char c)
+    {
+        return c == '2' || c == '3' || c == '4';
+    }
+
+    // 블록을 둘 수 있는 타일인지 판별
+    private bool IsPlayableChar(char c)
+    {
+        return c >= '1' && c <= '4';
+    }
+    
+    /** 디버깅용이므로 주석 처리
     private void OnDrawGizmos()
     {
         if (boardData.boardShape == null || boardData.boardShape.Length == 0) return;
@@ -499,7 +534,8 @@ public class Board : MonoBehaviour
         {
             foreach (var seat in boardData.specialSeats)
             {
-                Vector2 seatPos = origin + new Vector2(seat.gridIndex.x * boardData.gridSize, seat.gridIndex.y * boardData.gridSize);
+                int mappedY = r - 1 - seat.gridIndex.y;
+                Vector2 seatPos = origin + new Vector2(seat.gridIndex.x * boardData.gridSize, mappedY * boardData.gridSize) + boardData.tileOffset;
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawWireSphere(seatPos, boardData.gridSize * 0.4f);
             }

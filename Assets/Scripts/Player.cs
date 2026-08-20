@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
         HandleHover();
         HandleInput();
     }
-
+    
     // 마우스 위치에 블록이 있는지 감지
     private void HandleHover()
     {
@@ -85,45 +85,58 @@ public class Player : MonoBehaviour
 
             if (targetToRotate != null)
             {
-                // 회전 전 현재 상태 저장
                 Vector2 originalPos = targetToRotate.transform.position;
                 Board originalBoard = targetToRotate.currentBoard;
 
-                // 기존 보드 점유 지우기
+                // 보드에 놓여진 상태에서 회전할 때
                 if (originalBoard != null)
                 {
+                    // 기존 보드 점유 지우기
                     originalBoard.RemoveBlock(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
-                }
 
-                // 회전 함수
-                targetToRotate.RotateBlock();
+                    // 일단 회전
+                    targetToRotate.RotateBlock();
 
-                if (originalBoard != null)
-                {
-                    // 원래 위치(originalPos)가 회전 후에도 유효한지 체크
-                    if (originalBoard.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
+                    // 회전 후 메인 보드 영역을 침범하는지 확인 (걸침 방지용)
+                    bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
+                    bool canRotate = false;
+
+                    if (originalBoard == Board.Main)
                     {
+                        // 메인 보드에 있던 블록은 회전 후에도 메인 보드 안에 완전히 있어야 함
+                        if (Board.Main.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
+                        {
+                            canRotate = true;
+                        }
+                    }
+                    else if (originalBoard == Board.Background)
+                    {
+                        // 배경 보드에 있던 블록은 회전 후 메인 보드를 침범해선 안 되며, 배경 보드 안에서 유효해야 함
+                        if (!isOverlappingMain && Board.Background.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
+                        {
+                            canRotate = true;
+                        }
+                    }
+
+                    if (canRotate)
+                    {
+                        // 제자리에서 회전이 완벽히 가능하면 보드에 다시 배치
                         targetToRotate.ApplyToBoard(originalBoard, originalPos);
                     }
                     else
                     {
-                        // 만약 제자리가 안된다면, 해당 보드 내에서 가장 가까운 가능한 위치로 다시 스냅 시도
-                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
-
-                        if (originalBoard.IsValidPlacement(snappedPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
-                        {
-                            targetToRotate.ApplyToBoard(originalBoard, snappedPos);
-                        }
-                        else
-                        {
-                            // 아예 놓을 데가 없으면 회전 취소 후 원위치
-                            targetToRotate.RotateBlock();
-                            targetToRotate.RotateBlock();
-                            targetToRotate.RotateBlock();
-                            targetToRotate.ApplyToBoard(originalBoard, originalPos);
-                            Debug.Log("[회전 실패] 배치 공간 부족");
-                        }
+                        // 스냅 시도 없이, 제자리가 안 되면 즉시 회전 취소(3번 더 돌려서 원상복구)
+                        targetToRotate.RotateBlock();
+                        targetToRotate.RotateBlock();
+                        targetToRotate.RotateBlock();
+                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
+                        Debug.Log("[회전 실패] 배치 공간이 부족하거나 두 보드에 걸칩니다.");
                     }
+                }
+                else
+                {
+                    // 드래그 중일 때는 자유롭게 회전 (currentBoard == null)
+                    targetToRotate.RotateBlock();
                 }
             }
         }

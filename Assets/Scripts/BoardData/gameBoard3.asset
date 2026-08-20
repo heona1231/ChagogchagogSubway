@@ -39,5 +39,8 @@ MonoBehaviour:
     requiredType: 0
     initialDirection: 0
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
-  chairPrefab: {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
+  chairPrefabs:
+  - {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
+  - {fileID: 2805829480096003139, guid: 55bc1b79aea22c549b91eef2aa885308, type: 3}
+  - {fileID: 2805829480096003139, guid: 1511e97102519574faee9e7038d9d856, type: 3}
   tileOffset: {x: 0, y: -0.66}
