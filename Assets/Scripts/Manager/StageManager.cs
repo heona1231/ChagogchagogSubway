@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class StageManager : MonoBehaviour
 {
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    //[SerializeField] private StageData[] stageDatas;
+    [SerializeField] private StageData[] stageDatas;
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
 
@@ -83,17 +83,17 @@ public class StageManager : MonoBehaviour
         //Debug.Log($"챕터{currentStageData.chapterNumber} 스테이지{currentStageData.stageNumber} 시작");
 
         //서현아 작성, block 생성
-        /*Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
+        Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
 
-        foreach (var blockSpawnData in stageData.blockSpawnDatas)
+        /*foreach (var blockSpawnData in stageData.blockSpawnDatas)
         {
             newBlock.transform.position = new Vector3(blockSpawnData.spawnPosition.x, blockSpawnData.spawnPosition.y, 0f);
             newBlock.transform.rotation = Quaternion.Euler(blockSpawnData.spawnRotation);
             newBlock.Initialize(blockSpawnData.blockDataPrefab);
-        }*/
+        }
 
         GameManager.Instance.StartStage(limitTime, targetTime);
-        Debug.Log($"{currentStageNumber}번 스테이지 시작");
+        Debug.Log($"{currentStageNumber}번 스테이지 시작");*/
     }
 
     private void Update()

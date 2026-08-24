@@ -11,6 +11,7 @@ public class Block : MonoBehaviour
 
     [SerializeField] private GameObject blockSprite;
     [SerializeField] private GameObject blockOutlineSprite;
+    [SerializeField] private GameObject blockOutlineSpriteR;
 
     // 강혜원 작성
     //[SerializeField] private PassengerType currentType = PassengerType.Normal;
@@ -74,7 +75,9 @@ public class Block : MonoBehaviour
 
         blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
+        blockOutlineSpriteR.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSpriteR;
         blockOutlineSprite.gameObject.SetActive(false);
+        blockOutlineSpriteR.gameObject.SetActive(false);
 
         Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
         blockSprite.transform.localPosition = offsetPosition;
@@ -152,9 +155,16 @@ public class Block : MonoBehaviour
     }
 
     //테두리 보이기/끄기
-    public void ShowOutline(bool isShown)
+    public void ShowOutline(bool isShown, bool isRed)
     {
-        blockOutlineSprite.gameObject.SetActive(isShown);
+        if(isRed)
+        {
+            blockOutlineSpriteR.gameObject.SetActive(isShown);
+        }
+        else
+        {
+            blockOutlineSprite.gameObject.SetActive(isShown);
+        }
     }
 
     //블럭 sprite 변경
