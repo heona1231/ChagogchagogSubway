@@ -41,6 +41,7 @@ public class BlockData : ScriptableObject
     public Sprite blockSprite;
     public Sprite[] blockSpriteSit = new Sprite[4];
     public Sprite blockOutlineSprite;
+    public Sprite blockOutlineSpriteR;
     public Vector2 spriteOffset;
     public BlockType blockType = BlockType.Normal;
     public BlockDirection defaultDirection = BlockDirection.Down; // 강헤원 작성, 기본 방향 (아래)

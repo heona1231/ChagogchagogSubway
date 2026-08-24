@@ -1,4 +1,4 @@
-// ¹Ú¼¼Àº ÀÛ¼º
+// ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +29,7 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Sprite nextButtonActiveSprite;
     [SerializeField] private Sprite nextButtonDisabledSprite;
 
-    [Header("Board")] // °­Çý¿ø ÀÛ¼º, board ¿ÀºêÁ§Æ® º¯¼ö ¼³Á¤
+    [Header("Board")] // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, board ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [SerializeField] private Board bgBoard;
     [SerializeField] private Board gameBoard;
 
@@ -66,7 +66,7 @@ public class StageManager : MonoBehaviour
             //timerFillStartPosition = timerFill.position;
         }
 
-        // °­Çý¿ø ÀÛ¼º, ¹è°æ&°ÔÀÓ º¸µå µ¥ÀÌÅÍ stageDataÀÇ °ªÀ¸·Î ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, ï¿½ï¿½ï¿½&ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ stageDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         /**
         bgBoard.boardData = stageData.bgBoardData;
         gameBoard.boardData = stageData.gameBoardData;
@@ -81,9 +81,9 @@ public class StageManager : MonoBehaviour
         //    currentStageData.targetTime
         //);
 
-        //Debug.Log($"Ã©ÅÍ{currentStageData.chapterNumber} ½ºÅ×ÀÌÁö{currentStageData.stageNumber} ½ÃÀÛ");
+        //Debug.Log($"Ã©ï¿½ï¿½{currentStageData.chapterNumber} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{currentStageData.stageNumber} ï¿½ï¿½ï¿½ï¿½");
 
-        //¼­Çö¾Æ ÀÛ¼º, block »ý¼º
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, block ï¿½ï¿½ï¿½ï¿½
         Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
 
         foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
@@ -94,8 +94,9 @@ public class StageManager : MonoBehaviour
         }
 
         GameManager.Instance.StartStage(limitTime, targetTime);
-        //Debug.Log($"{currentStageNumber}¹ø ½ºÅ×ÀÌÁö ½ÃÀÛ");
-        Debug.Log($"Ã©ÅÍ {currentChapterNumber}¹ø,  {currentStageNumber}¹ø ½ºÅ×ÀÌÁö ½ÃÀÛ");
+        //Debug.Log($"{currentStageNumber}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+        Debug.Log($"Ã©ï¿½ï¿½ {currentChapterNumber}ï¿½ï¿½,  {currentStageNumber}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+
     }
 
     private void Update()
@@ -103,8 +104,8 @@ public class StageManager : MonoBehaviour
         UpdateTimerBar();
     }
 
-    // StageData »ç¿ëÇÏÁö ¾ÊÀ¸¸é¼­ ÁÖ¼® Ã³¸®
-    // ¼­Çö¾Æ ¼öÁ¤
+    // StageData ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¼­ ï¿½Ö¼ï¿½ Ã³ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private StageData FindStageData(int chapterNumber, int stageNumber)
     {
         /*int chapterNumber = GameManager.Instance.CurrentChapterNumber;
@@ -123,10 +124,10 @@ public class StageManager : MonoBehaviour
         }
         catch
         {
-            Debug.LogError($"Ã©ÅÍ{chapterNumber} {stageNumber}¹ø ½ºÅ×ÀÌÁö µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError($"Ã©ï¿½ï¿½{chapterNumber} {stageNumber}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         }
 
-        Debug.LogError($"Ã©ÅÍ{chapterNumber} {stageNumber}¹ø ½ºÅ×ÀÌÁö µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+        Debug.LogError($"Ã©ï¿½ï¿½{chapterNumber} {stageNumber}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         return null;
     }
 
@@ -172,11 +173,11 @@ public class StageManager : MonoBehaviour
         if (isCleared) return;
         /**if (!IsPuzzleCleared())
         {
-            Debug.Log("ÆÛÁñ ¹Ì¿Ï¼º");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿Ï¼ï¿½");
             return;
         }**/
 
-        // isCleared = true; // È®ÀÎ¿ë
+        // isCleared = true; // È®ï¿½Î¿ï¿½
 
         bool isSpecialSeatSuccess = Board.Main.CheckAllSpecialSeatsSatisfied();
 
@@ -185,13 +186,13 @@ public class StageManager : MonoBehaviour
 
     private bool IsPuzzleCleared()
     {
-        // ¸ðµç ºí·°ÀÌ Á¤´ä À§Ä¡¿¡ ³õ¿´´ÂÁö È®ÀÎ
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         return false;
     }
 
     private bool IsSpecialSeatSuccess()
     {
-        // Æ¯¼ö ½Â°´ÀÌ Æ¯¼ö ÁÂ¼®¿¡ ¸Â°Ô ¹èÄ¡µÆ´ÂÁö È®ÀÎ
+        // Æ¯ï¿½ï¿½ ï¿½Â°ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Â¼ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½Ä¡ï¿½Æ´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         return false;
     }
 
@@ -215,17 +216,17 @@ public class StageManager : MonoBehaviour
     {
         if (clearPanel == null)
         {
-            Debug.LogError("ClearPanelÀÌ StageManager¿¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("ClearPanelï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
         if (clearStarImage == null)
         {
-            Debug.LogError("ClearStarRenderer°¡ StageManager¿¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("ClearStarRendererï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
-        Debug.Log($"OpenClearPanel ½ÇÇàµÊ / º° {starCount}°³");
+        Debug.Log($"OpenClearPanel ï¿½ï¿½ï¿½ï¿½ï¿½ / ï¿½ï¿½ {starCount}ï¿½ï¿½");
 
         clearPanel.SetActive(true);
         //clearPanel.transform.SetAsLastSibling();
@@ -263,5 +264,5 @@ public class StageManager : MonoBehaviour
     //        PlayerPrefs.Save();
     //    }
     //}
-    // º° ÀúÀåÀ» StageManager°¡ ¾Æ´Ï¶ó GameManager¿¡¼­ ÇÒ °Å±â ¶§¹®¿¡!
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ GameManagerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Å±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
 }
