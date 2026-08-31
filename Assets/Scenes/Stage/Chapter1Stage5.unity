@@ -2575,7 +2575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1546721631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2604,6 +2604,7 @@ MonoBehaviour:
   nextButtonDisabledSprite: {fileID: 21300000, guid: b524010c3e5f5a54aa4e88565bc0ad1c, type: 3}
   bgBoard: {fileID: 0}
   gameBoard: {fileID: 0}
+  blockPrefab: {fileID: 0}
 --- !u!4 &1546721632
 Transform:
   m_ObjectHideFlags: 0

@@ -11,7 +11,6 @@ public class Block : MonoBehaviour
 
     [SerializeField] private GameObject blockSprite;
     [SerializeField] private GameObject blockOutlineSprite;
-    [SerializeField] private GameObject blockOutlineSpriteR;
 
     // 강혜원 작성
     //[SerializeField] private PassengerType currentType = PassengerType.Normal;
@@ -80,9 +79,7 @@ public class Block : MonoBehaviour
 
         blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
-        blockOutlineSpriteR.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSpriteR;
         blockOutlineSprite.gameObject.SetActive(false);
-        blockOutlineSpriteR.gameObject.SetActive(false);
 
         Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
         blockSprite.transform.localPosition = offsetPosition;
@@ -164,12 +161,13 @@ public class Block : MonoBehaviour
     {
         if(isRed)
         {
-            blockOutlineSpriteR.gameObject.SetActive(isShown);
+            blockOutlineSprite.GetComponent<SpriteRenderer>().color = Color.red;
         }
         else
         {
-            blockOutlineSprite.gameObject.SetActive(isShown);
+            blockOutlineSprite.GetComponent<SpriteRenderer>().color = Color.white;
         }
+        blockOutlineSprite.gameObject.SetActive(isShown);
     }
 
     //블럭 sprite 변경

@@ -20,6 +20,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   blockOutlineSprite: {fileID: 21300000, guid: 9b831b0872fd48345aa10b4de606b635, type: 3}
+  blockOutlineSpriteR: {fileID: 21300000, guid: 0747ea776ed05654c99deae2d740e87e, type: 3}
   spriteOffset: {x: 0, y: 0.66}
   blockType: 0
   defaultDirection: 0
