@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class StageManager : MonoBehaviour
 {
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    [SerializeField] private StageData[] stageDatas;
+    [SerializeField] private StageData[][] stageDatas;
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
 
@@ -47,7 +47,7 @@ public class StageManager : MonoBehaviour
     {
         int currentChapterNumber = GameManager.Instance.CurrentChapterNumber;
         int currentStageNumber = GameManager.Instance.CurrentStageNumber;
-        currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
+        //currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
 
         //if (currentStageData == null) return;
 
@@ -84,14 +84,14 @@ public class StageManager : MonoBehaviour
         //Debug.Log($"é��{currentStageData.chapterNumber} ��������{currentStageData.stageNumber} ����");
 
         //������ �ۼ�, block ����
-        Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
+        /*Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
 
         foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
         {
             newBlock.transform.position = new Vector3(blockSpawnData.spawnPosition.x, blockSpawnData.spawnPosition.y, 0f);
             newBlock.transform.rotation = Quaternion.Euler(blockSpawnData.spawnRotation);
             newBlock.Initialize(blockSpawnData.blockDataPrefab);
-        }
+        }*/
 
         GameManager.Instance.StartStage(limitTime, targetTime);
         //Debug.Log($"{currentStageNumber}�� �������� ����");
@@ -120,7 +120,7 @@ public class StageManager : MonoBehaviour
 
         try
         {
-            currentStageData = stageDatas[stageNumber];
+            currentStageData = stageDatas[chapterNumber][stageNumber];
         }
         catch
         {
