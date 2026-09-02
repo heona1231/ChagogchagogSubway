@@ -104,6 +104,7 @@ public class Player : MonoBehaviour
             draggingBlock.transform.position = mousePos;
 
             // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
+            /**
             if (Board.Main != null)
             {
                 Vector2 rawPos = draggingBlock.transform.position;
@@ -114,6 +115,7 @@ public class Player : MonoBehaviour
                     Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 }
             }
+            **/
 
             // 보드에 놓여질 위치 보기 활성화
             UpdatePreview(draggingBlock, draggingBlock.transform.position);
