@@ -2239,6 +2239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a669a25a2a1e6745919c8ad3905e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageDatas:
+  - {fileID: 11400000, guid: 616d474bebe4dd9468dcd37c5b89302d, type: 2}
   limitTime: 60
   targetTime: 30
   timerFill: {fileID: 815984471}
