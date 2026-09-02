@@ -328,6 +328,7 @@ public class Board : MonoBehaviour
             {
                 occupiedCells[checkX, checkY] = block;
 
+                /**
                 // 해당 자리가 의자라면 생성되어 있는 의자 타일의 회전값을 바로 변경
                 string rowStr = boardData.boardShape[rows - 1 - checkY];
                 if (checkX < rowStr.Length)
@@ -341,6 +342,7 @@ public class Board : MonoBehaviour
                         }
                     }
                 }
+                **/
             }
         }
     }
@@ -476,7 +478,6 @@ public class Board : MonoBehaviour
 
         // 프리뷰 오브젝트 활성화 및 이미지 적용
         previewObject.SetActive(true);
-        previewRenderer.sprite = block.blockData.blockOutlineSprite;
 
         // 블록의 실제 회전값을 그대로 프리뷰에 복사
         previewObject.transform.rotation = block.transform.rotation;
@@ -489,13 +490,13 @@ public class Board : MonoBehaviour
         bool isValid = IsValidPlacement(snappedPos, blockOffset, shapeCells);
         if (isValid)
         {
-            // 빈 자리면 반투명 하얀색
-            previewRenderer.color = new Color(1f, 1f, 1f, 0.5f);
+            // 빈 자리면 하얀색
+            previewRenderer.sprite = block.blockData.blockOutlineSprite;
         }
         else
         {
-            // 겹치거나 X칸이면 반투명 빨간색
-            previewRenderer.color = new Color(1f, 0f, 0f, 0.5f);
+            // 겹치거나 X칸이면 빨간색
+            previewRenderer.sprite = block.blockData.blockOutlineSpriteR;
         }
     }
 
