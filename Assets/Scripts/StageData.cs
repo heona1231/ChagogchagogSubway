@@ -1,4 +1,5 @@
 // 박세은 작성
+using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -27,4 +28,10 @@ public class StageData : ScriptableObject
     public BlockSpawnData[] blockSpawnDatas;
 
     //public BlockAnswerData[] blockAnswers;
+}
+
+[Serializable]
+public class StageDataArray
+{
+    public StageData[] stages;
 }

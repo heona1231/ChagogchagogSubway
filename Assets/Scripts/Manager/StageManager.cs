@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class StageManager : MonoBehaviour
 {
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    [SerializeField] private StageData[][] stageDatas;
+    [SerializeField] private StageDataArray[] chapterDatas;
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
 
@@ -119,7 +119,7 @@ public class StageManager : MonoBehaviour
 
         try
         {
-            currentStageData = stageDatas[chapterNumber][stageNumber];
+            //currentStageData = stageDatas[chapterNumber][stageNumber];
         }
         catch
         {
