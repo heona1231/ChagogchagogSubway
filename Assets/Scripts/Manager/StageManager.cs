@@ -45,16 +45,19 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        int currentChapterNumber = GameManager.Instance.CurrentChapterNumber;
-        int currentStageNumber = GameManager.Instance.CurrentStageNumber;
-        //currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
+        int currentChapterNumber = GameManager.Instance.CurrentChapterNumber - 1;
+        int currentStageNumber = GameManager.Instance.CurrentStageNumber - 1;
+        currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
 
-        //if (currentStageData == null) return;
+        Debug.Log("1");
+        if (currentStageData == null) return;
+        Debug.Log("2");
 
         if (clearPanel != null)
         {
             clearPanel.SetActive(false);
         }
+        Debug.Log("3");
 
         if (timerFill != null)
         {
@@ -65,14 +68,15 @@ public class StageManager : MonoBehaviour
             timerFillStartWidth = timerRenderer.bounds.size.x;
             //timerFillStartPosition = timerFill.position;
         }
+        Debug.Log("4");
 
         // ������ �ۼ�, ���&���� ���� ������ stageData�� ������ ����
-        /**
-        bgBoard.boardData = stageData.bgBoardData;
-        gameBoard.boardData = stageData.gameBoardData;
-        bgBoard.Initialize(stageData.bgBoardData);
-        gameBoard.Initialize(stageData.gameBoardData);
-        **/
+
+        bgBoard.boardData = currentStageData.bgBoardData;
+        gameBoard.boardData = currentStageData.gameBoardData;
+        bgBoard.Initialize(currentStageData.bgBoardData);
+        gameBoard.Initialize(currentStageData.gameBoardData);
+        
 
         SetTargetTimeMarker();
 
@@ -82,20 +86,20 @@ public class StageManager : MonoBehaviour
         //);
 
         //Debug.Log($"é��{currentStageData.chapterNumber} ��������{currentStageData.stageNumber} ����");
+        Debug.Log("5");
 
-        //������ �ۼ�, block ����
-        /*Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
+        //서현아 수정, block data 가져오기
+        Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
 
         foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
         {
             newBlock.transform.position = new Vector3(blockSpawnData.spawnPosition.x, blockSpawnData.spawnPosition.y, 0f);
             newBlock.transform.rotation = Quaternion.Euler(blockSpawnData.spawnRotation);
             newBlock.Initialize(blockSpawnData.blockDataPrefab);
-        }*/
+        }
 
         GameManager.Instance.StartStage(limitTime, targetTime);
-        //Debug.Log($"{currentStageNumber}�� �������� ����");
-        Debug.Log($"é�� {currentChapterNumber}��,  {currentStageNumber}�� �������� ����");
+        Debug.Log($"챕터 {currentChapterNumber},  {currentStageNumber}스테이지 블럭 생성 완료");
 
     }
 
@@ -104,8 +108,8 @@ public class StageManager : MonoBehaviour
         UpdateTimerBar();
     }
 
-    // StageData ������� �����鼭 �ּ� ó��
-    // ������ ����
+    // StageData 가져오기
+    // 서현아 수정
     private StageData FindStageData(int chapterNumber, int stageNumber)
     {
         /*int chapterNumber = GameManager.Instance.CurrentChapterNumber;
@@ -120,15 +124,14 @@ public class StageManager : MonoBehaviour
 
         try
         {
-            //currentStageData = stageDatas[chapterNumber][stageNumber];
+            Debug.Log($"챕터{chapterNumber} {stageNumber}스테이지를 찾았습니다.");
+            return chapterDatas[chapterNumber].stages[stageNumber];
         }
         catch
         {
-            Debug.LogError($"é��{chapterNumber} {stageNumber}�� �������� �����͸� ã�� �� �����ϴ�.");
+            Debug.LogError($"챕터{chapterNumber} {stageNumber}스테이지를 찾을 수 없습니다.");
+            return null;
         }
-
-        Debug.LogError($"é��{chapterNumber} {stageNumber}�� �������� �����͸� ã�� �� �����ϴ�.");
-        return null;
     }
 
     private void SetTargetTimeMarker()

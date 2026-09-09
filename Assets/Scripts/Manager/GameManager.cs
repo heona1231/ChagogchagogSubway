@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public int CurrentChapterNumber { get; private set; } = 1;
-    public int CurrentStageNumber { get; private set; }
+    public int CurrentStageNumber { get; private set; } = 1;
 
     [Header("Stage Time")]
     [SerializeField] private float limitTime;
