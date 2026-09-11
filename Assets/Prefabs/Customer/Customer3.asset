@@ -15,10 +15,7 @@ MonoBehaviour:
   blockName: Customer3
   blockSprite: {fileID: 21300000, guid: 5a633ac07e869ff40906ebc65d7f13c4, type: 3}
   blockSpriteSit:
-  - {fileID: 21300000, guid: 5a633ac07e869ff40906ebc65d7f13c4, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 0f559d564cdb32649bf3c8d7a240ce3c, type: 3}
   blockOutlineSprite: {fileID: 21300000, guid: fe50d0586b68e744a93362e23b9e4771, type: 3}
   blockOutlineSpriteR: {fileID: 21300000, guid: aa3b97a7d220acb438a51a239a6d9a78, type: 3}
   spriteOffset: {x: 0, y: 0.72}
