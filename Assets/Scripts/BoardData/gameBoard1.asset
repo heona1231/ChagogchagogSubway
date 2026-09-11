@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc3ebcaabe70ef4ea63f4820d3e518d, type: 3}
   m_Name: gameBoard1
   m_EditorClassIdentifier: 
-  gridSize: 1.33
+  gridSize: 1.32
   type: 0
   boardShape:
   - 000000200000
