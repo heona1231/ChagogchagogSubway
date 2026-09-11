@@ -642,7 +642,7 @@ SpriteRenderer:
   m_SortingLayerID: -1057878625
   m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 61c2e501e03fbb044bfa29a002a0b2f3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: df03b42cef012f34b99cb61de67b7bf5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1134,7 +1134,7 @@ Transform:
   m_GameObject: {fileID: 650345552}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.62, z: 1}
+  m_LocalPosition: {x: 0.01, y: -0.535, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1678,7 +1678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.66
+      value: -1.98
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1795,8 +1795,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1057878625
   m_SortingLayer: -1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: bc505c57e170cc044afc8539bb1e13ea, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: f1d746e703c773b40a7a5f144eb90e05, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2239,8 +2239,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a669a25a2a1e6745919c8ad3905e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageDatas:
-  - {fileID: 11400000, guid: 616d474bebe4dd9468dcd37c5b89302d, type: 2}
   limitTime: 60
   targetTime: 30
   timerFill: {fileID: 815984471}
@@ -2777,7 +2775,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.66
+      value: -0.66
       objectReference: {fileID: 0}
     - target: {fileID: 7520017525707034946, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_LocalPosition.y

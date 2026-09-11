@@ -21,7 +21,8 @@ MonoBehaviour:
   - 111111111111
   - 111111111111
   - 111111111111
-  boardOffset: {x: 0, y: 0.66}
+  boardOffset: {x: 0, y: 0.76}
   specialSeats: []
   tilePrefab: {fileID: 0}
+  chairPrefabs: []
   tileOffset: {x: 0, y: 0}
