@@ -935,7 +935,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d0fe97286aaf26043ad581d51342cc34, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1683,7 +1683,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: bc78b816a05a15e419e569e65247a1ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1835,7 +1835,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4807895b2e6dcc948a71891a349f1c46, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2377,7 +2377,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6deeffdf4bc65f24783d2a9c9e569c95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2663,7 +2663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1546721631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2676,6 +2676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a669a25a2a1e6745919c8ad3905e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterDatas: []
   limitTime: 60
   targetTime: 35
   timerFill: {fileID: 815984471}
@@ -3388,6 +3389,7 @@ SceneRoots:
   - {fileID: 1518515241}
   - {fileID: 1704400116}
   - {fileID: 1546721632}
+  - {fileID: 448684736}
   - {fileID: 1197140111}
   - {fileID: 264763594}
   - {fileID: 1887873358}
@@ -3402,4 +3404,3 @@ SceneRoots:
   - {fileID: 1086771074}
   - {fileID: 800497710}
   - {fileID: 1624103826}
-  - {fileID: 448684736}
