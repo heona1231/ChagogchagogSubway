@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 584bf822743ce534bb92d296da336f8d, type: 3}
+  m_Name: Customer6
+  m_EditorClassIdentifier: 
+  blockName: Customer6
+  blockSprite: {fileID: 21300000, guid: 28889f51dc3c3ab4e9641f1ccded8a9a, type: 3}
+  blockSpriteSit:
+  - {fileID: 21300000, guid: 96a16e30a9507524e8d5e2feeeece8d3, type: 3}
+  blockOutlineSprite: {fileID: 21300000, guid: e0d1e017da5da3b4ca0ba0ccf493622f, type: 3}
+  blockOutlineSpriteR: {fileID: 21300000, guid: e0d1e017da5da3b4ca0ba0ccf493622f, type: 3}
+  spriteOffset: {x: -0.6, y: 0.72}
+  blockType: 0
+  defaultDirection: 0
+  passengerType: 3
+  shapeRows:
+  - cols: 000000
+  - cols: 000100
+  - cols: 000000

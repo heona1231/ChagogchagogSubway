@@ -12,23 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc3ebcaabe70ef4ea63f4820d3e518d, type: 3}
   m_Name: gameBoard1
   m_EditorClassIdentifier: 
-  gridSize: 1.33
+  gridSize: 1.32
   type: 0
   boardShape:
+  - 000000200000
+  - 000000210000
   - 000000000000
-  - 000000000100
-  - 000000000220
   - 000000000000
   - 000000000000
   - 000000000000
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
-  - gridIndex: {x: 9, y: 3}
+  - gridIndex: {x: 6, y: 0}
     requiredType: 0
-    initialDirection: 90
-  - gridIndex: {x: 10, y: 3}
+    initialDirection: 270
+  - gridIndex: {x: 6, y: 1}
     requiredType: 0
-    initialDirection: 180
+    initialDirection: 270
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
   chairPrefabs:
   - {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
