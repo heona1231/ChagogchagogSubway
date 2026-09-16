@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: VillainCustomer1Sit
   m_EditorClassIdentifier: 
   blockName: VillainCustomer1
-  blockSprite: {fileID: 21300000, guid: fe0a0a540232ebe4190d590483aeed55, type: 3}
+  blockSprite: {fileID: 21300000, guid: 52ebb26d7bae3f743aa230b0bd5ff164, type: 3}
   blockSpriteSit:
-  - {fileID: 21300000, guid: fe0a0a540232ebe4190d590483aeed55, type: 3}
+  - {fileID: 21300000, guid: 52ebb26d7bae3f743aa230b0bd5ff164, type: 3}
   blockOutlineSprite: {fileID: 21300000, guid: 588ea140596fcb14a8691973103b0f36, type: 3}
   blockOutlineSpriteR: {fileID: 21300000, guid: 3674e6aef7d19994faf19bd6702d3089, type: 3}
   spriteOffset: {x: 0, y: 0}
+  shapeOffset: {x: 0, y: 0}
   blockType: 1
   defaultDirection: 0
   passengerType: 1
@@ -29,8 +30,8 @@ MonoBehaviour:
   clearedBlockData: {fileID: 11400000, guid: a2bba67e0ca85f741a5230591287535d, type: 2}
   gaugeSprites:
   - gaugeValue: 60
-    sprite: {fileID: 21300000, guid: fe0a0a540232ebe4190d590483aeed55, type: 3}
+    sprite: {fileID: 21300000, guid: 52ebb26d7bae3f743aa230b0bd5ff164, type: 3}
   - gaugeValue: 30
-    sprite: {fileID: 21300000, guid: 9de6b0b8fdeed4f44b79f0135cfb4d74, type: 3}
+    sprite: {fileID: 21300000, guid: 41430d8d46ba97e46960a1e330e558e0, type: 3}
   - gaugeValue: 0
-    sprite: {fileID: 21300000, guid: b3aa6fa5042b75e45bbcc2e694805bf4, type: 3}
+    sprite: {fileID: 21300000, guid: ff10c3f40f0bad44e9043507af35b25c, type: 3}
