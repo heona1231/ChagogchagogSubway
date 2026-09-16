@@ -16,7 +16,7 @@ public class Block : MonoBehaviour
     //[SerializeField] private PassengerType currentType = PassengerType.Normal;
     //public PassengerType CurrentType => currentType;
     //서현아 수정, blockData에서 설정하도록 옮김
-    [SerializeField] public Vector2 shapeOffset = Vector2.zero;
+    [SerializeField] public Vector2 shapeOffset;
     [HideInInspector] public Vector2Int[] shapeCells;
     [HideInInspector] public Board currentBoard = null;
     [HideInInspector] public Vector2 startDragPosition;
@@ -41,7 +41,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void Start()
+    /*private void Start()
     {
         if (blockData != null)
         {
@@ -57,18 +57,17 @@ public class Block : MonoBehaviour
         {
             ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
         }
-    }
+    }*/
 
     public void Initialize(BlockData inputBlockData)
     {
         this.blockData = inputBlockData;
-
         BuildBlock();
         GetGimmickComponenet();
     }
 
     //blockData를 토대로 모양 구성
-    private void BuildBlock()
+    public void BuildBlock()
     {
         foreach (Transform child in transform)
         {
@@ -80,6 +79,8 @@ public class Block : MonoBehaviour
         blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
         blockOutlineSprite.gameObject.SetActive(false);
+
+        shapeOffset = blockData.spriteOffset;
 
         Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
         blockSprite.transform.localPosition = offsetPosition;
@@ -124,6 +125,15 @@ public class Block : MonoBehaviour
         }
 
         shapeCells = cellsList.ToArray(); // 강혜원 작성
+
+        if (Board.Main != null && Board.Main.IsValidPlacement(transform.position, shapeOffset, shapeCells))
+        {
+            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
+        }
+        else if (Board.Background != null && Board.Background.IsValidPlacement(transform.position, shapeOffset, shapeCells))
+        {
+            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
+        }
     }
 
     //blockType에 따라 컴포넌트 추가 부여

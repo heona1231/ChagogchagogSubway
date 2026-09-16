@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
-        Initialize(boardData); // stageData 사용 안 할 때만 사용
+        //Initialize(boardData); // stageData 사용 안 할 때만 사용
     }
 
     // 외부에서 호출하여 boardData를 설정하고 초기화하는 함수
