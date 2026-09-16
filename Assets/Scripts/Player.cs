@@ -194,7 +194,14 @@ public class Player : MonoBehaviour
 
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
                 bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
-                draggingBlock.ChangeBlockSpriteSitdown(1);
+                if (isChair)
+                {
+                    draggingBlock.ChangeBlockSpriteSitdown(1); // 의자 타일이면 앉은 모양
+                }
+                else
+                {
+                    draggingBlock.ChangeBlockSpriteSitdown(0); // Main 보드의 일반 타일이면 서 있는 모양
+                }
 
                 Debug.Log($"<color=cyan>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Main 보드</b>에 배치되었습니다. 위치: {snappedPos}");
 
