@@ -5,8 +5,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int CurrentChapterNumber { get; private set; } = 1;
-    public int CurrentStageNumber { get; private set; } = 1;
+    [Header("stagenumber")]
+    /*[SerializeField] public int CurrentChapterNumber { get; private set; } = 1;
+    [SerializeField] public int CurrentStageNumber { get; private set; } = 1;*/
+    [SerializeField] public int CurrentChapterNumber = 1;
+    [SerializeField] public int CurrentStageNumber = 1;
 
     [Header("Stage Time")]
     [SerializeField] private float limitTime;

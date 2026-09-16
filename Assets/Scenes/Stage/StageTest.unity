@@ -2245,7 +2245,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapterDatas:
   - stages:
-    - {fileID: 11400000, guid: 990f8f99a38e2644fb16355dc8ad88b3, type: 2}
+    - {fileID: 11400000, guid: 5f23617eaf2bfe14aa48408f2129a993, type: 2}
+    - {fileID: 11400000, guid: 572f9784648e13d4794b115a78f84163, type: 2}
+    - {fileID: 11400000, guid: 95bfc4f4b20691b4da46d519bfc48106, type: 2}
+    - {fileID: 11400000, guid: df96b6718a7594149a74e0a334c99d4e, type: 2}
+    - {fileID: 11400000, guid: 587986c46e961aa41993999f5c6d9ef5, type: 2}
+    - {fileID: 11400000, guid: e5776354cbafb2644ba6fecba60adeb6, type: 2}
+    - {fileID: 11400000, guid: b2f353f728c4d5d41bf6cadae2883327, type: 2}
+    - {fileID: 11400000, guid: d457ae2f29d6dba44975353f88825b1b, type: 2}
+    - {fileID: 11400000, guid: 06b2d23208c423a4bbdb9ec47cb417e8, type: 2}
+    - {fileID: 11400000, guid: e8c458bbace5390488702dcabd8b8be0, type: 2}
+    - {fileID: 11400000, guid: 3c4559e5faabe3e4f8c2d6c506372b93, type: 2}
+    - {fileID: 11400000, guid: 34f391f893034cb47ac7b257ad99e8cc, type: 2}
+    - {fileID: 11400000, guid: 0cb837b654b5ef2469281bcf277d5302, type: 2}
+    - {fileID: 11400000, guid: d6dfd783ad1ead14280f11c750c16e11, type: 2}
+    - {fileID: 11400000, guid: 722c3614bc7636348935c46724817fe8, type: 2}
   limitTime: 60
   targetTime: 30
   timerFill: {fileID: 815984471}
@@ -2355,6 +2369,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 070f6dcb309e3b442ba0e610e96a16b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentChapterNumber: 1
+  CurrentStageNumber: 1
   limitTime: 60
   targetTime: 30
 --- !u!4 &1704400116
