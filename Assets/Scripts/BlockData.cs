@@ -43,6 +43,7 @@ public class BlockData : ScriptableObject
     public Sprite blockOutlineSprite;
     public Sprite blockOutlineSpriteR;
     public Vector2 spriteOffset;
+    public Vector2 shapeOffset;
     public BlockType blockType = BlockType.Normal;
     public BlockDirection defaultDirection = BlockDirection.Down; // 강헤원 작성, 기본 방향 (아래)
     public PassengerType passengerType;

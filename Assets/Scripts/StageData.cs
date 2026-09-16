@@ -7,7 +7,7 @@ public class BlockSpawnData
 {
     public BlockData blockDataPrefab;
     public Vector3 spawnPosition;
-    public Vector3 spawnRotation;
+    public int spawnRotation;
 }
 
 [CreateAssetMenu(fileName = "StageData", menuName = "Stage/StageData")]

@@ -86,8 +86,12 @@ public class StageManager : MonoBehaviour
         //서현아 수정, block data 가져오기
         foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
         {
-            Block newBlock = Instantiate(blockPrefab, blockSpawnData.spawnPosition, Quaternion.Euler(blockSpawnData.spawnRotation));
+            Block newBlock = Instantiate(blockPrefab, blockSpawnData.spawnPosition, Quaternion.identity);
             newBlock.Initialize(blockSpawnData.blockDataPrefab);
+            for(int i = 0; i < blockSpawnData.spawnRotation / 90; i++)
+            {
+                newBlock.RotateBlock();
+            }
         }
 
         GameManager.Instance.StartStage(limitTime, targetTime);

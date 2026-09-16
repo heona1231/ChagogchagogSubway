@@ -80,8 +80,9 @@ public class Block : MonoBehaviour
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
         blockOutlineSprite.gameObject.SetActive(false);
 
-        shapeOffset = blockData.spriteOffset;
+        blockSprite.gameObject.transform.position = blockData.spriteOffset;
 
+        shapeOffset = blockData.shapeOffset;
         Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
         blockSprite.transform.localPosition = offsetPosition;
         blockOutlineSprite.transform.localPosition = offsetPosition;

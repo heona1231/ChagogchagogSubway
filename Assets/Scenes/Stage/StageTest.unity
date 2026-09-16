@@ -1771,7 +1771,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b19780dbc1fa9344f9d2eb5c875e8d01, type: 2}
     - target: {fileID: 3304798138037706738, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: shapeOffset.y
-      value: -0.66
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6924728406570878383, guid: b00f9e693e3860448b7370395417665d, type: 3}
       propertyPath: m_Name
@@ -2370,7 +2370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentChapterNumber: 1
-  CurrentStageNumber: 2
+  CurrentStageNumber: 15
   limitTime: 60
   targetTime: 30
 --- !u!4 &1704400116
