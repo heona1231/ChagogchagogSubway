@@ -21,7 +21,7 @@ MonoBehaviour:
   - {fileID: 0}
   blockOutlineSprite: {fileID: 21300000, guid: 588ea140596fcb14a8691973103b0f36, type: 3}
   blockOutlineSpriteR: {fileID: 21300000, guid: 3674e6aef7d19994faf19bd6702d3089, type: 3}
-  spriteOffset: {x: 0, y: 0}
+  spriteOffset: {x: 0, y: -0.66}
   blockType: 1
   defaultDirection: 0
   passengerType: 1

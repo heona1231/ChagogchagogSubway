@@ -49,15 +49,12 @@ public class StageManager : MonoBehaviour
         int currentStageNumber = GameManager.Instance.CurrentStageNumber - 1;
         currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
 
-        Debug.Log("1");
         if (currentStageData == null) return;
-        Debug.Log("2");
 
         if (clearPanel != null)
         {
             clearPanel.SetActive(false);
         }
-        Debug.Log("3");
 
         if (timerFill != null)
         {
@@ -68,7 +65,6 @@ public class StageManager : MonoBehaviour
             timerFillStartWidth = timerRenderer.bounds.size.x;
             //timerFillStartPosition = timerFill.position;
         }
-        Debug.Log("4");
 
         // ������ �ۼ�, ���&���� ���� ������ stageData�� ������ ����
 
@@ -86,15 +82,11 @@ public class StageManager : MonoBehaviour
         //);
 
         //Debug.Log($"é��{currentStageData.chapterNumber} ��������{currentStageData.stageNumber} ����");
-        Debug.Log("5");
 
         //서현아 수정, block data 가져오기
-        Block newBlock = Instantiate(blockPrefab, Vector3.zero, Quaternion.identity);
-
         foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
         {
-            newBlock.transform.position = new Vector3(blockSpawnData.spawnPosition.x, blockSpawnData.spawnPosition.y, 0f);
-            newBlock.transform.rotation = Quaternion.Euler(blockSpawnData.spawnRotation);
+            Block newBlock = Instantiate(blockPrefab, blockSpawnData.spawnPosition, Quaternion.Euler(blockSpawnData.spawnRotation));
             newBlock.Initialize(blockSpawnData.blockDataPrefab);
         }
 
