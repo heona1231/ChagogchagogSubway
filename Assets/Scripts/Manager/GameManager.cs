@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float limitTime;
     [SerializeField] private float targetTime;
 
-    private float currentTime;
+    [SerializeField] private float currentTime;
     private float stageStartTime;
     private bool isPlaying;
     private bool isPaused;
@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"챕터 {CurrentChapterNumber} " + $"스테이지 {CurrentStageNumber}로 이동하기");
 
-        SceneManager.LoadScene(sceneName);
+        //SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene("StageTest");
     }
 
     public void StartStage(float stageLimitTime, float stageTargetTime)
@@ -172,13 +173,14 @@ public class GameManager : MonoBehaviour
     {
         int nextStageNumber = CurrentStageNumber + 1;
 
-        if (nextStageNumber > 5)
+        /*if (nextStageNumber > 5)
         {
             BackToChapter();    // 일단 스테이지 5개만 있어서 그 이상은 '다음으로' 버튼 눌렀을 때 챕터 화면으로 돌아가게 해뒀습니다~
             return;
         }
-
+        */
         SelectStage(CurrentChapterNumber, nextStageNumber);
+
     }
 
     public void EndGame()
