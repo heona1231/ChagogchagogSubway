@@ -2373,6 +2373,7 @@ MonoBehaviour:
   CurrentStageNumber: 1
   limitTime: 60
   targetTime: 30
+  currentTime: 0
 --- !u!4 &1704400116
 Transform:
   m_ObjectHideFlags: 0

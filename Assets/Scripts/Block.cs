@@ -156,7 +156,7 @@ public class Block : MonoBehaviour
     //회전 함수 (호출시 90도 돌아감)
     public void RotateBlock()
     {
-        transform.Rotate(0, 0, 90f);
+        transform.Rotate(0, 0, -90f);
 
         // 강혜원 작성, 회전 시 보드가 검사해야 하는 좌표도 함께 처리
         for (int i = 0; i < shapeCells.Length; i++)
