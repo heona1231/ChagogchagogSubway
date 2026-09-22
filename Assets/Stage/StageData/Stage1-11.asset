@@ -16,18 +16,18 @@ MonoBehaviour:
   stageNumber: 11
   limitTime: 60
   targetTime: 30
-  bgBoardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
-  gameBoardData: {fileID: 11400000, guid: f3edf53f33559934baaf5d6795362141, type: 2}
+  bgBoardData: {fileID: 11400000, guid: be84e0b440f4d9b4898bd841c04a8132, type: 2}
+  gameBoardData: {fileID: 11400000, guid: 7c0fd6f0a5d3bd94986bd3c5c5036e54, type: 2}
   blockSpawnDatas:
   - blockDataPrefab: {fileID: 11400000, guid: ee7a307071e05bd44805af09d4cfee13, type: 2}
     spawnPosition: {x: 0, y: 1.32, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 90}
+    spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: 1fc57b685725b704d8350d7a6b422476, type: 2}
     spawnPosition: {x: 1.32, y: 1.32, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 90}
+    spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: 07c2a41db03db424691d0caa93a55c83, type: 2}
     spawnPosition: {x: 1.32, y: -1.98, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 0}
+    spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: 1e7279980f97e784997498cc9aae0d16, type: 2}
     spawnPosition: {x: -0.66, y: -1.98, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 270}
+    spawnRotation: 0
