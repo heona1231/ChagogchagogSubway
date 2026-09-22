@@ -25,7 +25,7 @@ MonoBehaviour:
   specialSeats:
   - gridIndex: {x: 6, y: 1}
     requiredType: 0
-    initialDirection: 270
+    initialDirection: 90
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
   chairPrefabs:
   - {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
