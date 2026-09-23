@@ -16,8 +16,8 @@ MonoBehaviour:
   stageNumber: 1
   limitTime: 6
   targetTime: 4
-  bgBoardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
-  gameBoardData: {fileID: 11400000, guid: ebe5f2dd67ed6b84188cbed0bc26a8b1, type: 2}
+  bgBoardData: {fileID: 11400000, guid: be84e0b440f4d9b4898bd841c04a8132, type: 2}
+  gameBoardData: {fileID: 11400000, guid: d7ab9a44c65ffd744bd75108d4de96aa, type: 2}
   blockSpawnDatas:
   - blockDataPrefab: {fileID: 11400000, guid: b19780dbc1fa9344f9d2eb5c875e8d01, type: 2}
     spawnPosition: {x: -3.96, y: -0.66, z: 0}
