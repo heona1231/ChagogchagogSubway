@@ -208,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 5
-  isLocked: 0
 --- !u!114 &5174840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,8 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 10
-  isLocked: 0
 --- !u!114 &27786612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,8 +623,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 4
-  isLocked: 0
 --- !u!114 &43723049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1875,8 +1875,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 28
-  isLocked: 0
 --- !u!114 &229399971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2097,8 +2097,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 18
-  isLocked: 0
 --- !u!114 &267336741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3077,8 +3077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 16
-  isLocked: 0
 --- !u!114 &423520960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3281,8 +3281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 8
-  isLocked: 0
 --- !u!114 &462633115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3858,8 +3858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 12
-  isLocked: 0
 --- !u!114 &526053983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4237,8 +4237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 13
-  isLocked: 0
 --- !u!114 &570319641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4725,8 +4725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 20
-  isLocked: 0
 --- !u!114 &705254514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4872,8 +4872,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 19
-  isLocked: 0
 --- !u!114 &707081995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5001,8 +5001,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 2
-  isLocked: 0
 --- !u!114 &721246251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5166,8 +5166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 26
-  isLocked: 0
 --- !u!114 &725184562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5937,8 +5937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 22
-  isLocked: 0
 --- !u!114 &975436167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6305,8 +6305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 25
-  isLocked: 0
 --- !u!114 &1010483452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6867,8 +6867,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 14
-  isLocked: 0
 --- !u!114 &1079491565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7197,8 +7197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 3
-  isLocked: 0
 --- !u!114 &1137043744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7611,8 +7611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 1
-  isLocked: 0
 --- !u!1 &1207698837
 GameObject:
   m_ObjectHideFlags: 0
@@ -7922,8 +7922,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 15
-  isLocked: 0
 --- !u!114 &1286990801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8322,8 +8322,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 6
-  isLocked: 0
 --- !u!114 &1297383602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8848,8 +8848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 21
-  isLocked: 0
 --- !u!114 &1358218051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9270,8 +9270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 9
-  isLocked: 0
 --- !u!114 &1393809553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9435,8 +9435,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 24
-  isLocked: 0
 --- !u!114 &1402282569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9582,8 +9582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 29
-  isLocked: 0
 --- !u!114 &1444426116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10183,8 +10183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 23
-  isLocked: 0
 --- !u!114 &1526418166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10234,7 +10234,7 @@ GameObject:
   - component: {fileID: 1568001062}
   - component: {fileID: 1568001061}
   m_Layer: 0
-  m_Name: bgChapterScene1
+  m_Name: bgChapterScene2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10284,7 +10284,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8566e68e7f06a9b41ac719eb40b3c890, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6289b1b52220ea443874d1a5c4a1964c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -10567,8 +10567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 27
-  isLocked: 0
 --- !u!114 &1632441684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12258,8 +12258,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 070f6dcb309e3b442ba0e610e96a16b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentChapterNumber: 1
+  CurrentStageNumber: 1
   limitTime: 60
   targetTime: 0
+  currentTime: 0
 --- !u!4 &1900145432
 Transform:
   m_ObjectHideFlags: 0
@@ -12439,8 +12442,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 7
-  isLocked: 0
 --- !u!114 &1931892520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12974,8 +12977,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 17
-  isLocked: 0
 --- !u!114 &2037705692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13257,8 +13260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 30
-  isLocked: 0
 --- !u!114 &2080818964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13386,8 +13389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f33d01c281b694b8428886f64bb9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapterNumber: 1
   stageNumber: 11
-  isLocked: 0
 --- !u!114 &2085782011
 MonoBehaviour:
   m_ObjectHideFlags: 0
