@@ -423,7 +423,6 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    /**
     // 드래그 중일 때 마우스 위치의 의자 방향을 블록에 맞춰 실시간으로 변경
     public void UpdateChairsDirectionForBlock(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
@@ -468,7 +467,6 @@ public class Board : MonoBehaviour
             }
         }
     }
-    **/
 
     // 보드에 놓여질 위치 보기 활성화
     public void ShowPreview(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
@@ -546,34 +544,6 @@ public class Board : MonoBehaviour
             }
         }
         return true;
-    }
-
-    // 보드의 해당 위치에 있는 의자의 각도를 반환하는 함수
-    public float GetChairAngle(Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
-    {
-        if (shapeCells == null) return -1f;
-
-        Vector2 origin = GetBottomLeftOrigin();
-        Vector2 basePos = position - blockOffset;
-
-        int baseGridX = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
-        int baseGridY = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
-
-        foreach (Vector2Int cellOffset in shapeCells)
-        {
-            int checkX = baseGridX + cellOffset.x;
-            int checkY = baseGridY + cellOffset.y;
-
-            if (checkX >= 0 && checkX < columns && checkY >= 0 && checkY < rows)
-            {
-                if (chairObjects[checkX, checkY] != null)
-                {
-                    // 의자 오브젝트의 Z축 회전값을 반환
-                    return chairObjects[checkX, checkY].transform.eulerAngles.z;
-                }
-            }
-        }
-        return -1f; // 의자가 없으면 -1 반환
     }
 
     /** 디버깅용이므로 주석 처리
