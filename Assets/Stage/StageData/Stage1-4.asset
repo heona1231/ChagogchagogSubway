@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapterNumber: 1
   stageNumber: 4
-  limitTime: 7.5
-  targetTime: 5
-  bgBoardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
-  gameBoardData: {fileID: 11400000, guid: ee14438e4778628429f39b424d06f58e, type: 2}
+  limitTime: 60
+  targetTime: 30
+  bgBoardData: {fileID: 11400000, guid: be84e0b440f4d9b4898bd841c04a8132, type: 2}
+  gameBoardData: {fileID: 11400000, guid: a44687c6ac796584d9901123b619831c, type: 2}
   blockSpawnDatas:
   - blockDataPrefab: {fileID: 11400000, guid: b19780dbc1fa9344f9d2eb5c875e8d01, type: 2}
-    spawnPosition: {x: -6.6, y: -1.32, z: 0}
+    spawnPosition: {x: -1.32, y: 0, z: 0}
     spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: c18873a70ce879643a0a77ba719fe8eb, type: 2}
-    spawnPosition: {x: -4.62, y: 1.32, z: 0}
+    spawnPosition: {x: -0.66, y: 1.32, z: 0}
     spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: ee7a307071e05bd44805af09d4cfee13, type: 2}
-    spawnPosition: {x: -3.3, y: -1.98, z: 0}
+    spawnPosition: {x: 1.32, y: -0.66, z: 0}
     spawnRotation: 0

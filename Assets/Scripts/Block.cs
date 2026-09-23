@@ -204,6 +204,9 @@ public class Block : MonoBehaviour
             case 3:
                 ChangeBlockSprite(blockData.blockSpriteSit[2]);
                 break;
+            case 4:
+                ChangeBlockSprite(blockData.blockSpriteSit[3]);
+                break;
         }
     }
 
@@ -259,9 +262,9 @@ public class Block : MonoBehaviour
 
         switch (angle)
         {
-            case 90: return BlockDirection.Left;
+            case 270: return BlockDirection.Left;
             case 180: return BlockDirection.Up;
-            case 270: return BlockDirection.Right;
+            case 90: return BlockDirection.Right;
             default: return BlockDirection.Down;    // 기본 아래
         }
     }
