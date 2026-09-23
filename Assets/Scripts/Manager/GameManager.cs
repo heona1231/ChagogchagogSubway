@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"챕터 {CurrentChapterNumber} " + $"스테이지 {CurrentStageNumber}로 이동하기");
 
         //SceneManager.LoadScene(sceneName);
-        SceneManager.LoadScene("StageTest");
+        SceneManager.LoadScene("Stage");
     }
 
     public void StartStage(float stageLimitTime, float stageTargetTime)

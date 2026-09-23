@@ -161,8 +161,8 @@ public class Block : MonoBehaviour
         // 강혜원 작성, 회전 시 보드가 검사해야 하는 좌표도 함께 처리
         for (int i = 0; i < shapeCells.Length; i++)
         {
-            int nx = -shapeCells[i].y;
-            int ny = shapeCells[i].x;
+            int nx = shapeCells[i].y;
+            int ny = -shapeCells[i].x;
             shapeCells[i] = new Vector2Int(nx, ny);
         }
     }

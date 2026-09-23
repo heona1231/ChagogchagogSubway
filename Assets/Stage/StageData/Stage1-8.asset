@@ -20,8 +20,8 @@ MonoBehaviour:
   gameBoardData: {fileID: 11400000, guid: cf9fe9f82a050764f89d7ca7572c7594, type: 2}
   blockSpawnDatas:
   - blockDataPrefab: {fileID: 11400000, guid: b19780dbc1fa9344f9d2eb5c875e8d01, type: 2}
-    spawnPosition: {x: 0, y: -0.66, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 90}
+    spawnPosition: {x: -3.96, y: 0, z: 0}
+    spawnRotation: 90
   - blockDataPrefab: {fileID: 11400000, guid: 7bb190c6aa2ddc1409bca39015d832ab, type: 2}
-    spawnPosition: {x: 1.32, y: 1.32, z: 0}
-    spawnRotation: {x: 0, y: 0, z: 90}
+    spawnPosition: {x: 7.26, y: -2.64, z: 0}
+    spawnRotation: 90
