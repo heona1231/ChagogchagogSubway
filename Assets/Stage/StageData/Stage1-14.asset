@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapterNumber: 1
   stageNumber: 14
-  limitTime: 60
-  targetTime: 30
+  limitTime: 27
+  targetTime: 18
   bgBoardData: {fileID: 11400000, guid: cd62a1cf876310543bf5db8deb6f3617, type: 2}
   gameBoardData: {fileID: 11400000, guid: 51cca9313683ec545b7eacd988a9a7c2, type: 2}
   blockSpawnDatas:
