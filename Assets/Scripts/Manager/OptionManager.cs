@@ -255,6 +255,7 @@ public class OptionManager : MonoBehaviour
 
     public void OpenSettingsPanel()
     {
+        Debug.Log("OpenSettingsPanel »£√‚µ ");
         settingsPanel.SetActive(true);
     }
 
