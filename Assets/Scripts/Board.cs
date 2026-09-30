@@ -71,26 +71,62 @@ public class Board : MonoBehaviour
                         Vector2 pos = origin + new Vector2(x * boardData.gridSize, y * boardData.gridSize) + boardData.tileOffset;
 
                         // 문자에 따라 생성할 프리팹 결정
-                        GameObject prefabToInstantiate = null;
-                        if (cellChar == '1')
+                        GameObject floorPrefab = boardData.tilePrefab; // 기본 바닥
+                        Quaternion floorRotation = Quaternion.identity;
+
+                        bool isEdge = (x == 6 || x == columns - 1) && (y == 0 || y == rows - 1);
+
+                        if (isEdge && boardData.edgeTilePrefab != null)
                         {
-                            prefabToInstantiate = boardData.tilePrefab;
+                            floorPrefab = boardData.edgeTilePrefab; // 4곳의 꼭짓점이면 타일 변경
+
+                            float edgeAngle = 0f;
+
+                            // 4개의 꼭짓점 위치에 따라 회전 각도(Z축)를 다르게 설정
+                            if (x == 6 && y == rows - 1)
+                            {
+                                // 좌측 상단
+                                edgeAngle = 0f;
+                            }
+                            else if (x == columns - 1 && y == rows - 1)
+                            {
+                                // 우측 상단
+                                edgeAngle = 270f;
+                            }
+                            else if (x == 6 && y == 0)
+                            {
+                                // 좌측 하단
+                                edgeAngle = 90f;
+                            }
+                            else if (x == columns - 1 && y == 0)
+                            {
+                                // 우측 하단
+                                edgeAngle = 180f;
+                            }
+
+                            // 계산된 각도로 회전값 생성
+                            floorRotation = Quaternion.Euler(0, 0, edgeAngle);
                         }
-                        else if (cellChar == '2' && boardData.chairPrefabs.Length > 0)
+
+                        // 일반 바닥 타일 생성
+                        Instantiate(floorPrefab, pos, floorRotation, transform);
+
+                        GameObject chairPrefabToInstantiate = null;
+
+                        if (cellChar == '2' && boardData.chairPrefabs.Length > 0)
                         {
-                            prefabToInstantiate = boardData.chairPrefabs[0]; // 일반석
+                            chairPrefabToInstantiate = boardData.chairPrefabs[0]; // 일반석
                         }
                         else if (cellChar == '3' && boardData.chairPrefabs.Length > 1)
                         {
-                            prefabToInstantiate = boardData.chairPrefabs[1]; // 노약자석
+                            chairPrefabToInstantiate = boardData.chairPrefabs[1]; // 노약자석
                         }
                         else if (cellChar == '4' && boardData.chairPrefabs.Length > 2)
                         {
-                            prefabToInstantiate = boardData.chairPrefabs[2]; // 임산부석
+                            chairPrefabToInstantiate = boardData.chairPrefabs[2]; // 임산부석
                         }
 
-                        // 프리팹이 할당되어 있다면 생성
-                        if (prefabToInstantiate != null)
+                        if (chairPrefabToInstantiate != null)
                         {
                             BlockDirection spawnDir = BlockDirection.Down; // 기본값
                             if (boardData.specialSeats != null)
@@ -115,12 +151,12 @@ public class Board : MonoBehaviour
                                 case BlockDirection.Left: initAngle = 270f; break;
                             }
 
-                            // 계산된 회전값을 적용하여 생성
-                            GameObject spawnedTile = Instantiate(prefabToInstantiate, pos, Quaternion.Euler(0, 0, initAngle), transform);
+                            // 바닥 위에 동일한 위치에 계산된 회전값으로 의자 생성
+                            GameObject spawnedChair = Instantiate(chairPrefabToInstantiate, pos, Quaternion.Euler(0, 0, initAngle), transform);
 
                             if (IsChairChar(cellChar))
                             {
-                                chairObjects[x, y] = spawnedTile;
+                                chairObjects[x, y] = spawnedChair;
                             }
                         }
                     }

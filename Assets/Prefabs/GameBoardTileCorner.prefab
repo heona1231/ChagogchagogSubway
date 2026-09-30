@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7931568190335971363}
   - component: {fileID: 6084346773670712581}
   m_Layer: 0
-  m_Name: ChairTilePregnant
+  m_Name: GameBoardTileCorner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: d0464cdf599db7c478f7562ea0f7ab63, type: 3}
+  m_SortingOrder: -2
+  m_Sprite: {fileID: 21300000, guid: b6d13c6c26ca85641b46a4da792ff98c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

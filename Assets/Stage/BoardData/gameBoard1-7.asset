@@ -33,6 +33,7 @@ MonoBehaviour:
     requiredType: 3
     initialDirection: 270
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
+  edgeTilePrefab: {fileID: 2805829480096003139, guid: ba2493779d0d8ed45bd046985a81b79c, type: 3}
   chairPrefabs:
   - {fileID: 2805829480096003139, guid: c2b4d55e82491a74fae245cc18ae7f92, type: 3}
   - {fileID: 2805829480096003139, guid: 55bc1b79aea22c549b91eef2aa885308, type: 3}
