@@ -21,7 +21,7 @@ public class KeySettingUI : MonoBehaviour
 
     private readonly List<string> defaultKeyNames = new()
     {
-        //"ESC,
+        "ESC",
         "SPACE",
         "E",
         "R",
