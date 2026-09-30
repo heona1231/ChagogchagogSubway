@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
+    public static StageManager Instance;
+
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    [SerializeField] private StageDataArray[] chapterDatas;
+    [SerializeField] public StageDataArray[] chapterDatas;
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
 
@@ -43,6 +45,17 @@ public class StageManager : MonoBehaviour
     private float timerFillStartLeftX;
     private float timerFillStartWidth;
 
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void Start()
     {
         int currentChapterNumber = GameManager.Instance.CurrentChapterNumber - 1;
@@ -72,9 +85,6 @@ public class StageManager : MonoBehaviour
         gameBoard.boardData = currentStageData.gameBoardData;
         bgBoard.Initialize(currentStageData.bgBoardData);
         gameBoard.Initialize(currentStageData.gameBoardData);
-        
-
-        SetTargetTimeMarker();
 
         //GameManager.Instance.StartStage(
         //    currentStageData.limitTime,
@@ -93,6 +103,10 @@ public class StageManager : MonoBehaviour
                 newBlock.RotateBlock();
             }
         }
+
+        limitTime = currentStageData.limitTime;
+        targetTime = currentStageData.targetTime;
+        SetTargetTimeMarker();
 
         GameManager.Instance.StartStage(limitTime, targetTime);
         Debug.Log($"챕터 {currentChapterNumber},  {currentStageNumber}스테이지 블럭 생성 완료");
@@ -140,7 +154,7 @@ public class StageManager : MonoBehaviour
         SpriteRenderer timerRenderer = timerFill.GetComponent<SpriteRenderer>();
 
         //float ratio = currentStageData.targetTime / currentStageData.limitTime;
-        float ratio = targetTime / limitTime;
+        float ratio = (limitTime - targetTime) / limitTime;
 
         float leftX = timerRenderer.bounds.min.x;
         float rightX = timerRenderer.bounds.max.x;

@@ -173,12 +173,12 @@ public class GameManager : MonoBehaviour
     {
         int nextStageNumber = CurrentStageNumber + 1;
 
-        /*if (nextStageNumber > 5)
+        if (nextStageNumber > StageManager.Instance.chapterDatas[CurrentChapterNumber-1].stages.Length)
         {
             BackToChapter();    // 일단 스테이지 5개만 있어서 그 이상은 '다음으로' 버튼 눌렀을 때 챕터 화면으로 돌아가게 해뒀습니다~
             return;
         }
-        */
+
         SelectStage(CurrentChapterNumber, nextStageNumber);
 
     }
