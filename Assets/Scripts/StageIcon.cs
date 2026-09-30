@@ -11,7 +11,7 @@ public class StageIcon : MonoBehaviour
     {
         if (menuPanel != null)
         {
-            menuPanel.SetActive(false);
+            //menuPanel.SetActive(false);
         }
         //if (clearPanel != null)
         // {
