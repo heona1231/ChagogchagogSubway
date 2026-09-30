@@ -191,7 +191,6 @@ public class Player : MonoBehaviour
             {
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
 
-
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
                 bool isChair = Board.Main.IsChairCell(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
                 if (isChair)
@@ -249,7 +248,7 @@ public class Player : MonoBehaviour
         Vector2Int[] nextCells = new Vector2Int[currentCells.Length];
         for (int i = 0; i < currentCells.Length; i++)
         {
-            nextCells[i] = new Vector2Int(-currentCells[i].y, currentCells[i].x);
+            nextCells[i] = new Vector2Int(currentCells[i].y, -currentCells[i].x);
         }
 
         Vector2 currentPos = targetBlock.transform.position;

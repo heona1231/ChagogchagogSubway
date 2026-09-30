@@ -21,9 +21,9 @@ public enum PassengerType
 public enum BlockDirection
 {
     Down = 0,   // 아래(기본)
-    Left = 90,  // 왼쪽
+    Right = 90,  // 오른쪽
     Up = 180,   // 위
-    Right = 270 // 오른쪽
+    Left = 270 // 왼쪽
 }
 
 [System.Serializable]
