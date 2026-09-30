@@ -30,6 +30,7 @@ public class BoardData : ScriptableObject
     public List<SpecialSeat> specialSeats = new List<SpecialSeat>();
 
     public GameObject tilePrefab; // 게임 보드 일반 타일 프리팹
+    public GameObject edgeTilePrefab; // 게임 보드 일반 타일 테두리 프리팹
     public GameObject[] chairPrefabs; // 게임 보드 의자 프리팹
     public Vector2 tileOffset = Vector2.zero;
 }
