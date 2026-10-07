@@ -11,6 +11,11 @@ public class StageManager : MonoBehaviour
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
 
+    // 강혜원 작성, 배경 및 보드 이미지
+    [Header("Stage Images")]
+    [SerializeField] private GameObject bgImage;       // 배경 이미지를 보여줄 컴포넌트
+    [SerializeField] private GameObject boardImage;    // 보드 이미지를 보여줄 컴포넌트
+
     [Header("Timer")]
     [SerializeField] private Transform timerFill;
     [SerializeField] private Transform targetTimeMarker;
@@ -63,6 +68,16 @@ public class StageManager : MonoBehaviour
         currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
 
         if (currentStageData == null) return;
+
+        // 강혜원 작성, 배경 및 보드 이미지 적용
+        if (bgImage != null && currentStageData.bgImage != null)
+        {
+            bgImage.GetComponent<SpriteRenderer>().sprite = currentStageData.bgImage;
+        }
+        if (boardImage != null && currentStageData.boardImage != null)
+        {
+            boardImage.GetComponent<SpriteRenderer>().sprite = currentStageData.boardImage;
+        }
 
         if (clearPanel != null)
         {

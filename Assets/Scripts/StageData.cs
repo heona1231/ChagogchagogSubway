@@ -25,6 +25,11 @@ public class StageData : ScriptableObject
     public BoardData bgBoardData; 
     public BoardData gameBoardData;
 
+    // 강혜원 작성, 배경 및 보드 이미지
+    [Header("Stage Images")]
+    public Sprite bgImage;
+    public Sprite boardImage;
+
     public BlockSpawnData[] blockSpawnDatas;
 
     //public BlockAnswerData[] blockAnswers;
