@@ -2262,6 +2262,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 214bd93e32fdffa42a577e35bee9bed8, type: 2}
   limitTime: 60
   targetTime: 30
+  bgImage: {fileID: 410880299}
+  boardImage: {fileID: 1035441329}
   timerFill: {fileID: 815984471}
   targetTimeMarker: {fileID: 485214874}
   clearPanel: {fileID: 2049140926}
@@ -2370,7 +2372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentChapterNumber: 1
-  CurrentStageNumber: 7
+  CurrentStageNumber: 1
   limitTime: 60
   targetTime: 30
   currentTime: 0

@@ -18,6 +18,8 @@ MonoBehaviour:
   targetTime: 10
   bgBoardData: {fileID: 11400000, guid: be84e0b440f4d9b4898bd841c04a8132, type: 2}
   gameBoardData: {fileID: 11400000, guid: 0d7a6a7d99025f6439956a4f0e3a16ab, type: 2}
+  bgImage: {fileID: 21300000, guid: 0560c33cf04994a43b503adb626f7098, type: 3}
+  boardImage: {fileID: 21300000, guid: f7da0ea3307a6754e97396dfc10d34ff, type: 3}
   blockSpawnDatas:
   - blockDataPrefab: {fileID: 11400000, guid: b19780dbc1fa9344f9d2eb5c875e8d01, type: 2}
     spawnPosition: {x: -6.6, y: -1.32, z: 0}
