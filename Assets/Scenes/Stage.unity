@@ -2387,7 +2387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentChapterNumber: 1
-  CurrentStageNumber: 4
+  CurrentStageNumber: 25
   limitTime: 60
   targetTime: 30
   currentTime: 0

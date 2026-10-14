@@ -23,8 +23,8 @@ MonoBehaviour:
   - 000000000112
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
-  - gridIndex: {x: 11, y: 1}
-    requiredType: 3
+  - gridIndex: {x: 11, y: 4}
+    requiredType: 2
     initialDirection: 270
   - gridIndex: {x: 11, y: 5}
     requiredType: 0

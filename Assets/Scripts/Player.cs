@@ -224,6 +224,8 @@ public class Player : MonoBehaviour
 
                 // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
                 UpdateBlockSpriteOnChair(draggingBlock, snappedPos);
+
+                CheckGameClear();
             }
             else
             {

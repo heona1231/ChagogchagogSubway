@@ -20,7 +20,7 @@ MonoBehaviour:
   - 000000000010
   - 000000000010
   - 000000000012
-  - 000000000013
+  - 000000000014
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
   - gridIndex: {x: 11, y: 0}
