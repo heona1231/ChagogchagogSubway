@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
             Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
 
             bool isChairCellBeforePlace = Board.Main.IsCenterChairCell(snappedPos, draggingBlock.shapeOffset);
-            if (isChairCellBeforePlace && draggingBlock.shapeCells.Length != 2)
+            if (isChairCellBeforePlace && draggingBlock.shapeCells.Length == 1)
             {
                 float chairAngle = Board.Main.GetCenterChairAngle(snappedPos, draggingBlock.shapeOffset);
                 if (chairAngle != -1f)

@@ -10,23 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a57b74bdf0fb53c44a384ca7adb9e2b8, type: 3}
-  m_Name: gameBoard1-15
+  m_Name: gameBoard1-29
   m_EditorClassIdentifier: 
   gridSize: 1.32
   type: 0
   boardShape:
-  - 000000000004
-  - 000000011113
-  - 000000111010
-  - 000000110000
-  - 000000100000
+  - 000000000000
+  - 000000011110
+  - 000000011110
+  - 000000001110
+  - 000000000113
   - 000000000000
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
-  - gridIndex: {x: 11, y: 0}
-    requiredType: 3
-    initialDirection: 270
-  - gridIndex: {x: 11, y: 1}
+  - gridIndex: {x: 11, y: 4}
     requiredType: 2
     initialDirection: 270
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}

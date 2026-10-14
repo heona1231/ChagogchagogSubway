@@ -514,7 +514,7 @@ public class Board : MonoBehaviour
         Vector2Int[] previewShapeCells = shapeCells;
 
         // 블록 전체가 아닌 중심점이 의자일 때만 시뮬레이션(2칸 블럭이 아닐 경우)
-        if (IsCenterChairCell(snappedPos, blockOffset) && shapeCells.Length != 2)
+        if (IsCenterChairCell(snappedPos, blockOffset) && shapeCells.Length == 1)
         {
             float chairAngle = GetCenterChairAngle(snappedPos, blockOffset);
             if (chairAngle != -1f)
