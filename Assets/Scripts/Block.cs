@@ -9,7 +9,7 @@ public class Block : MonoBehaviour
     [SerializeField] private float gridSize = 1f;
     [SerializeField] public BlockData blockData;
 
-    [SerializeField] private GameObject blockSprite;
+    [SerializeField] public GameObject blockSprite; // 강혜원 수정, 타 클래스에서 사용을 위해 publid으로 변경
     [SerializeField] private GameObject blockOutlineSprite;
 
     // 강혜원 작성
@@ -206,6 +206,18 @@ public class Block : MonoBehaviour
                 break;
             case 4:
                 ChangeBlockSprite(blockData.blockSpriteSit[3]);
+                break;
+            case 5:
+                ChangeBlockSprite(blockData.blockSpriteSit[4]);
+                break;
+            case 6:
+                ChangeBlockSprite(blockData.blockSpriteSit[5]);
+                break;
+            case 7:
+                ChangeBlockSprite(blockData.blockSpriteSit[6]);
+                break;
+            case 8:
+                ChangeBlockSprite(blockData.blockSpriteSit[7]);
                 break;
         }
     }

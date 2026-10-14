@@ -506,36 +506,55 @@ public class Board : MonoBehaviour
     }
     **/
 
-    // 보드에 놓여질 위치 보기 활성화
     public void ShowPreview(Block block, Vector2 position, Vector2 blockOffset, Vector2Int[] shapeCells)
     {
         if (block == null || block.blockData.blockOutlineSprite == null) return;
-
-        // 마우스 위치를 기반으로 보드판에 스냅된 월드 좌표 계산
         Vector2 snappedPos = GetSnappedPosition(position, blockOffset, shapeCells);
+        Quaternion previewRotation = block.transform.rotation;
+        Vector2Int[] previewShapeCells = shapeCells;
 
-        // 프리뷰 오브젝트 활성화 및 이미지 적용
+        // 블록 전체가 아닌 중심점이 의자일 때만 시뮬레이션(2칸 블럭이 아닐 경우)
+        if (IsCenterChairCell(snappedPos, blockOffset) && shapeCells.Length != 2)
+        {
+            float chairAngle = GetCenterChairAngle(snappedPos, blockOffset);
+            if (chairAngle != -1f)
+            {
+                int targetAngle = Mathf.RoundToInt(chairAngle) % 360;
+                if (targetAngle < 0) targetAngle += 360;
+
+                int currentAngle = Mathf.RoundToInt(block.transform.eulerAngles.z) % 360;
+                if (currentAngle < 0) currentAngle += 360;
+
+                int diff = (currentAngle - targetAngle) % 360;
+                if (diff < 0) diff += 360;
+                int rotationsNeeded = diff / 90;
+
+                if (rotationsNeeded > 0)
+                {
+                    previewRotation = Quaternion.Euler(0, 0, targetAngle);
+                    previewShapeCells = (Vector2Int[])shapeCells.Clone();
+                    for (int r = 0; r < rotationsNeeded; r++)
+                    {
+                        for (int i = 0; i < previewShapeCells.Length; i++)
+                        {
+                            int nx = previewShapeCells[i].y;
+                            int ny = -previewShapeCells[i].x;
+                            previewShapeCells[i] = new Vector2Int(nx, ny);
+                        }
+                    }
+                    snappedPos = GetSnappedPosition(position, blockOffset, previewShapeCells);
+                }
+            }
+        }
+
         previewObject.SetActive(true);
-
-        // 블록의 실제 회전값을 그대로 프리뷰에 복사
-        previewObject.transform.rotation = block.transform.rotation;
-
-        // 블록이 회전한 각도만큼 오프셋(offset)도 같이 회전시켜서 더해줌
-        Vector3 rotatedOffset = block.transform.rotation * (Vector3)block.blockData.spriteOffset;
+        previewObject.transform.rotation = previewRotation;
+        Vector3 rotatedOffset = previewRotation * (Vector3)block.blockData.spriteOffset;
         previewObject.transform.position = (Vector3)snappedPos + rotatedOffset;
 
-        // 배치 가능 여부에 따라 아웃라인 색상 변경
-        bool isValid = IsValidPlacement(snappedPos, blockOffset, shapeCells);
-        if (isValid)
-        {
-            // 빈 자리면 하얀색
-            previewRenderer.sprite = block.blockData.blockOutlineSprite;
-        }
-        else
-        {
-            // 겹치거나 X칸이면 빨간색
-            previewRenderer.sprite = block.blockData.blockOutlineSpriteR;
-        }
+        bool isValid = IsValidPlacement(snappedPos, blockOffset, previewShapeCells);
+        if (isValid) previewRenderer.sprite = block.blockData.blockOutlineSprite;
+        else previewRenderer.sprite = block.blockData.blockOutlineSpriteR;
     }
 
     // 보드에 놓여질 위치 보기 비활성화
@@ -610,6 +629,45 @@ public class Board : MonoBehaviour
             }
         }
         return -1f; // 의자가 없으면 -1 반환
+    }
+
+    // 블록의 중심(마우스가 잡고 있는 위치)의 그리드 좌표를 가져오는 헬퍼 함수
+    private Vector2Int GetCenterGridIndex(Vector2 position, Vector2 blockOffset)
+    {
+        Vector2 origin = GetBottomLeftOrigin();
+        Vector2 basePos = position - blockOffset;
+        int x = Mathf.RoundToInt((basePos.x - origin.x) / boardData.gridSize);
+        int y = Mathf.RoundToInt((basePos.y - origin.y) / boardData.gridSize);
+        return new Vector2Int(x, y);
+    }
+
+    // 블록의 "중심점"이 의자 타일인지 판별
+    public bool IsCenterChairCell(Vector2 position, Vector2 blockOffset)
+    {
+        Vector2Int grid = GetCenterGridIndex(position, blockOffset);
+        if (grid.x >= 0 && grid.x < columns && grid.y >= 0 && grid.y < rows)
+        {
+            string rowStr = boardData.boardShape[rows - 1 - grid.y];
+            if (grid.x < rowStr.Length)
+            {
+                return IsChairChar(rowStr[grid.x]);
+            }
+        }
+        return false;
+    }
+
+    // 블록의 "중심점"에 위치한 의자의 각도를 반환
+    public float GetCenterChairAngle(Vector2 position, Vector2 blockOffset)
+    {
+        Vector2Int grid = GetCenterGridIndex(position, blockOffset);
+        if (grid.x >= 0 && grid.x < columns && grid.y >= 0 && grid.y < rows)
+        {
+            if (chairObjects[grid.x, grid.y] != null)
+            {
+                return chairObjects[grid.x, grid.y].transform.eulerAngles.z;
+            }
+        }
+        return -1f;
     }
 
     /** 디버깅용이므로 주석 처리
