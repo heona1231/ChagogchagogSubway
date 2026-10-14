@@ -15,7 +15,7 @@ MonoBehaviour:
   gridSize: 1.32
   type: 0
   boardShape:
-  - 000000000014
+  - 000000000012
   - 000000000014
   - 000000000000
   - 000000000011
@@ -24,7 +24,7 @@ MonoBehaviour:
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
   - gridIndex: {x: 11, y: 0}
-    requiredType: 3
+    requiredType: 0
     initialDirection: 270
   - gridIndex: {x: 11, y: 1}
     requiredType: 3
