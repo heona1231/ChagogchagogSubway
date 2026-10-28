@@ -28,7 +28,7 @@ MonoBehaviour:
     spawnPosition: {x: -5, y: 1.32, z: 0}
     spawnRotation: 0
   - blockDataPrefab: {fileID: 11400000, guid: ee7a307071e05bd44805af09d4cfee13, type: 2}
-    spawnPosition: {x: -3.3, y: 0, z: 0}
+    spawnPosition: {x: -4.62, y: 0, z: 0}
     spawnRotation: 90
   - blockDataPrefab: {fileID: 11400000, guid: c18873a70ce879643a0a77ba719fe8eb, type: 2}
     spawnPosition: {x: -2.64, y: 1.32, z: 0}
