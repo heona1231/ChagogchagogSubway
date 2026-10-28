@@ -467,6 +467,10 @@ public class Player : MonoBehaviour
                 block.ChangeBlockSpriteSitdown(0);
             }
         }
+        else if (block.shapeCells.Length == 1)
+        {
+            block.ChangeBlockSpriteSitdown(1);
+        }
         else
         {
             block.ChangeBlockSpriteSitdown(0);
