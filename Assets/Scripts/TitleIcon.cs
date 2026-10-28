@@ -6,7 +6,7 @@ public class TitleIcon : MonoBehaviour
     [SerializeField] private bool isStartIcon = false;
     [SerializeField] private bool isQuitIcon = false;
 
-    private void OnMouseDown()
+    private void OnMouseUpAsButton()
     {
         if (isStartIcon)
         {
