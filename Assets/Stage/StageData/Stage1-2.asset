@@ -15,7 +15,7 @@ MonoBehaviour:
   chapterNumber: 1
   stageNumber: 2
   limitTime: 9
-  targetTime: 6
+  targetTime: 5
   bgBoardData: {fileID: 11400000, guid: be84e0b440f4d9b4898bd841c04a8132, type: 2}
   gameBoardData: {fileID: 11400000, guid: ed4896091905ef04baa8a453a6ab5778, type: 2}
   bgImage: {fileID: 21300000, guid: 0560c33cf04994a43b503adb626f7098, type: 3}
