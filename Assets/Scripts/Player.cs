@@ -15,6 +15,11 @@ public class Player : MonoBehaviour
     private Block draggingBlock = null;
     private int draggingOrder = 100;
 
+    [SerializeField] private bool isClickToAttach = false; // true: 클릭, false: 드래그
+    // 박세은 추가: 키 바인딩
+    [Header("Keyboard Interaction")]
+    [SerializeField] private StageIcon menuIcon;
+
     private void Start()
     {
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
@@ -22,10 +27,19 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        // 박세은 추가: 키 바인딩
+        HandleMenuInput();
+
+        // 메뉴 창이 열려있다면 게임 조작을 막음
+        if (GameManager.Instance != null && GameManager.Instance.IsPaused)
+        {
+            return;
+        }
+
         HandleHover();
         HandleInput();
     }
-
+    
     // 마우스 위치에 블록이 있는지 감지
     private void HandleHover()
     {
@@ -39,13 +53,7 @@ public class Player : MonoBehaviour
 
         if (hitBlock != hoveredBlock)
         {
-            if (hoveredBlock != null) OnHoverExit(hoveredBlock);
             hoveredBlock = hitBlock;
-            if (hoveredBlock != null) OnHoverEnter(hoveredBlock);
-        }
-        else if (hitBlock != null && !hitBlock.isOutlineActive()) // 블럭 아웃라인이 활성화되어 있지 않다면
-        {
-            OnHoverEnter(hitBlock);
         }
     }
 
@@ -53,73 +61,70 @@ public class Player : MonoBehaviour
     private void HandleInput()
     {
         // 좌클릭 (드래그 시작)
-        if (Input.GetMouseButtonDown(0) && hoveredBlock != null)
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
         {
-            StartDrag(hoveredBlock);
-        }
-
-        // 우클릭 (회전)
-        if (Input.GetMouseButtonDown(1))
-        {
-            Block targetToRotate = draggingBlock != null ? draggingBlock : hoveredBlock;
-
-            if (targetToRotate != null)
+            if (draggingBlock != null)
             {
-                // 회전 전 현재 상태 저장
-                Vector2 originalPos = targetToRotate.transform.position;
-                Board originalBoard = targetToRotate.currentBoard;
-
-                // 기존 보드 점유 지우기
-                if (originalBoard != null)
+                // 이미 들고 있다면 놓기 (클릭 모드에서만 가능)
+                if (isClickToAttach || Input.GetKeyDown(KeyCode.E))
                 {
-                    originalBoard.RemoveBlock(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells);
+                    EndDrag();
                 }
-
-                // 회전 함수
-                targetToRotate.RotateBlock();
-
-                if (originalBoard != null)
-                {
-                    // 원래 위치(originalPos)가 회전 후에도 유효한지 체크
-                    if (originalBoard.IsValidPlacement(originalPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
-                    {
-                        targetToRotate.ApplyToBoard(originalBoard, originalPos);
-                    }
-                    else
-                    {
-                        // 만약 제자리가 안된다면, 해당 보드 내에서 가장 가까운 가능한 위치로 다시 스냅 시도
-                        Vector2 snappedPos = originalBoard.GetSnappedPosition(originalPos, targetToRotate.shapeOffset);
-
-                        if (originalBoard.IsValidPlacement(snappedPos, targetToRotate.shapeOffset, targetToRotate.shapeCells))
-                        {
-                            targetToRotate.ApplyToBoard(originalBoard, snappedPos);
-                        }
-                        else
-                        {
-                            // 아예 놓을 데가 없으면 회전 취소 후 원위치
-                            targetToRotate.RotateBlock();
-                            targetToRotate.RotateBlock();
-                            targetToRotate.RotateBlock();
-                            targetToRotate.ApplyToBoard(originalBoard, originalPos);
-                            Debug.Log("[회전 실패] 배치 공간 부족");
-                        }
-                    }
-                }
+            }
+            else if (hoveredBlock != null)
+            {
+                // 들고 있지 않다면 잡기
+                StartDrag(hoveredBlock);
             }
         }
 
-        // 드래그 중 위치 이동
-        if (Input.GetMouseButton(0) && draggingBlock != null)
+        // 우클릭 (회전)
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) // 박세은, R키 바인딩
+        {
+            Block targetBlock = draggingBlock != null ? draggingBlock : hoveredBlock;
+
+            if (targetBlock != null)
+            {
+                TryRotateBlock(targetBlock);
+            }
+        }
+
+        // 블록 이동 처리
+        if (draggingBlock != null)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f;
-            draggingBlock.transform.position = mousePos;
-        }
 
-        // 좌클릭 업 (드래그 종료 및 배치)
-        if (Input.GetMouseButtonUp(0) && draggingBlock != null)
-        {
-            EndDrag();
+            // 배경 보드의 경계를 벗어나는 경우 블록의 위치를 강제
+            if (Board.Background != null)
+            {
+                mousePos = Board.Background.GetClampedRawPosition(mousePos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            }
+
+            draggingBlock.transform.position = mousePos;
+
+            // 드래그하면서 의자 근처를 지나갈 때 실시간으로 의자 방향 회전
+            /**
+            if (Board.Main != null)
+            {
+                Vector2 rawPos = draggingBlock.transform.position;
+                if (Board.Main.IsOverlappingBoard(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+                {
+                    Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                    // 마우스가 위치한 곳의 의자들에 블록의 현재 방향을 실시간 반영
+                    Board.Main.UpdateChairsDirectionForBlock(draggingBlock, snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                }
+            }
+            **/
+
+            // 보드에 놓여질 위치 보기 활성화
+            UpdatePreview(draggingBlock, draggingBlock.transform.position);
+
+            // 드래그 모드 전용 - 마우스를 떼면 배치
+            if (!isClickToAttach && Input.GetMouseButtonUp(0))
+            {
+                EndDrag();
+            }
         }
     }
 
@@ -139,7 +144,6 @@ public class Player : MonoBehaviour
         if (targetBlock.blockData.blockType == BlockType.Minigame)
         {
             // 미니게임 함수 호출
-            //targetBlock.spriteRenderer.color = Color.red;
             Debug.Log("미니게임 호출");
             targetBlock.GetComponent<MinigameMashClick>().StartMinigame();
             return;
@@ -149,11 +153,15 @@ public class Player : MonoBehaviour
         Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
 
         draggingBlock.startDragPosition = draggingBlock.transform.position;
+        draggingBlock.SaveOriginalState();
 
         if (draggingBlock.currentBoard != null)
         {
             draggingBlock.currentBoard.RemoveBlock(draggingBlock.startDragPosition, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+            draggingBlock.currentBoard = null;
         }
+
+        draggingBlock.ChangeBlockSpriteSitdown(0);
 
         if (draggingBlock.spriteRenderer != null)
         {
@@ -163,6 +171,10 @@ public class Player : MonoBehaviour
 
     private void EndDrag()
     {
+        // 보드에 놓여질 위치 보기 비활성화
+        if (Board.Main != null) Board.Main.HidePreview();
+        if (Board.Background != null) Board.Background.HidePreview();
+
         Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
 
         if (draggingBlock.spriteRenderer != null)
@@ -175,12 +187,43 @@ public class Player : MonoBehaviour
 
         if (isOverlappingMain)
         {
-            if (Board.Main.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+            Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+
+            bool isChairCellBeforePlace = Board.Main.IsCenterChairCell(snappedPos, draggingBlock.shapeOffset);
+            if (isChairCellBeforePlace && draggingBlock.shapeCells.Length == 1)
             {
-                Vector2 snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+                float chairAngle = Board.Main.GetCenterChairAngle(snappedPos, draggingBlock.shapeOffset);
+                if (chairAngle != -1f)
+                {
+                    // 목표 각도와 현재 각도를 360도 체계(0~359)로 정규화
+                    int targetAngle = Mathf.RoundToInt(chairAngle) % 360;
+                    if (targetAngle < 0) targetAngle += 360;
+
+                    int currentAngle = Mathf.RoundToInt(draggingBlock.transform.eulerAngles.z) % 360;
+                    if (currentAngle < 0) currentAngle += 360;
+
+                    int rotationsNeeded = 0;
+                    // 각도가 일치할 때까지 블록 회전 (무한 루프 방지를 위해 최대 3회로 제한)
+                    while (currentAngle != targetAngle && rotationsNeeded < 4)
+                    {
+                        draggingBlock.RotateBlock(); // -90도 회전 및 shapeCells 업데이트
+
+                        currentAngle = Mathf.RoundToInt(draggingBlock.transform.eulerAngles.z) % 360;
+                        if (currentAngle < 0) currentAngle += 360;
+                        rotationsNeeded++;
+                    }
+
+                    // 회전 후 블록의 형태(shapeCells)가 변했으므로 스냅 위치를 다시 계산하여 격자 밖으로 삐져나가는 현상 방지
+                    snappedPos = Board.Main.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
+                }
+            }
+
+            if (Board.Main.IsValidPlacement(snappedPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
+            {
                 draggingBlock.ApplyToBoard(Board.Main, snappedPos);
 
-                Debug.Log($"<color=cyan>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Main 보드</b>에 배치되었습니다. 위치: {snappedPos}");
+                // Main 보드에 둘 때 의자 타일인지 확인 후 모양 변경
+                UpdateBlockSpriteOnChair(draggingBlock, snappedPos);
 
                 CheckGameClear();
             }
@@ -191,14 +234,20 @@ public class Player : MonoBehaviour
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
         {
-            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset);
+            Vector2 snappedPos = Board.Background.GetSnappedPosition(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells);
             draggingBlock.ApplyToBoard(Board.Background, snappedPos);
+
+            // Background 보드로 갈 때는 일반 모양(서 있는 모양)으로 설정
+            draggingBlock.ChangeBlockSpriteSitdown(0);
 
             Debug.Log($"<color=yellow>[배치 성공]</color> '{draggingBlock.name}' 블록이 <b>Background 보드</b>로 이동했습니다. 위치: {snappedPos}");
         }
         else
         {
             draggingBlock.ReturnToStart();
+
+            // 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
+            draggingBlock.ChangeBlockSpriteSitdown(0);
         }
 
         // 드래그 종료 처리
@@ -209,30 +258,67 @@ public class Player : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePos) == null)
         {
-            OnHoverExit(currentDroppingBlock);
             hoveredBlock = null;
         }
     }
 
-    private void OnHoverEnter(Block block)
+    private void TryRotateBlock(Block targetBlock)
     {
-        // Debug.Log("호버 시작");
-        if (block != null)
+        // 다음 회전 시의 가상 좌표를 계산
+        Vector2Int[] currentCells = targetBlock.shapeCells;
+        Vector2Int[] nextCells = new Vector2Int[currentCells.Length];
+        for (int i = 0; i < currentCells.Length; i++)
         {
-            if (block.blockData.blockType == BlockType.Minigame) return;
-
-            block.ShowOutline(true);
+            nextCells[i] = new Vector2Int(currentCells[i].y, -currentCells[i].x);
         }
-    }
 
-    private void OnHoverExit(Block block)
-    {
-        // Debug.Log("호버 끝남");
-        if (block != null)
+        Vector2 currentPos = targetBlock.transform.position;
+        bool isDragging = (targetBlock == draggingBlock);
+
+        // 바닥에 놓여있는 상태일 때의 예외 처리
+        if (!isDragging)
         {
-            if (block.blockData.blockType == BlockType.Minigame) return;
+            Board board = targetBlock.currentBoard;
+            if (board != null)
+            {
+                // 현재 자리에서 블록을 임시로 빼고 회전 시 배치 가능한지 검사
+                board.RemoveBlock(currentPos, targetBlock.shapeOffset, currentCells);
+                bool isValid = board.IsValidPlacement(currentPos, targetBlock.shapeOffset, nextCells);
 
-            block.ShowOutline(false);
+                // 배경 보드에 있는 블록이 회전하면서 메인 보드 영역을 침범하는지 검사
+                if (isValid && board == Board.Background && Board.Main != null)
+                {
+                    if (Board.Main.IsOverlappingBoard(currentPos, targetBlock.shapeOffset, nextCells))
+                    {
+                        isValid = false; // 메인 보드와 겹치면 회전 불가
+                    }
+                }
+
+                if (!isValid)
+                {
+                    // 불가능하면 원상복구하고 회전 취소
+                    board.PlaceBlock(targetBlock, currentPos, targetBlock.shapeOffset, currentCells);
+                    // 회전 실패 시 피드백 추가
+
+                    return;
+                }
+            }
+        }
+
+        // 모든 예외 처리를 통과했으므로 블록 실제 회전
+        targetBlock.RotateBlock();
+
+        // 바닥에 놓여있던 블록이면 갱신된 형태로 보드에 다시 등록
+        if (!isDragging && targetBlock.currentBoard != null)
+        {
+            // RotateBlock() 내부에서 targetBlock.shapeCells가 갱신되었으므로 이를 사용해 다시 배치
+            targetBlock.currentBoard.PlaceBlock(targetBlock, currentPos, targetBlock.shapeOffset, targetBlock.shapeCells);
+
+            // 보드에 놓인 채로 회전했을 때, 메인 보드의 의자 위라면 스프라이트를 다시 계산해서 갱신
+            if (targetBlock.currentBoard == Board.Main)
+            {
+                UpdateBlockSpriteOnChair(targetBlock, currentPos);
+            }
         }
     }
 
@@ -250,5 +336,144 @@ public class Player : MonoBehaviour
 
         Debug.Log("[클리어!]");
         FindFirstObjectByType<StageManager>().CheckClear(); // 박세은, 클리어 판단 코드
+    }
+
+    // 박세은 추가: 키 바인딩(ESC키)
+    private void HandleMenuInput()
+    {
+        if (!Input.GetKeyDown(KeyCode.Escape))
+        {
+            return;
+        }
+
+        if (menuIcon == null)
+        {
+            Debug.LogError("Player의 Menu Icon이 연결되지 않았습니다.");
+            return;
+        }
+
+        menuIcon.ToggleMenu();
+    }
+
+    // Main과 Background 중 어느 보드에 미리보기를 띄울지 결정하는 함수
+    private void UpdatePreview(Block block, Vector2 rawPos)
+    {
+        if (block == null) return;
+
+        // Main 보드에 조금이라도 걸쳐있는지 확인
+        bool isOverlappingMain = Board.Main != null && Board.Main.IsOverlappingBoard(rawPos, block.shapeOffset, block.shapeCells);
+
+        if (isOverlappingMain)
+        {
+            // Main에 걸쳤다면 Main에 보여주고 Background 프리뷰는 끔
+            if (Board.Main != null) Board.Main.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
+            if (Board.Background != null) Board.Background.HidePreview();
+        }
+        else
+        {
+            // Main에 안 걸쳤다면 Background에 띄우기 시도
+            if (Board.Main != null) Board.Main.HidePreview();
+            if (Board.Background != null) Board.Background.ShowPreview(block, rawPos, block.shapeOffset, block.shapeCells);
+        }
+    }
+
+    // 의자 위에 놓인 블록의 스프라이트를 계산하여 적용하는 함수
+    private void UpdateBlockSpriteOnChair(Block block, Vector2 snappedPos)
+    {
+        bool isChair = Board.Main.IsChairCell(snappedPos, block.shapeOffset, block.shapeCells);
+        if (!isChair)
+        {
+            block.ChangeBlockSpriteSitdown(0);
+            return;
+        }
+
+        if (block.shapeCells.Length == 2)
+        {
+            float angle0 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[0] });
+            float angle1 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[1] });
+
+            bool isCell0OnChair = (angle0 != -1f);
+            bool isCell1OnChair = (angle1 != -1f);
+            float tolerance = 5f;
+
+            BlockDirection currentDir = block.GetCurrentDirection();
+            float blockAngle = (float)currentDir;
+
+            // 두 사람 모두 의자에 놓일 경우
+            if (isCell0OnChair && isCell1OnChair)
+            {
+                float diff = Mathf.Abs(angle0 - angle1);
+                float chairAngleNorm = angle0 % 360f;
+                if (chairAngleNorm < 0f) chairAngleNorm += 360f;
+
+                if (diff <= tolerance)
+                {
+                    if (chairAngleNorm == 90f)
+                    {
+                        if (blockAngle == 0f) block.ChangeBlockSpriteSitdown(4);
+                        else if (blockAngle == 180f) block.ChangeBlockSpriteSitdown(3);
+                    }
+                    else if (chairAngleNorm == 270f)
+                    {
+                        if (blockAngle == 0f) block.ChangeBlockSpriteSitdown(3);
+                        else if (blockAngle == 180f) block.ChangeBlockSpriteSitdown(4);
+                    }
+                }
+                else if (Mathf.Abs(diff - 180f) <= tolerance)
+                {
+                    block.ChangeBlockSpriteSitdown(0);
+                }
+            }
+            // 한 사람만 의자에 놓일 경우
+            else if (isCell0OnChair != isCell1OnChair)
+            {
+                float chairAngle = isCell0OnChair ? angle0 : angle1;
+                float chairAngleNorm = chairAngle % 360f;
+                if (chairAngleNorm < 0f) chairAngleNorm += 360f;
+
+                if (chairAngleNorm == 90f)
+                {
+                    if (blockAngle == 0f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(6);
+                        else if (isCell1OnChair) block.ChangeBlockSpriteSitdown(8);
+                    }
+                    else if (blockAngle == 90f) block.ChangeBlockSpriteSitdown(2);
+                    else if (blockAngle == 180f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(5);
+                        else if (isCell1OnChair) block.ChangeBlockSpriteSitdown(7);
+                    }
+                    else if (blockAngle == 270f) block.ChangeBlockSpriteSitdown(1);
+                }
+                else if (chairAngleNorm == 270f)
+                {
+                    if (blockAngle == 0f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(5);
+                        else if (isCell1OnChair) block.ChangeBlockSpriteSitdown(7);
+                    }
+                    else if (blockAngle == 90f) block.ChangeBlockSpriteSitdown(1);
+                    else if (blockAngle == 180f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(6);
+                        else if (isCell1OnChair) block.ChangeBlockSpriteSitdown(8);
+                    }
+                    else if (blockAngle == 270f) block.ChangeBlockSpriteSitdown(2);
+                }
+            }
+            else
+            {
+                block.ChangeBlockSpriteSitdown(0);
+            }
+        }
+        else if (block.shapeCells.Length == 1)
+        {
+            block.ChangeBlockSpriteSitdown(1);
+        }
+        else
+        {
+            block.ChangeBlockSpriteSitdown(0);
+        }
     }
 }

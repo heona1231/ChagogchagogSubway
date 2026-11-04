@@ -3,24 +3,34 @@ using UnityEngine;
 
 public class StageSelectButton : MonoBehaviour
 {
-    [SerializeField] private int stageNumber;
-    [SerializeField] private bool isLocked;
+    [Header("Stage Info")]
+    [SerializeField] private int chapterNumber = 1;
+    [SerializeField] private int stageNumber = 1;
 
     public void SelectStage()
     {
-        int currentChapterNumber = GameManager.Instance.CurrentChapterNumber;
+        GameManager gameManager = GameManager.Instance;
 
-        bool isUnlocked = stageNumber == 1 ||
-            PlayerPrefs.GetInt($"Chapter{currentChapterNumber}Stage{stageNumber - 1}Star", 0) > 0;
-
-        if (!isUnlocked)
+        if (gameManager == null)
         {
-            Debug.Log("잠긴 스테이지입니다.");
+            gameManager = FindFirstObjectByType<GameManager>();
+        }
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager를 찾을 수 없습니다.");
             return;
         }
 
-        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        bool isUnlocked =
+            stageNumber == 1 || PlayerPrefs.GetInt($"Chapter{chapterNumber}Stage{stageNumber - 1}Star", 0) > 0;
+    
+        if (!isUnlocked)
+        {
+            Debug.Log($"챕터 {chapterNumber}의 스테이지 {stageNumber}는 잠겨 있습니다.");
+            return;
+        }
 
-        gameManager.SelectStage(stageNumber);
+        gameManager.SelectStage(chapterNumber, stageNumber);
     }
 }

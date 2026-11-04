@@ -73,7 +73,7 @@ public class MinigameMashClick : MonoBehaviour
                 currentGauge = maxGauge;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
             {
                 currentGauge -= clickDecreaseAmount;
                 if(currentGauge < 0)
@@ -116,7 +116,27 @@ public class MinigameMashClick : MonoBehaviour
     {
         isGameActive = false;
 
+        if (block.currentBoard != null)
+        {
+            block.currentBoard.RemoveBlock(
+                block.transform.position,
+                block.shapeOffset,
+                block.shapeCells
+            );
+        }
+
         block.Initialize(clearedBlockData);
+
+        if (block.currentBoard != null)
+        {
+            block.currentBoard.PlaceBlock(
+                block,
+                block.transform.position,
+                block.shapeOffset,
+                block.shapeCells
+            );
+        }
+
         MinigameManager.Instance.EndMinigame();
 
         this.enabled = false;

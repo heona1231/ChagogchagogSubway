@@ -3,33 +3,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 강혜원 작성
-public enum PassengerType
-{
-    Normal,
-    Villain,
-    Elderly,    // 노약자
-    Pregnant    // 임산부
-}
-
 public class Block : MonoBehaviour
 {
     [SerializeField] private GameObject blockCell;
     [SerializeField] private float gridSize = 1f;
     [SerializeField] public BlockData blockData;
 
-    [SerializeField] private GameObject blockSprite;
+    [SerializeField] public GameObject blockSprite; // 강혜원 수정, 타 클래스에서 사용을 위해 publid으로 변경
     [SerializeField] private GameObject blockOutlineSprite;
 
     // 강혜원 작성
-    [SerializeField] private PassengerType currentType = PassengerType.Normal;
-    public PassengerType CurrentType => currentType;
-    [SerializeField] public Vector2 shapeOffset = Vector2.zero;
+    //[SerializeField] private PassengerType currentType = PassengerType.Normal;
+    //public PassengerType CurrentType => currentType;
+    //서현아 수정, blockData에서 설정하도록 옮김
+    [SerializeField] public Vector2 shapeOffset;
     [HideInInspector] public Vector2Int[] shapeCells;
     [HideInInspector] public Board currentBoard = null;
     [HideInInspector] public Vector2 startDragPosition;
     [HideInInspector] public SpriteRenderer spriteRenderer;
     [HideInInspector] public int originalOrder;
+
+    // 강혜원 작성, 블록의 현재 상태 저장용 변수들
+    [HideInInspector] public Board originalBoard;
+    private Quaternion originalRotation;
+    private Vector2Int[] originalShapeCells;
 
     private void Awake()
     {
@@ -44,7 +41,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void Start()
+    /*private void Start()
     {
         if (blockData != null)
         {
@@ -54,29 +51,38 @@ public class Block : MonoBehaviour
         // 강혜원 작성, 생성 시 어느 보드에 있는지 확인 후 해당 자리를 true로 변경
         if (Board.Main != null && Board.Main.IsValidPlacement(transform.position, shapeOffset, shapeCells))
         {
-            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset));
+            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(transform.position, shapeOffset, shapeCells))
         {
-            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset));
+            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
         }
-    }
+    }*/
 
     public void Initialize(BlockData inputBlockData)
     {
         this.blockData = inputBlockData;
-
         BuildBlock();
         GetGimmickComponenet();
     }
 
     //blockData를 토대로 모양 구성
-    private void BuildBlock()
+    public void BuildBlock()
     {
+        foreach (Transform child in transform)
+        {
+            if (child == blockSprite.transform || child == blockOutlineSprite.transform)
+                continue;
+            Destroy(child.gameObject);
+        }
+
         blockSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockSprite;
         blockOutlineSprite.GetComponent<SpriteRenderer>().sprite = blockData.blockOutlineSprite;
         blockOutlineSprite.gameObject.SetActive(false);
 
+        blockSprite.gameObject.transform.position = blockData.spriteOffset;
+
+        shapeOffset = blockData.shapeOffset;
         Vector3 offsetPosition = new Vector3(blockData.spriteOffset.x, blockData.spriteOffset.y, 0);
         blockSprite.transform.localPosition = offsetPosition;
         blockOutlineSprite.transform.localPosition = offsetPosition;
@@ -120,6 +126,15 @@ public class Block : MonoBehaviour
         }
 
         shapeCells = cellsList.ToArray(); // 강혜원 작성
+
+        if (Board.Main != null && Board.Main.IsValidPlacement(transform.position, shapeOffset, shapeCells))
+        {
+            ApplyToBoard(Board.Main, Board.Main.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
+        }
+        else if (Board.Background != null && Board.Background.IsValidPlacement(transform.position, shapeOffset, shapeCells))
+        {
+            ApplyToBoard(Board.Background, Board.Background.GetSnappedPosition(transform.position, shapeOffset, shapeCells));
+        }
     }
 
     //blockType에 따라 컴포넌트 추가 부여
@@ -141,20 +156,28 @@ public class Block : MonoBehaviour
     //회전 함수 (호출시 90도 돌아감)
     public void RotateBlock()
     {
-        transform.Rotate(0, 0, 90f);
+        transform.Rotate(0, 0, -90f);
 
         // 강혜원 작성, 회전 시 보드가 검사해야 하는 좌표도 함께 처리
         for (int i = 0; i < shapeCells.Length; i++)
         {
-            int nx = -shapeCells[i].y;
-            int ny = shapeCells[i].x;
+            int nx = shapeCells[i].y;
+            int ny = -shapeCells[i].x;
             shapeCells[i] = new Vector2Int(nx, ny);
         }
     }
 
     //테두리 보이기/끄기
-    public void ShowOutline(bool isShown)
+    public void ShowOutline(bool isShown, bool isRed)
     {
+        if(isRed)
+        {
+            blockOutlineSprite.GetComponent<SpriteRenderer>().color = Color.red;
+        }
+        else
+        {
+            blockOutlineSprite.GetComponent<SpriteRenderer>().color = Color.white;
+        }
         blockOutlineSprite.gameObject.SetActive(isShown);
     }
 
@@ -162,6 +185,41 @@ public class Block : MonoBehaviour
     public void ChangeBlockSprite(Sprite sprite)
     {
         blockSprite.GetComponent<SpriteRenderer>().sprite = sprite;
+    }
+
+    //앉았을때 블럭 sprite 변경
+    public void ChangeBlockSpriteSitdown(int sitState)
+    {
+        switch (sitState)
+        {
+            case 0:
+                ChangeBlockSprite(blockData.blockSprite);
+                break;
+            case 1:
+                ChangeBlockSprite(blockData.blockSpriteSit[0]);
+                break;
+            case 2:
+                ChangeBlockSprite(blockData.blockSpriteSit[1]);
+                break;
+            case 3:
+                ChangeBlockSprite(blockData.blockSpriteSit[2]);
+                break;
+            case 4:
+                ChangeBlockSprite(blockData.blockSpriteSit[3]);
+                break;
+            case 5:
+                ChangeBlockSprite(blockData.blockSpriteSit[4]);
+                break;
+            case 6:
+                ChangeBlockSprite(blockData.blockSpriteSit[5]);
+                break;
+            case 7:
+                ChangeBlockSprite(blockData.blockSpriteSit[6]);
+                break;
+            case 8:
+                ChangeBlockSprite(blockData.blockSpriteSit[7]);
+                break;
+        }
     }
 
     // 강혜원 작성, 보드에 등록하고 위치 설정
@@ -175,16 +233,56 @@ public class Block : MonoBehaviour
     // 강혜원 작성, 실패 시 원래 자리로 되돌아가는 함수
     public void ReturnToStart()
     {
+        // 위치, 회전, 모양 배열을 드래그 시작 전 상태로 완벽 복구
         transform.position = startDragPosition;
+        transform.rotation = originalRotation;
+        shapeCells = originalShapeCells;
+
+        // 소속 보드 복구 및 재등록
+        currentBoard = originalBoard;
         if (currentBoard != null)
         {
             currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
+            // 원래 메인 보드였다면 앉은 모습(1), 배경이었다면 서 있는 모습(0)
+            ChangeBlockSpriteSitdown(0);
         }
+        else
+        {
+            ChangeBlockSpriteSitdown(0);
+        }
+    }
+
+    // 강혜원 작성, 드래그 시작 시점의 원본 상태를 저장
+    public void SaveOriginalState()
+    {
+        originalBoard = currentBoard;
+        originalRotation = transform.rotation;
+        originalShapeCells = (Vector2Int[])shapeCells.Clone(); // 참조가 꼬이지 않게 복제해서 백업
     }
 
     // 강혜원 작성, 아웃라인 활성화 상태를 반환(빌런 블럭 미니게임 후 사용)
     public bool isOutlineActive()
     {
         return blockOutlineSprite.activeSelf;
+    }
+
+    // 강혜원 작성, 현재 블럭의 회전 각도를 기반으로 방향을 반환하는 함수
+    public BlockDirection GetCurrentDirection()
+    {
+        int angle = Mathf.RoundToInt(transform.eulerAngles.z) % 360;
+        if (angle < 0) angle += 360;
+
+        switch (angle)
+        {
+            case 270: return BlockDirection.Left;
+            case 180: return BlockDirection.Up;
+            case 90: return BlockDirection.Right;
+            default: return BlockDirection.Down;    // 기본 아래
+        }
+    }
+
+    public PassengerType GetPassengerType()
+    {
+        return blockData.passengerType;
     }
 }

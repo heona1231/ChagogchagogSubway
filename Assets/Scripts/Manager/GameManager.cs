@@ -5,19 +5,25 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int CurrentChapterNumber { get; private set; } = 1;
-    public int CurrentStageNumber { get; private set; }
+    [Header("stagenumber")]
+    /*[SerializeField] public int CurrentChapterNumber { get; private set; } = 1;
+    [SerializeField] public int CurrentStageNumber { get; private set; } = 1;*/
+    [SerializeField] public int CurrentChapterNumber = 1;
+    [SerializeField] public int CurrentStageNumber = 1;
 
     [Header("Stage Time")]
     [SerializeField] private float limitTime;
     [SerializeField] private float targetTime;
 
-    private float currentTime;
+    [SerializeField] private float currentTime;
     private float stageStartTime;
     private bool isPlaying;
     private bool isPaused;
     private float pauseStartTime;
     private float totalPausedTime;
+    private bool canGoNextStage;
+
+    public bool IsPaused => isPaused;
 
     private void Awake()
     {
@@ -33,9 +39,17 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isPlaying && Input.GetKeyDown(KeyCode.R))
+        // 박세은 수정: 키 바인딩을 Player.cs에서 사용해야 하므로 주석 처리(영향X)
+        //if (isPlaying && Input.GetKeyDown(KeyCode.R))
+        //{
+        //    RestartGame();
+        //}
+
+        if (canGoNextStage && Input.GetKeyDown(KeyCode.C))
         {
-            RestartGame();
+            canGoNextStage = false;
+            NextStage();
+            return;
         }
 
         if (!isPlaying || isPaused) return;
@@ -72,31 +86,44 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
-    public void SelectStage(int stageNumber)
+    public void SelectStage(int chapterNumber, int stageNumber)
     {
+        CurrentChapterNumber = chapterNumber;
         CurrentStageNumber = stageNumber;
-        Debug.Log($"{stageNumber}번 스테이지로 이동하기");
-        SceneManager.LoadScene($"Stage{stageNumber}");
+
+        string sceneName = $"Chapter{CurrentChapterNumber}Stage{CurrentStageNumber}";
+
+        Debug.Log($"챕터 {CurrentChapterNumber} " + $"스테이지 {CurrentStageNumber}로 이동하기");
+
+        //SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene("Stage");
     }
 
     public void StartStage(float stageLimitTime, float stageTargetTime)
     {
-        if (CurrentStageNumber <= 0)
-        {
-            CurrentStageNumber = GetStageNumberFromCurrentScene();
-        }
+        //if (CurrentStageNumber <= 0)
+        //{
+        //    CurrentStageNumber = GetStageNumberFromCurrentScene();
+        //}
+        // ㄴ 챕터 번호까지 읽어야 하므로 아래와 같이 변경
+        SetChapterAndStageFromCurrentSceneIfNeeded();
 
         limitTime = stageLimitTime;
         targetTime = stageTargetTime;
 
         totalPausedTime = 0f;
         isPaused = false;
+        canGoNextStage = false;
 
         stageStartTime = Time.realtimeSinceStartup;
         currentTime = 0f;
         isPlaying = true;
-
-        Debug.Log($"스테이지 시작 | 제한 시간: {limitTime}초 / 목표 시간: {targetTime}초");
+        
+        Debug.Log(
+            $"챕터 {CurrentChapterNumber} " +
+            $"스테이지 {CurrentStageNumber} 시작 | " +
+            $"제한 시간: {limitTime}초 / 목표 시간: {targetTime}초"
+        );
     }
 
     public void PauseStage()
@@ -122,6 +149,7 @@ public class GameManager : MonoBehaviour
     public void ClearStage(bool isSpecialSeatSuccess)
     {
         isPlaying = false;
+        canGoNextStage = true;
 
         int starCount = CalculateStarCount(isSpecialSeatSuccess);
 
@@ -145,18 +173,20 @@ public class GameManager : MonoBehaviour
     {
         int nextStageNumber = CurrentStageNumber + 1;
 
-        if (nextStageNumber > 5)
+        if (nextStageNumber > StageManager.Instance.chapterDatas[CurrentChapterNumber-1].stages.Length)
         {
             BackToChapter();    // 일단 스테이지 5개만 있어서 그 이상은 '다음으로' 버튼 눌렀을 때 챕터 화면으로 돌아가게 해뒀습니다~
             return;
         }
 
-        SelectStage(nextStageNumber);
+        SelectStage(CurrentChapterNumber, nextStageNumber);
+
     }
 
     public void EndGame()
     {
         isPlaying = false;
+        canGoNextStage = false;
 
         StageManager stageManager = FindFirstObjectByType<StageManager>();
 
@@ -175,13 +205,10 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()   // 나중에 StageScene에서 재시작 버튼 만들고 연결해주면 됨
     {
-        if (CurrentStageNumber <= 0)
-        {
-            CurrentStageNumber = GetStageNumberFromCurrentScene();
-        }
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
-        Debug.Log($"[GameManager] {CurrentStageNumber}번 스테이지 재시작");
-        SceneManager.LoadScene($"Stage{CurrentStageNumber}");
+        Debug.Log($"[GameManager] 챕터 {CurrentStageNumber} " + $"스테이지 {CurrentStageNumber} 재시작");
+        SceneManager.LoadScene(currentSceneName);
     }
 
     private int CalculateStarCount(bool isSpecialSeatSuccess)
@@ -233,18 +260,48 @@ public class GameManager : MonoBehaviour
         return Mathf.Clamp01(remainingTime / limitTime);
     }
 
-    private int GetStageNumberFromCurrentScene()
+    private void SetChapterAndStageFromCurrentSceneIfNeeded()
     {
-        string sceneName = SceneManager.GetActiveScene().name;
-
-        string numberText = sceneName.Replace("Stage", "");
-
-        if (int.TryParse(numberText, out int stageNumber))
+        if (CurrentChapterNumber > 0 && CurrentStageNumber > 0)
         {
-            return stageNumber;
+            return;
         }
 
-        Debug.LogError($"현재 씬 이름에서 스테이지 번호를 가져올 수 없습니다: {sceneName}");
-        return 1;
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        // 저장 예시: Chapter1Stage2
+        int chapterIndex = sceneName.IndexOf("Chapter");
+        int stageIndex = sceneName.IndexOf("Stage");
+
+        if (chapterIndex < 0 || stageIndex < 0)
+        {
+            Debug.LogError($"씬 이름에서 챕터/스테이지 번호를 찾을 수 없습니다: {sceneName}");
+            return;
+        }
+
+        string chapterText = sceneName.Substring(
+            chapterIndex + "Chapter".Length,
+            stageIndex - (chapterIndex + "Chapter".Length)
+            );
+        string stageText = sceneName.Substring(
+            stageIndex + "Stage".Length
+            );
+
+        bool chapterParsed = int.TryParse(chapterText, out int chapterNumber);
+        bool stageParsed = int.TryParse(stageText, out int stageNumber);
+
+        if (!chapterParsed || !stageParsed)
+        {
+            Debug.LogError($"씬 이름에서 숫자 변환에 실패했습니다: {sceneName}");
+            return;
+        }
+
+        CurrentChapterNumber = chapterNumber;
+        CurrentStageNumber = stageNumber;
+
+        Debug.Log($"씬 이름에서 번호 설정 완료: "
+            + $"챕터 {CurrentChapterNumber}, "
+            + $"스테이지 {CurrentStageNumber}"
+            );
     }
 }

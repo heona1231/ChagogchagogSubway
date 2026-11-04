@@ -1,4 +1,5 @@
 // 박세은 작성
+using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -6,7 +7,7 @@ public class BlockSpawnData
 {
     public BlockData blockDataPrefab;
     public Vector3 spawnPosition;
-    public Vector3 spawnRotation;
+    public int spawnRotation;
 }
 
 [CreateAssetMenu(fileName = "StageData", menuName = "Stage/StageData")]
@@ -20,8 +21,22 @@ public class StageData : ScriptableObject
     public float targetTime = 30f;
 
     [Header("Stage Layout")]
-    public GameObject boardPrefab;
+    // 강혜원 작성, 프리팹 설정이 아닌 board 데이터 설정으로 수정
+    public BoardData bgBoardData; 
+    public BoardData gameBoardData;
+
+    // 강혜원 작성, 배경 및 보드 이미지
+    [Header("Stage Images")]
+    public Sprite bgImage;
+    public Sprite boardImage;
+
     public BlockSpawnData[] blockSpawnDatas;
 
     //public BlockAnswerData[] blockAnswers;
+}
+
+[Serializable]
+public class StageDataArray
+{
+    public StageData[] stages;
 }

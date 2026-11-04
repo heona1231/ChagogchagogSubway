@@ -1,13 +1,20 @@
-// ¹Ú¼¼Àº ÀÛ¼º
+// ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
+    public static StageManager Instance;
+
     //[SerializeField] private bool isSpecialSeatSuccess = false;
-    //[SerializeField] private StageData[] stageDatas;
+    [SerializeField] public StageDataArray[] chapterDatas;
     [SerializeField] private float limitTime = 60f;
     [SerializeField] private float targetTime = 30f;
+
+    // ê°•í˜œì› ì‘ì„±, ë°°ê²½ ë° ë³´ë“œ ì´ë¯¸ì§€
+    [Header("Stage Images")]
+    [SerializeField] private GameObject bgImage;       // ë°°ê²½ ì´ë¯¸ì§€ë¥¼ ë³´ì—¬ì¤„ ì»´í¬ë„ŒíŠ¸
+    [SerializeField] private GameObject boardImage;    // ë³´ë“œ ì´ë¯¸ì§€ë¥¼ ë³´ì—¬ì¤„ ì»´í¬ë„ŒíŠ¸
 
     [Header("Timer")]
     [SerializeField] private Transform timerFill;
@@ -29,19 +36,48 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Sprite nextButtonActiveSprite;
     [SerializeField] private Sprite nextButtonDisabledSprite;
 
-    //private StageData currentStageData;
+    [Header("Board")] // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, board ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private Board bgBoard;
+    [SerializeField] private Board gameBoard;
+
+    [Header("Block")]
+    [SerializeField] private Block blockPrefab;
+
+    private StageData currentStageData;
     private bool isCleared = false;
     private Vector3 timerFillStartScale;
     //private Vector3 timerFillStartPosition;
     private float timerFillStartLeftX;
     private float timerFillStartWidth;
 
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void Start()
     {
-        int currentStageNumber = GameManager.Instance.CurrentStageNumber;
-        //currentStageData = FindStageData(currentStageNumber);
+        int currentChapterNumber = GameManager.Instance.CurrentChapterNumber - 1;
+        int currentStageNumber = GameManager.Instance.CurrentStageNumber - 1;
+        currentStageData = FindStageData(currentChapterNumber, currentStageNumber);
 
-        //if (currentStageData == null) return;
+        if (currentStageData == null) return;
+
+        // ê°•í˜œì› ì‘ì„±, ë°°ê²½ ë° ë³´ë“œ ì´ë¯¸ì§€ ì ìš©
+        if (bgImage != null && currentStageData.bgImage != null)
+        {
+            bgImage.GetComponent<SpriteRenderer>().sprite = currentStageData.bgImage;
+        }
+        if (boardImage != null && currentStageData.boardImage != null)
+        {
+            boardImage.GetComponent<SpriteRenderer>().sprite = currentStageData.boardImage;
+        }
 
         if (clearPanel != null)
         {
@@ -58,17 +94,38 @@ public class StageManager : MonoBehaviour
             //timerFillStartPosition = timerFill.position;
         }
 
-        SetTargetTimeMarker();
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, ï¿½ï¿½ï¿½&ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ stageDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+        bgBoard.boardData = currentStageData.bgBoardData;
+        gameBoard.boardData = currentStageData.gameBoardData;
+        bgBoard.Initialize(currentStageData.bgBoardData);
+        gameBoard.Initialize(currentStageData.gameBoardData);
 
         //GameManager.Instance.StartStage(
         //    currentStageData.limitTime,
         //    currentStageData.targetTime
         //);
 
-        //Debug.Log($"Ã©ÅÍ{currentStageData.chapterNumber} ½ºÅ×ÀÌÁö{currentStageData.stageNumber} ½ÃÀÛ");
+        //Debug.Log($"Ã©ï¿½ï¿½{currentStageData.chapterNumber} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{currentStageData.stageNumber} ï¿½ï¿½ï¿½ï¿½");
+
+        //ì„œí˜„ì•„ ìˆ˜ì •, block data ê°€ì ¸ì˜¤ê¸°
+        foreach (var blockSpawnData in currentStageData.blockSpawnDatas)
+        {
+            Block newBlock = Instantiate(blockPrefab, blockSpawnData.spawnPosition, Quaternion.identity);
+            newBlock.Initialize(blockSpawnData.blockDataPrefab);
+            for(int i = 0; i < blockSpawnData.spawnRotation / 90; i++)
+            {
+                newBlock.RotateBlock();
+            }
+        }
+
+        limitTime = currentStageData.limitTime;
+        targetTime = currentStageData.targetTime;
+        SetTargetTimeMarker();
 
         GameManager.Instance.StartStage(limitTime, targetTime);
-        Debug.Log($"{currentStageNumber}¹ø ½ºÅ×ÀÌÁö ½ÃÀÛ");
+        Debug.Log($"ì±•í„° {currentChapterNumber},  {currentStageNumber}ìŠ¤í…Œì´ì§€ ë¸”ëŸ­ ìƒì„± ì™„ë£Œ");
+
     }
 
     private void Update()
@@ -76,22 +133,31 @@ public class StageManager : MonoBehaviour
         UpdateTimerBar();
     }
 
-    // StageData »ç¿ëÇÏÁö ¾ÊÀ¸¸é¼­ ÁÖ¼® Ã³¸®
-    //private StageData FindStageData(int stageNumber)
-    //{
-    //    int chapterNumber = GameManager.Instance.CurrentChapterNumber;
+    // StageData ê°€ì ¸ì˜¤ê¸°
+    // ì„œí˜„ì•„ ìˆ˜ì •
+    private StageData FindStageData(int chapterNumber, int stageNumber)
+    {
+        /*int chapterNumber = GameManager.Instance.CurrentChapterNumber;
 
-    //    foreach (StageData data in stageDatas)
-    //    {
-    //        if (data.chapterNumber == chapterNumber && data.stageNumber == stageNumber)
-    //        {
-    //            return data;
-    //        }
-    //    }
+        foreach (StageData data in stageDatas)
+        {
+            if (data.chapterNumber == chapterNumber && data.stageNumber == stageNumber)
+            {
+                return data;
+            }
+        }*/
 
-    //    Debug.LogError($"Ã©ÅÍ{chapterNumber} {stageNumber}¹ø ½ºÅ×ÀÌÁö µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
-    //    return null;
-    //}
+        try
+        {
+            Debug.Log($"ì±•í„°{chapterNumber} {stageNumber}ìŠ¤í…Œì´ì§€ë¥¼ ì°¾ì•˜ìŠµë‹ˆë‹¤.");
+            return chapterDatas[chapterNumber].stages[stageNumber];
+        }
+        catch
+        {
+            Debug.LogError($"ì±•í„°{chapterNumber} {stageNumber}ìŠ¤í…Œì´ì§€ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            return null;
+        }
+    }
 
     private void SetTargetTimeMarker()
     {
@@ -103,7 +169,7 @@ public class StageManager : MonoBehaviour
         SpriteRenderer timerRenderer = timerFill.GetComponent<SpriteRenderer>();
 
         //float ratio = currentStageData.targetTime / currentStageData.limitTime;
-        float ratio = targetTime / limitTime;
+        float ratio = (limitTime - targetTime) / limitTime;
 
         float leftX = timerRenderer.bounds.min.x;
         float rightX = timerRenderer.bounds.max.x;
@@ -135,11 +201,11 @@ public class StageManager : MonoBehaviour
         if (isCleared) return;
         /**if (!IsPuzzleCleared())
         {
-            Debug.Log("ÆÛÁñ ¹Ì¿Ï¼º");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿Ï¼ï¿½");
             return;
         }**/
 
-        // isCleared = true; // È®ÀÎ¿ë
+        // isCleared = true; // È®ï¿½Î¿ï¿½
 
         bool isSpecialSeatSuccess = Board.Main.CheckAllSpecialSeatsSatisfied();
 
@@ -148,13 +214,13 @@ public class StageManager : MonoBehaviour
 
     private bool IsPuzzleCleared()
     {
-        // ¸ğµç ºí·°ÀÌ Á¤´ä À§Ä¡¿¡ ³õ¿´´ÂÁö È®ÀÎ
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         return false;
     }
 
     private bool IsSpecialSeatSuccess()
     {
-        // Æ¯¼ö ½Â°´ÀÌ Æ¯¼ö ÁÂ¼®¿¡ ¸Â°Ô ¹èÄ¡µÆ´ÂÁö È®ÀÎ
+        // Æ¯ï¿½ï¿½ ï¿½Â°ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Â¼ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½Ä¡ï¿½Æ´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         return false;
     }
 
@@ -178,17 +244,17 @@ public class StageManager : MonoBehaviour
     {
         if (clearPanel == null)
         {
-            Debug.LogError("ClearPanelÀÌ StageManager¿¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("ClearPanelï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
         if (clearStarImage == null)
         {
-            Debug.LogError("ClearStarRenderer°¡ StageManager¿¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("ClearStarRendererï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
-        Debug.Log($"OpenClearPanel ½ÇÇàµÊ / º° {starCount}°³");
+        Debug.Log($"OpenClearPanel ï¿½ï¿½ï¿½ï¿½ï¿½ / ï¿½ï¿½ {starCount}ï¿½ï¿½");
 
         clearPanel.SetActive(true);
         //clearPanel.transform.SetAsLastSibling();
@@ -226,5 +292,5 @@ public class StageManager : MonoBehaviour
     //        PlayerPrefs.Save();
     //    }
     //}
-    // º° ÀúÀåÀ» StageManager°¡ ¾Æ´Ï¶ó GameManager¿¡¼­ ÇÒ °Å±â ¶§¹®¿¡!
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ StageManagerï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ GameManagerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Å±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
 }
