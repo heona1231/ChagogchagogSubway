@@ -119,6 +119,9 @@ public class StageManager : MonoBehaviour
             }
         }
 
+        //서현아 수정, audio 출력
+        AudioManager.Instance.PlayBGM(AudioManager.Instance.bgmSoundsIngame[currentChapterNumber]);
+
         limitTime = currentStageData.limitTime;
         targetTime = currentStageData.targetTime;
         SetTargetTimeMarker();

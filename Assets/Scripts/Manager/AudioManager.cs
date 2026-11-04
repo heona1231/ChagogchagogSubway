@@ -1,6 +1,27 @@
 //서현아 작성
 using UnityEngine;
 
+public enum SFXType
+{
+    UIClick,
+    UIHover,
+
+    BlockGrab,
+    BlockRotate,
+    BlockPlace,
+    BlockCancle,
+
+    MiniClick,
+    MiniClear,
+    MiniFail,
+
+    TargetTime,
+    LimitTime,
+    StageFail,
+    StageClear
+}
+
+
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
@@ -9,12 +30,11 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource sfxSource;
 
     [Header("배경음악")]
-    public AudioClip bgm1Sound;
-    public AudioClip bgm2Sound;
+    public AudioClip bgmSoundMenu;
+    public AudioClip[] bgmSoundsIngame;
 
     [Header("효과음 클립")]
-    public AudioClip clickSound;
-    public AudioClip blockPlaceSound;
+    public AudioClip[] SFXClips;
 
     [Header("볼륨")]
     public float bgmVolume;
@@ -50,7 +70,7 @@ public class AudioManager : MonoBehaviour
     //시작시 bgm1Sound를 bgm으로 재생
     private void Start()
     {
-        PlayBGM(bgm1Sound);
+        PlayBGM(bgmSoundMenu);
     }
 
     private void LoadVolumeSettings()
@@ -80,9 +100,10 @@ public class AudioManager : MonoBehaviour
 
     //효과음 재생 함수
     //사용법 : AudioManager.Instance.PlaySFX(AudioManager.Instance.[스크립트 내 효과음 클립 이름 ex>clickSound]);
-    public void PlaySFX(AudioClip clip)
+    public void PlaySFX(SFXType type)
     {
-        if(clip != null && sfxSource != null)
+        AudioClip clip = SFXClips[(int)type];
+        if (clip != null && sfxSource != null)
         {
             sfxSource.PlayOneShot(clip);
         }

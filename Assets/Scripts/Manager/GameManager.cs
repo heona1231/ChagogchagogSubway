@@ -56,8 +56,20 @@ public class GameManager : MonoBehaviour
 
         currentTime = Time.realtimeSinceStartup - stageStartTime - totalPausedTime;
 
+
+        //서현아 수정, tartget,limit time 효과음 재생
+        if(currentTime <= targetTime - 3)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.TargetTime);
+        }
+        if (currentTime <= limitTime - 3)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.LimitTime);
+        }
+
         if (currentTime >= limitTime)
         {
+            AudioManager.Instance.PlaySFX(SFXType.StageFail);
             EndGame();
         }
     }
@@ -166,6 +178,7 @@ public class GameManager : MonoBehaviour
             stageManager.OpenClearPanel(starCount);
         }
 
+        AudioManager.Instance.PlaySFX(SFXType.StageClear);
         //SceneManager.LoadScene("ChapterScene");   // 테스트용
     }
 
