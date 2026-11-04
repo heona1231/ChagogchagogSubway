@@ -387,17 +387,91 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (block.shapeCells.Length == 2)
+        BlockDirection currentDir = block.GetCurrentDirection();
+        float blockAngle = (float)currentDir;
+        float tolerance = 5f;
+
+        if (block.shapeCells.Length == 3)
+        {
+            float angle0 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[0] });
+            float angle1 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[1] });
+            float angle2 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[2] });
+
+            bool isCell0OnChair = (angle0 != -1f);
+            bool isCell1OnChair = (angle1 != -1f);
+            bool isCell2OnChair = (angle2 != -1f);
+
+            int cellsOnChairCount = (isCell0OnChair ? 1 : 0) + (isCell1OnChair ? 1 : 0) + (isCell2OnChair ? 1 : 0);
+
+            // 3개의 셀 중 2개가 의자에 놓인 경우
+            if (cellsOnChairCount == 2)
+            {
+                // 기준이 될 의자 각도 가져오기
+                float chairAngle = isCell0OnChair ? angle0 : (isCell1OnChair ? angle1 : angle2);
+                float chairAngleNorm = chairAngle % 360f;
+                if (chairAngleNorm < 0f) chairAngleNorm += 360f;
+
+                if (chairAngleNorm == 90f)
+                {
+                    if (blockAngle == 180f) block.ChangeBlockSpriteSitdown(1);
+                    else if (blockAngle == 270f) block.ChangeBlockSpriteSitdown(2);
+                }
+                else if (chairAngleNorm == 270f)
+                {
+                    if (blockAngle == 0f) block.ChangeBlockSpriteSitdown(1);
+                    else if (blockAngle == 90f) block.ChangeBlockSpriteSitdown(2);
+                }
+            }
+            // 3개의 셀 중 1개만 의자에 놓인 경우
+            else if (cellsOnChairCount == 1)
+            {
+                float chairAngle = isCell0OnChair ? angle0 : (isCell1OnChair ? angle1 : angle2);
+                float chairAngleNorm = chairAngle % 360f;
+                if (chairAngleNorm < 0f) chairAngleNorm += 360f;
+
+                if (chairAngleNorm == 90f)
+                {
+                    if (blockAngle == 0f) block.ChangeBlockSpriteSitdown(7);
+                    else if (blockAngle == 90f) block.ChangeBlockSpriteSitdown(8);
+                    else if (blockAngle == 180f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(4);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
+                    }
+                    else if (blockAngle == 270f)
+                    {
+                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(3);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
+                    }
+                }
+                else if (chairAngleNorm == 270f)
+                {
+                    if (blockAngle == 0f)
+                    {
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(4);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
+                    }
+                    else if (blockAngle == 90f)
+                    {
+                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(3);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
+                    }
+                    else if (blockAngle == 180f) block.ChangeBlockSpriteSitdown(7);
+                    else if (blockAngle == 270f) block.ChangeBlockSpriteSitdown(8);
+                }
+            }
+            else
+            {
+                block.ChangeBlockSpriteSitdown(0);
+            }
+        }
+        else if (block.shapeCells.Length == 2)
         {
             float angle0 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[0] });
             float angle1 = Board.Main.GetChairAngle(snappedPos, block.shapeOffset, new Vector2Int[] { block.shapeCells[1] });
 
             bool isCell0OnChair = (angle0 != -1f);
             bool isCell1OnChair = (angle1 != -1f);
-            float tolerance = 5f;
-
-            BlockDirection currentDir = block.GetCurrentDirection();
-            float blockAngle = (float)currentDir;
 
             // 두 사람 모두 의자에 놓일 경우
             if (isCell0OnChair && isCell1OnChair)
