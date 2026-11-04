@@ -15,18 +15,18 @@ MonoBehaviour:
   gridSize: 1.32
   type: 0
   boardShape:
+  - 000000010102
+  - 000000011112
   - 000000000000
   - 000000000000
   - 000000000000
-  - 000000000001
-  - 000000000002
-  - 000000000002
+  - 000000000000
   boardOffset: {x: 0, y: 0.66}
   specialSeats:
-  - gridIndex: {x: 11, y: 4}
+  - gridIndex: {x: 11, y: 0}
     requiredType: 0
     initialDirection: 270
-  - gridIndex: {x: 11, y: 5}
+  - gridIndex: {x: 11, y: 1}
     requiredType: 0
     initialDirection: 270
   tilePrefab: {fileID: 2805829480096003139, guid: 4455222976ddbcc46b2a2b7ab434952a, type: 3}
