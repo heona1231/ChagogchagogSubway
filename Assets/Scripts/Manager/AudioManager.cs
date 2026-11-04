@@ -99,7 +99,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //효과음 재생 함수
-    //사용법 : AudioManager.Instance.PlaySFX(AudioManager.Instance.[스크립트 내 효과음 클립 이름 ex>clickSound]);
+    //사용법 : AudioManager.Instance.PlaySFX(SFXType.효과음타입 ex>Click);
     public void PlaySFX(SFXType type)
     {
         AudioClip clip = SFXClips[(int)type];
