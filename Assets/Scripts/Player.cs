@@ -435,26 +435,26 @@ public class Player : MonoBehaviour
                     else if (blockAngle == 90f) block.ChangeBlockSpriteSitdown(8);
                     else if (blockAngle == 180f)
                     {
-                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(4);
-                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(3);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
                     }
                     else if (blockAngle == 270f)
                     {
-                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(3);
-                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
+                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(4);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
                     }
                 }
                 else if (chairAngleNorm == 270f)
                 {
                     if (blockAngle == 0f)
                     {
-                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(4);
-                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
+                        if (isCell0OnChair) block.ChangeBlockSpriteSitdown(3);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
                     }
                     else if (blockAngle == 90f)
                     {
-                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(3);
-                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(5);
+                        if (isCell1OnChair) block.ChangeBlockSpriteSitdown(4);
+                        else if (isCell2OnChair) block.ChangeBlockSpriteSitdown(6);
                     }
                     else if (blockAngle == 180f) block.ChangeBlockSpriteSitdown(7);
                     else if (blockAngle == 270f) block.ChangeBlockSpriteSitdown(8);
