@@ -100,6 +100,10 @@ public class GameManager : MonoBehaviour
 
     public void SelectStage(int chapterNumber, int stageNumber)
     {
+        Debug.Log(
+            $"[ÃßÀû] SelectStage È£ÃâµÊ! \n{System.Environment.StackTrace}"
+        );
+
         CurrentChapterNumber = chapterNumber;
         CurrentStageNumber = stageNumber;
 

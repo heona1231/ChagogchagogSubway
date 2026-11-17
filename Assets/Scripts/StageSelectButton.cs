@@ -7,6 +7,13 @@ public class StageSelectButton : MonoBehaviour
     [SerializeField] private int chapterNumber = 1;
     [SerializeField] private int stageNumber = 1;
 
+    // 자동 생성된 스테이지에 번호 설정
+    public void Initialize(int chapter, int stage)
+    {
+        chapterNumber = chapter;
+        stageNumber = stage;
+    }
+
     public void SelectStage()
     {
         GameManager gameManager = GameManager.Instance;
