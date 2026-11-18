@@ -71,4 +71,15 @@ public class StageIcon : MonoBehaviour
             GameManager.Instance.PauseStage();
         }
     }
+
+
+    public void AudioUiClick()
+    {
+        AudioManager.Instance.PlaySFX(SFXType.UIClick);
+    }
+
+    public void AudioUiHover()
+    {
+        AudioManager.Instance.PlaySFX(SFXType.UIHover);
+    }
 }

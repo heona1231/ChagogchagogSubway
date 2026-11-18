@@ -69,12 +69,14 @@ public class Player : MonoBehaviour
                 if (isClickToAttach || Input.GetKeyDown(KeyCode.E))
                 {
                     EndDrag();
+                    AudioManager.Instance.PlaySFX(SFXType.BlockPlace);
                 }
             }
             else if (hoveredBlock != null)
             {
                 // 들고 있지 않다면 잡기
                 StartDrag(hoveredBlock);
+                AudioManager.Instance.PlaySFX(SFXType.BlockGrab);
             }
         }
 
@@ -313,6 +315,7 @@ public class Player : MonoBehaviour
 
         // 모든 예외 처리를 통과했으므로 블록 실제 회전
         targetBlock.RotateBlock();
+        AudioManager.Instance.PlaySFX(SFXType.BlockRotate);
 
         // 바닥에 놓여있던 블록이면 갱신된 형태로 보드에 다시 등록
         if (!isDragging && targetBlock.currentBoard != null)

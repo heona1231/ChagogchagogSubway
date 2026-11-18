@@ -80,6 +80,7 @@ public class MinigameMashClick : MonoBehaviour
                 {
                     currentGauge = 0;
                 }
+                AudioManager.Instance.PlaySFX(SFXType.MiniClick);
             }
 
             MinigameManager.Instance.ReceiveCurrentGauge(currentGauge);
@@ -139,6 +140,8 @@ public class MinigameMashClick : MonoBehaviour
 
         MinigameManager.Instance.EndMinigame();
 
+        AudioManager.Instance.PlaySFX(SFXType.MiniClear);
+
         this.enabled = false;
     }
 
@@ -151,5 +154,7 @@ public class MinigameMashClick : MonoBehaviour
         currentGauge = maxGauge;
 
         UpdateSprite();
+
+        AudioManager.Instance.PlaySFX(SFXType.MiniFail);
     }
 }
