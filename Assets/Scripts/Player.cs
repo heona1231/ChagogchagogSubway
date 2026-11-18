@@ -230,6 +230,10 @@ public class Player : MonoBehaviour
             else
             {
                 draggingBlock.ReturnToStart();
+                if (draggingBlock.currentBoard == Board.Main)
+                    UpdateBlockSpriteOnChair(draggingBlock, draggingBlock.transform.position);
+                else
+                    draggingBlock.ChangeBlockSpriteSitdown(0);
             }
         }
         else if (Board.Background != null && Board.Background.IsValidPlacement(rawPos, draggingBlock.shapeOffset, draggingBlock.shapeCells))
@@ -246,8 +250,10 @@ public class Player : MonoBehaviour
         {
             draggingBlock.ReturnToStart();
 
-            // 보드 바깥으로 돌아갈 때도 서 있는 모양으로 초기화
-            draggingBlock.ChangeBlockSpriteSitdown(0);
+            if (draggingBlock.currentBoard == Board.Main)
+                UpdateBlockSpriteOnChair(draggingBlock, draggingBlock.transform.position);
+            else
+                draggingBlock.ChangeBlockSpriteSitdown(0);
         }
 
         // 드래그 종료 처리

@@ -221,12 +221,6 @@ public class Block : MonoBehaviour
         if (currentBoard != null)
         {
             currentBoard.PlaceBlock(this, transform.position, shapeOffset, shapeCells);
-            // 원래 메인 보드였다면 앉은 모습(1), 배경이었다면 서 있는 모습(0)
-            ChangeBlockSpriteSitdown(0);
-        }
-        else
-        {
-            ChangeBlockSpriteSitdown(0);
         }
     }
 
