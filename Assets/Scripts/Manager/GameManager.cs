@@ -130,7 +130,9 @@ public class GameManager : MonoBehaviour
         stageStartTime = Time.realtimeSinceStartup;
         currentTime = 0f;
         isPlaying = true;
-        
+
+        AudioManager.Instance.PlaySFX(SFXType.StageStart);
+
         Debug.Log(
             $"챕터 {CurrentChapterNumber} " +
             $"스테이지 {CurrentStageNumber} 시작 | " +

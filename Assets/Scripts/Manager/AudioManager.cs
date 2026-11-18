@@ -17,6 +17,7 @@ public enum SFXType
 
     TargetTime,
     LimitTime,
+    StageStart,
     StageFail,
     StageClear
 }

@@ -60,11 +60,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b4d256635bdf7ad4aaecdbb074188453, type: 3}
   - {fileID: 8300000, guid: b4d256635bdf7ad4aaecdbb074188453, type: 3}
   - {fileID: 8300000, guid: b4d256635bdf7ad4aaecdbb074188453, type: 3}
+  - {fileID: 8300000, guid: fee49586fc461484b84b5d00eea9f3fb, type: 3}
+  - {fileID: 8300000, guid: fee49586fc461484b84b5d00eea9f3fb, type: 3}
   - {fileID: 8300000, guid: 18d122d311d3d2e4594deb1a5bada4c6, type: 3}
-  - {fileID: 8300000, guid: fee49586fc461484b84b5d00eea9f3fb, type: 3}
-  - {fileID: 8300000, guid: fee49586fc461484b84b5d00eea9f3fb, type: 3}
-  - {fileID: 8300000, guid: e374d773018c26d488ef8473e5b6c58c, type: 3}
   - {fileID: 8300000, guid: 64c8eb2046dfe4a469bce2a98d5915a2, type: 3}
+  - {fileID: 8300000, guid: e374d773018c26d488ef8473e5b6c58c, type: 3}
   bgmVolume: 0
   sfxVolume: 0
   defaultBgmVolume: 50
