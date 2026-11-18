@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3373581848604483392}
   - component: {fileID: 156147787991140791}
-  - component: {fileID: 5761629930528958317}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -68,13 +67,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e374d773018c26d488ef8473e5b6c58c, type: 3}
   bgmVolume: 0
   sfxVolume: 0
-  defaultBgmVolume: 50
+  defaultBgmVolume: 100
   defaultSfxVolume: 50
---- !u!81 &5761629930528958317
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7227015158196890110}
-  m_Enabled: 1
