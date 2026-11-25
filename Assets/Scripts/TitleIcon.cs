@@ -15,6 +15,7 @@ public class TitleIcon : MonoBehaviour
 
         // ������ �ۼ�, ����â ������ Ŭ���� ��� ����
         if (OptionManager.Instance != null && OptionManager.Instance.IsPanelOpen)
+            return;
 
         if (isStartIcon)
         {
