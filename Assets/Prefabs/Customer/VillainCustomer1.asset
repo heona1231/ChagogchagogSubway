@@ -23,6 +23,7 @@ MonoBehaviour:
   blockType: 1
   defaultDirection: 0
   passengerType: 1
+  stageNumber: {x: 1, y: 16}
   shapeRows:
   - cols: 000100
   - cols: 000100

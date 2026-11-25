@@ -47,6 +47,7 @@ public class BlockData : ScriptableObject
     public BlockType blockType = BlockType.Normal;
     public BlockDirection defaultDirection = BlockDirection.Down; // 강헤원 작성, 기본 방향 (아래)
     public PassengerType passengerType;
+    public Vector2Int stageNumber;
 
     //블럭 모양 설정
     [Header("BlockShape")]
