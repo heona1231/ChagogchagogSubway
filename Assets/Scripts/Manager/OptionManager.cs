@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class OptionManager : MonoBehaviour
-{ 
+{
+    public static OptionManager Instance; // 강혜원 작성, 인스턴스 생성
+
     public enum LanguageType
     {
         Korean,
@@ -54,6 +56,19 @@ public class OptionManager : MonoBehaviour
     [SerializeField] private Image fullscreenButtonImage;
     [SerializeField] private Sprite fullscreenSelectedSprite;
     [SerializeField] private Sprite fullscreenUnselectedSprite;
+
+    public bool IsPanelOpen => settingsPanel != null && settingsPanel.activeSelf; // 강혜원 작성, 설정창 활성화 여부
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     private void Start()
     {

@@ -9,7 +9,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Texture2D defaultCursor;
     [SerializeField] private Texture2D dragCursor;
-    private Vector2 hotSpot = new Vector2 (0.5f, 0.5f); // 커서의 클릭 판정 지점
+
+    // 커서의 클릭 판정 지점
+    [SerializeField] private Vector2 defaultHotSpotRatio = new Vector2(0.5f, 0.5f);
+    [SerializeField] private Vector2 dragHotSpotRatio = new Vector2(0.5f, 0.5f);
+
+    private enum CursorState { None, System, Game, Drag }
+    private CursorState currentCursorState = CursorState.None;
 
     private Block hoveredBlock = null;
     private Block draggingBlock = null;
@@ -20,9 +26,16 @@ public class Player : MonoBehaviour
     [Header("Keyboard Interaction")]
     [SerializeField] private StageIcon menuIcon;
 
-    private void Start()
+    private void SetCursor(Texture2D tex, Vector2 ratio)
     {
-        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
+        if (tex == null)
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            return;
+        }
+
+        Vector2 hotSpot = new Vector2(tex.width * ratio.x, tex.height * ratio.y);
+        Cursor.SetCursor(tex, hotSpot, CursorMode.Auto);
     }
 
     private void Update()
@@ -30,14 +43,14 @@ public class Player : MonoBehaviour
         // 박세은 추가: 키 바인딩
         HandleMenuInput();
 
-        // 메뉴 창이 열려있다면 게임 조작을 막음
-        if (GameManager.Instance != null && GameManager.Instance.IsPaused)
+        bool isPaused = GameManager.Instance != null && GameManager.Instance.IsPaused;
+        if (!isPaused)
         {
-            return;
+            HandleHover();
+            HandleInput();
         }
 
-        HandleHover();
-        HandleInput();
+        UpdateCursor(isPaused);
     }
     
     // 마우스 위치에 블록이 있는지 감지
@@ -152,7 +165,6 @@ public class Player : MonoBehaviour
         }
 
         draggingBlock = targetBlock;
-        Cursor.SetCursor(dragCursor, hotSpot, CursorMode.Auto);
 
         draggingBlock.startDragPosition = draggingBlock.transform.position;
         draggingBlock.SaveOriginalState();
@@ -176,8 +188,6 @@ public class Player : MonoBehaviour
         // 보드에 놓여질 위치 보기 비활성화
         if (Board.Main != null) Board.Main.HidePreview();
         if (Board.Background != null) Board.Background.HidePreview();
-
-        Cursor.SetCursor(defaultCursor, hotSpot, CursorMode.Auto);
 
         if (draggingBlock.spriteRenderer != null)
         {
@@ -632,5 +642,63 @@ public class Player : MonoBehaviour
         {
             block.ChangeBlockSpriteSitdown(0);
         }
+    }
+
+    private void OnDisable()
+    {
+        // 씬 전환 등으로 Player가 비활성화/파괴되면 기본 커서로 복구
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        currentCursorState = CursorState.None;
+    }
+
+    // 현재 상황에 맞는 커서 결정
+    private void UpdateCursor(bool isPaused)
+    {
+        CursorState target;
+
+        if (draggingBlock != null)
+            target = CursorState.Drag;          // 드래그 중엔 UI 위여도 드래그 커서 유지
+        else if (isPaused || IsPointerOverUI())
+            target = CursorState.System;
+        else
+            target = CursorState.Game;
+
+        ApplyCursor(target);
+    }
+
+    // 상태가 바뀔 때만 SetCursor 호출 (매 프레임 호출 방지)
+    private void ApplyCursor(CursorState state)
+    {
+        if (state == currentCursorState) return;
+        currentCursorState = state;
+
+        switch (state)
+        {
+            case CursorState.System:
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                break;
+            case CursorState.Game:
+                SetCursorTexture(defaultCursor, defaultHotSpotRatio);
+                break;
+            case CursorState.Drag:
+                SetCursorTexture(dragCursor, dragHotSpotRatio);
+                break;
+        }
+    }
+
+    private void SetCursorTexture(Texture2D tex, Vector2 ratio)
+    {
+        if (tex == null)
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            return;
+        }
+        Vector2 hotSpot = new Vector2(tex.width * ratio.x, tex.height * ratio.y);
+        Cursor.SetCursor(tex, hotSpot, CursorMode.Auto);
+    }
+
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }
