@@ -16,6 +16,7 @@ public class StageSelectButton : MonoBehaviour
 
     public void SelectStage()
     {
+        AudioManager.Instance.AudioUiClick();
         GameManager gameManager = GameManager.Instance;
 
         if (gameManager == null)

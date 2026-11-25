@@ -15,6 +15,7 @@ public class IconHover : MonoBehaviour
     private void OnMouseEnter()
     {
         spriteRenderer.sprite = hoverSprite;
+        AudioManager.Instance.PlaySFX(SFXType.UIHover);
     }
     private void OnMouseExit()
     {

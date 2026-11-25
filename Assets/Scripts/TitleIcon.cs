@@ -8,6 +8,8 @@ public class TitleIcon : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
+        AudioManager.Instance.AudioUiClick();
+
         if (isStartIcon)
         {
             GameManager.Instance.StartGame();

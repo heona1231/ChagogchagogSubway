@@ -428,8 +428,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -457,8 +457,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -944,8 +944,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -973,8 +973,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -1094,8 +1094,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -1161,8 +1161,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -1413,8 +1413,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -1442,8 +1442,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -2176,8 +2176,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -2205,8 +2205,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -2725,8 +2725,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494620366}
-        m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+      - m_Target: {fileID: 2728685925167773469}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: AudioUiClick
         m_Mode: 1
         m_Arguments:
@@ -2792,8 +2792,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 494620366}
-          m_TargetAssemblyTypeName: StageIcon, Assembly-CSharp
+        - m_Target: {fileID: 2728685925167773469}
+          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
           m_MethodName: AudioUiHover
           m_Mode: 1
           m_Arguments:
@@ -3382,11 +3382,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7227015158196890110, guid: 82c1bc0c67f8ac9458f701c8c96f7462, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82c1bc0c67f8ac9458f701c8c96f7462, type: 3}
+--- !u!114 &2728685925167773469 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 156147787991140791, guid: 82c1bc0c67f8ac9458f701c8c96f7462, type: 3}
+  m_PrefabInstance: {fileID: 2728685925167773468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 143a9e498e8cfb347bdaec0030f4c4ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
