@@ -1,4 +1,4 @@
-// ¹Ú¼¼Àº ÀÛ¼º
+// ï¿½Ú¼ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,13 +7,14 @@ public class TitleIcon : MonoBehaviour
     [SerializeField] private bool isStartIcon = false;
     [SerializeField] private bool isQuitIcon = false;
 
-    [SerializeField] private bool isOptionIcon = false; // °­Çý¿ø ¼öÁ¤, OptionIcon Ãß°¡
+    [SerializeField] private bool isOptionIcon = false; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, OptionIcon ï¿½ß°ï¿½
 
     private void OnMouseUpAsButton()
     {
-        // °­Çý¿ø ÀÛ¼º, ¼³Á¤Ã¢ À§¿¡¼­ Å¬¸¯ÇÑ °æ¿ì ¹«½Ã
+        AudioManager.Instance.AudioUiClick();
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½, ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (OptionManager.Instance != null && OptionManager.Instance.IsPanelOpen)
-            return;
 
         if (isStartIcon)
         {

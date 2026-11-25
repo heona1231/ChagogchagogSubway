@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private float pauseStartTime;
     private float totalPausedTime;
     private bool canGoNextStage;
+    private bool limitTimePlayed = false;
 
     public bool IsPaused => isPaused;
 
@@ -58,13 +59,10 @@ public class GameManager : MonoBehaviour
 
 
         //서현아 수정, tartget,limit time 효과음 재생
-        if(currentTime <= targetTime - 3)
-        {
-            AudioManager.Instance.PlaySFX(SFXType.TargetTime);
-        }
-        if (currentTime <= limitTime - 3)
+        if (currentTime >= limitTime - 3 && !limitTimePlayed)
         {
             AudioManager.Instance.PlaySFX(SFXType.LimitTime);
+            limitTimePlayed = true;
         }
 
         if (currentTime >= limitTime)
@@ -135,6 +133,8 @@ public class GameManager : MonoBehaviour
         currentTime = 0f;
         isPlaying = true;
 
+        limitTimePlayed = false;
+
         AudioManager.Instance.PlaySFX(SFXType.StageStart);
 
         Debug.Log(
@@ -151,6 +151,9 @@ public class GameManager : MonoBehaviour
         isPaused = true;
         pauseStartTime = Time.realtimeSinceStartup;
 
+        AudioManager.Instance.PauseBGM();
+        AudioManager.Instance.PauseSFX();
+
         Debug.Log("스테이지 일시정지");
     }
 
@@ -161,6 +164,9 @@ public class GameManager : MonoBehaviour
         totalPausedTime += Time.realtimeSinceStartup - pauseStartTime;
         isPaused = false;
 
+        AudioManager.Instance.ResumeBGM();
+        AudioManager.Instance.ResumeSFX();
+
         Debug.Log("스테이지 재시작");
     }
 
@@ -168,6 +174,9 @@ public class GameManager : MonoBehaviour
     {
         isPlaying = false;
         canGoNextStage = true;
+
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.StopSFX();
 
         int starCount = CalculateStarCount(isSpecialSeatSuccess);
 
@@ -206,6 +215,10 @@ public class GameManager : MonoBehaviour
     {
         isPlaying = false;
         canGoNextStage = false;
+
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.StopSFX();
+
 
         StageManager stageManager = FindFirstObjectByType<StageManager>();
 

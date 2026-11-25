@@ -55,17 +55,16 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadVolumeSettings();
         }
         else
         {
             Destroy(gameObject);
         }
-
-        LoadVolumeSettings();
     }
 
     //시작시 bgm1Sound를 bgm으로 재생
@@ -98,6 +97,27 @@ public class AudioManager : MonoBehaviour
             bgmSource.Play();
         }
     }
+    public void PauseBGM()
+    {
+        if (bgmSource != null)
+        {
+            bgmSource.Pause();
+        }
+    }
+    public void ResumeBGM()
+    {
+        if (bgmSource != null)
+        {
+            bgmSource.UnPause();
+        }
+    }
+    public void StopBGM()
+    {
+        if (bgmSource != null)
+        {
+            bgmSource.Stop();
+        }
+    }
 
     //효과음 재생 함수
     //사용법 : AudioManager.Instance.PlaySFX(SFXType.효과음타입 ex>Click);
@@ -109,7 +129,21 @@ public class AudioManager : MonoBehaviour
             sfxSource.PlayOneShot(clip);
         }
     }
-
+    public void StopSFX()
+    {
+        if (sfxSource != null)
+            sfxSource.Stop();
+    }
+    public void PauseSFX()
+    {
+        if (sfxSource != null)
+            sfxSource.Pause();
+    }
+    public void ResumeSFX()
+    {
+        if (sfxSource != null)
+            sfxSource.UnPause();
+    }
 
     //bgm 볼륨 조절 함수
     //사용법 : AudioManager.Instance.SetBgmVolume([0~100사이의 숫자])
@@ -117,7 +151,7 @@ public class AudioManager : MonoBehaviour
     public void SetBgmVolume(float volume, bool save = true)
     {
         //bgmVolume = volume;
-        BgmVolume = Mathf.Clamp(volume, 0f, 100f);
+        BgmVolume = Mathf.Clamp(volume, 0f, 100f) * 0.8f;
 
         if (bgmSource != null)
         {
@@ -156,5 +190,15 @@ public class AudioManager : MonoBehaviour
     {
         SetBgmVolume(defaultBgmVolume);
         SetSfxVolume(defaultSfxVolume);
+    }
+
+    public void AudioUiClick()
+    {
+        PlaySFX(SFXType.UIClick);
+    }
+
+    public void AudioUiHover()
+    {
+        PlaySFX(SFXType.UIHover);
     }
 }

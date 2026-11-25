@@ -39,6 +39,7 @@ public class StageIcon : MonoBehaviour
     public void BackToMainMenu()
     {
         GameManager.Instance.BackToChapter();
+        AudioManager.Instance.PlayBGM(AudioManager.Instance.bgmSoundsIngame[0]);
     }
 
     public void GoToNextStage()
@@ -70,16 +71,5 @@ public class StageIcon : MonoBehaviour
             menuPanel.SetActive(true);
             GameManager.Instance.PauseStage();
         }
-    }
-
-
-    public void AudioUiClick()
-    {
-        AudioManager.Instance.PlaySFX(SFXType.UIClick);
-    }
-
-    public void AudioUiHover()
-    {
-        AudioManager.Instance.PlaySFX(SFXType.UIHover);
     }
 }
