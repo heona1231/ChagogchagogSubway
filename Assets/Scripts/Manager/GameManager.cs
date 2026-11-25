@@ -268,6 +268,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool IsStageCleared(int chapterNumber, int stageNumber)
+    {
+        string key = $"Chapter{chapterNumber}Stage{stageNumber}Star";
+
+        int starCount = PlayerPrefs.GetInt(key, 0);
+
+        return starCount > 0;
+    }
+
     public float GetRemainingTimeRatio()
     {
         if (limitTime <= 0)
